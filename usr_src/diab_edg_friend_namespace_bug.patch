@@ -1,0 +1,35 @@
+diff -uNdr boost/program_options/eof_iterator.hpp boost.fixed/program_options/eof_iterator.hpp
+The EDG front end version that Diab is using seems to lose the namespace designation of some freind classes
+explicitly specifing boost:: works around this issue.
+--- boost_1_59_0/boost/program_options/eof_iterator.hpp	2015-06-08 23:54:19.000000000 -0700
++++ boost_1_59_0/boost/program_options/eof_iterator.hpp	2015-09-14 08:42:59.452521900 -0700
+@@ -68,8 +68,11 @@
+ 
+ 
+     private: // iterator core operations
++#ifdef __DCC__
++        friend class boost::iterator_core_access;
++#else
+         friend class iterator_core_access;
+-
++#endif        
+         void increment()
+         {
+             static_cast<Derived&>(*this).get();
+diff -uNdr boost/token_iterator.hpp boost.fixed/token_iterator.hpp
+--- boost_1_59_0/boost/token_iterator.hpp	2015-05-15 01:26:16.000000000 -0700
++++ boost_1_59_0/boost/token_iterator.hpp	2015-09-14 08:59:58.360356800 -0700
+@@ -38,8 +38,11 @@
+           , const Type&
+         >
+   {
+-
+-      friend class iterator_core_access;
++#ifdef __DCC__
++        friend class boost::iterator_core_access;
++#else
++        friend class iterator_core_access;
++#endif        
+ 
+       TokenizerFunc f_;
+       Iterator begin_;

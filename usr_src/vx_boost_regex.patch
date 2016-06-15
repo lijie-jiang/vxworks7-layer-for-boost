@@ -1,0 +1,22 @@
+diff -uNdr boost_1_59_0/libs/regex/test/Jamfile.v2 vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/libs/regex/test/Jamfile.v2
+--- boost_1_59_0/libs/regex/test/Jamfile.v2	2015-02-14 05:22:25.000000000 -0800
++++ boost_1_59_0/libs/regex/test/Jamfile.v2	2016-02-22 21:39:44.625320430 -0800
+@@ -185,6 +185,7 @@
+     <exception-handling>off
+     <link>static
+     <runtime-link>shared
++    <target-os>vxworks:<build>no # requires complete platform rebuild to turn of exceptions 
+   : regex_regress_noeh ]
+ 
+ ;
+diff -uNdr boost_1_59_0/libs/regex/test/noeh_test/Jamfile.v2 vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/libs/regex/test/noeh_test/Jamfile.v2
+--- boost_1_59_0/libs/regex/test/noeh_test/Jamfile.v2	2015-02-14 05:22:25.000000000 -0800
++++ boost_1_59_0/libs/regex/test/noeh_test/Jamfile.v2	2016-02-22 21:45:08.648742623 -0800
+@@ -46,5 +46,6 @@
+         <link>static
+         <define>BOOST_NO_EXCEPTIONS=1
+         <exception-handling>off
++        <target-os>vxworks:<build>no      # requires complete library rebuild to turn off exceptions
+     : 
+     ;
+\ No newline at end of file

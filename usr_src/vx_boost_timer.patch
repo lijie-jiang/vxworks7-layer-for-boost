@@ -1,0 +1,14 @@
+diff -uNdr boost_1_59_0/libs/timer/test/Jamfile.v2 vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/libs/timer/test/Jamfile.v2
+explicitly skip one test that requires a lot the Vxworks ain't got
+--- boost_1_59_0/libs/timer/test/Jamfile.v2	2013-12-28 06:11:49.000000000 -0800
++++ boost_1_59_0/libs/timer/test/Jamfile.v2	2016-02-09 16:04:54.419655897 -0800
+@@ -44,7 +44,8 @@
+        : $(parent) -text -brief # command line
+        : # input files
+        : <dependency>/boost/filesystem//boost_filesystem
+-         <test-info>always_show_run_output # requirements
++         <test-info>always_show_run_output # requirements 
++         <target-os>vxworks:<build>no      # skip for vxworks;requires popen/pclose + svn client
+        : inspect # test name
+      ]
+    ;

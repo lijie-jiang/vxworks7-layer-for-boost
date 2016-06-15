@@ -1,0 +1,12 @@
+diff -uNdr boost_1_59_0/libs/graph/test/typestr.hpp vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/libs/graph/test/typestr.hpp
+--- boost_1_59_0/libs/graph/test/typestr.hpp	2014-08-03 12:46:30.000000000 -0700
++++ boost_1_59_0/libs/graph/test/typestr.hpp	2016-03-13 00:00:49.864572042 -0800
+@@ -25,7 +25,7 @@
+  */
+ template <typename T>
+ std::string typestr() {
+-#if defined(__GNUC__)
++#if defined(__GNUC__) && ! defined(__VXWORKS__)
+     std::size_t const BUFSIZE = 8192;
+     std::size_t n = BUFSIZE;
+     char buf[BUFSIZE];

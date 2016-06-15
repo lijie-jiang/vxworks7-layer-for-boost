@@ -1,0 +1,92 @@
+diff -uNdr boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp vx7/workspace/VSB_Generic/usr/src/BOOST/boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp
+This patch updates ASIO support for VxWorks, but there are three outstanding issues:
+. 1) no if_indextoname() defect V7NET-748
+. 2) no support for serial, boost needs a Vxworks specific implmentation 
+. 3) the last two tests don't sucessfully compile, the code uses poll() instead of falling back to select() like it should  
+--- boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp	2015-03-23 13:24:12.000000000 -0700
++++ boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp	2016-03-29 16:12:04.964038100 -0700
+@@ -22,7 +22,8 @@
+ 
+ #if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__VXWORKS__) 
+ 
+ #include <boost/asio/detail/push_options.hpp>
+ 
+diff -uNdr boost_1_59_0\boost\asio/detail/impl/socket_ops.ipp ..\workspace\VSBsim32\usr\src\BOOST\boost_1_59_0\boost\asio/detail/impl/socket_ops.ipp
+--- boost_1_59_0/boost/asio/detail/impl/socket_ops.ipp	2015-03-23 13:24:12.000000000 -0700
++++ boost_1_59_0/boost/asio/detail/impl/socket_ops.ipp	2016-03-29 22:25:43.405996300 -0700
+@@ -33,6 +33,10 @@
+ # include <string>
+ #endif // defined(BOOST_ASIO_WINDOWS_RUNTIME)
+ 
++#if defined(__VXWORKS__)
++extern "C" int 	gethostname (char *name, size_t nameLen);
++#endif 
++
+ #if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) \
+   || defined(__MACH__) && defined(__APPLE__)
+ # if defined(BOOST_ASIO_HAS_PTHREADS)
+@@ -563,7 +567,8 @@
+   // get spurious readiness notifications from the reactor.
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(__CYGWIN__) \
+-  || defined(__SYMBIAN32__)
++  || defined(__SYMBIAN32__) \
++  || defined(__VXWORKS__)
+   fd_set write_fds;
+   FD_ZERO(&write_fds);
+   FD_SET(s, &write_fds);
+@@ -612,7 +617,7 @@
+ int socketpair(int af, int type, int protocol,
+     socket_type sv[2], boost::system::error_code& ec)
+ {
+-#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
++#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined(__VXWORKS__) 
+   (void)(af);
+   (void)(type);
+   (void)(protocol);
+@@ -1792,7 +1797,8 @@
+ 
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(__CYGWIN__) \
+-  || defined(__SYMBIAN32__)
++  || defined(__SYMBIAN32__) \
++  || defined(__VXWORKS__)
+   fd_set fds;
+   FD_ZERO(&fds);
+   FD_SET(s, &fds);
+@@ -1833,7 +1839,8 @@
+ 
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(__CYGWIN__) \
+-  || defined(__SYMBIAN32__)
++  || defined(__SYMBIAN32__) \
++  || defined(__VXWORKS__) 
+   fd_set fds;
+   FD_ZERO(&fds);
+   FD_SET(s, &fds);
+@@ -1874,7 +1881,8 @@
+ 
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(__CYGWIN__) \
+-  || defined(__SYMBIAN32__)
++  || defined(__SYMBIAN32__) \
++  || defined(__VXWORKS__) 
+   fd_set write_fds;
+   FD_ZERO(&write_fds);
+   FD_SET(s, &write_fds);
+diff -uNdr boost_1_59_0\boost\asio/detail/socket_types.hpp ..\workspace\VSBsim32\usr\src\BOOST\boost_1_59_0\boost\asio/detail/socket_types.hpp
+--- boost_1_59_0/boost/asio/detail/socket_types.hpp	2015-03-23 13:24:12.000000000 -0700
++++ boost_1_59_0/boost/asio/detail/socket_types.hpp	2016-03-29 16:12:04.979638100 -0700
+@@ -53,7 +53,7 @@
+ # include <boost/asio/detail/old_win_sdk_compat.hpp>
+ #else
+ # include <sys/ioctl.h>
+-# if !defined(__SYMBIAN32__)
++# if !defined(__SYMBIAN32__) && !defined(__VXWORKS__)
+ #  include <sys/poll.h>
+ # endif
+ # include <sys/types.h>

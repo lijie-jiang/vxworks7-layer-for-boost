@@ -1,0 +1,22 @@
+diff -uNdr boost_1_59_0/libs/flyweight/test/Jamfile.v2 vx7/workspace/VSB_Generic/usr/src/BOOST/boost_1_59_0/libs/flyweight/test/Jamfile.v2
+--- boost_1_59_0/libs/flyweight/test/Jamfile.v2	2014-12-05 12:09:13.000000000 -0800
++++ boost_1_59_0/libs/flyweight/test/Jamfile.v2	2016-03-06 01:34:55.792815583 -0800
+@@ -9,7 +9,7 @@
+ 
+ project
+     : requirements
+-      <os>LINUX:<threading>multi
++      <target-os>linux:<threading>multi
+     ;
+ 
+ test-suite "flyweight" :
+@@ -22,7 +22,8 @@
+         : # command line
+         : # input files
+         : # requirements
+-          <threading>multi                                          ]
++          <threading>multi
++          <target-os>vxworks:<link>shared                           ]
+     [ run test_multictor.cpp          test_multictor_main.cpp       ]
+     [ run test_no_locking.cpp         test_no_locking_main.cpp      ]
+     [ run test_no_tracking.cpp        test_no_tracking_main.cpp     ]

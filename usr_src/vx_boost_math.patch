@@ -1,0 +1,14 @@
+diff -uNdr boost_1_59_0/boost/math/special_functions/detail/fp_traits.hpp vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/boost/math/special_functions/detail/fp_traits.hpp
+Using fpclassify() causes namespace errors in a few non-math tests, might be a VxWorks issue, but this define is the easy fix 
+--- boost_1_59_0/boost/math/special_functions/detail/fp_traits.hpp	2015-05-05 05:32:10.000000000 -0700
++++ boost_1_59_0/boost/math/special_functions/detail/fp_traits.hpp	2016-01-29 11:05:25.156931398 -0800
+@@ -556,7 +556,8 @@
+    && !defined(__FAST_MATH__)\
+    && !defined(BOOST_MATH_DISABLE_STD_FPCLASSIFY)\
+    && !defined(BOOST_INTEL)\
+-   && !defined(sun)
++   && !defined(sun) \
++   && !defined(__VXWORKS__)
+ #  define BOOST_MATH_USE_STD_FPCLASSIFY
+ #endif
+ 

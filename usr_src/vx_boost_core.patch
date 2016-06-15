@@ -1,0 +1,14 @@
+diff -uNdr boost_1_59_0/libs/core/test/Jamfile.v2 vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/libs/core/test/Jamfile.v2
+--- boost_1_59_0/libs/core/test/Jamfile.v2	2015-07-20 02:32:52.000000000 -0700
++++ boost_1_59_0/libs/core/test/Jamfile.v2	2016-02-22 21:46:55.959239451 -0800
+@@ -59,7 +59,9 @@
+ run get_pointer_test.cpp ;
+ 
+ run lightweight_test_test.cpp ;
+-run lightweight_test_test.cpp : : : <exception-handling>off : lightweight_test_test_no_except ;
++run lightweight_test_test.cpp : : : <exception-handling>off 
++		 <target-os>vxworks:<build>no  # vx requires complete library rebuild to turn off exceptions
++		: lightweight_test_test_no_except ;
+ 
+ run lightweight_test_test2.cpp ;
+ 

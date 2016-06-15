@@ -1,0 +1,29 @@
+diff -uNdr boost_1_59_0/libs/range/test/adaptor_test/indexed.cpp vx7/workspace/VSB_Generic/usr/src/BOOST/boost_1_59_0/libs/range/test/adaptor_test/indexed.cpp
+--- boost_1_59_0/libs/range/test/adaptor_test/indexed.cpp	2015-04-21 00:22:15.000000000 -0700
++++ boost_1_59_0/libs/range/test/adaptor_test/indexed.cpp	2016-03-07 08:45:17.975785210 -0800
+@@ -98,21 +98,21 @@
+ template<typename Traversal, typename Range>
+ void check_traversal(const Range& rng)
+ {
+-    BOOST_STATIC_ASSERT(
++    BOOST_STATIC_ASSERT((
+         boost::is_convertible<
+             typename boost::range_traversal<const Range>::type,
+             Traversal
+-        >::value);
++        >::value));
+ }
+ 
+ template<typename Traversal, typename Range>
+ void check_not_traversal(const Range& rng)
+ {
+-    BOOST_STATIC_ASSERT(
++    BOOST_STATIC_ASSERT((
+         !boost::is_convertible<
+             typename boost::range_traversal<const Range>::type,
+             Traversal
+-        >::value);
++        >::value));
+ }
+ 
+ void indexed_test()

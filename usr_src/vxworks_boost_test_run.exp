@@ -1,0 +1,71 @@
+#!/usr/bin/expect -f
+#
+# This Expect script executes a boost test RTP on a VxWorks
+# target with telnet, based on a local filepath
+#
+# it is assumed rlogin is disabled and 
+# no login credentials are necessary
+#
+# Copyright 2016, Wind River Systems, Inc.
+#
+# Use, modification and distribution are subject to the
+# Boost Software License, Version 1.0.  (See accompanying file
+# LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+#  modification history
+#  --------------------
+#  31mar16,brk  written
+#
+
+set telnet_ip $::env(BOOST_TELNET_ADDR) 
+set src_dir $::env(LAYER_SRC_PATH)
+set ld_library_path $::env(VSB_LD_LIBRARY_PATH)
+
+set timeout 60
+
+proc disconnect { return } {
+	log_user 0
+	sleep 1
+
+	send -- "exit\r"
+	expect eof
+	puts "\r"
+	exit $return
+}
+
+#log_user 0
+spawn telnet $telnet_ip
+match_max 100000
+expect {
+	timeout {puts "Connection timed out\r"; exit 1}
+    "Connection refused" {puts "Connection refused\r"; exit 1}
+    -ex "->"
+	}
+send -- "cmd\r"
+sleep 0.1
+expect -exact "\[vxWorks *\]# "
+send -- "set env LD_LIBRARY_PATH=$ld_library_path\r"
+sleep 0.1
+expect -exact "\[vxWorks *\]# "
+log_user 1	
+
+send -- "cd $src_dir/status\r"
+sleep 0.1
+expect -exact "\[vxWorks *\]# "
+foreach arg $::argv { 
+	send -- "$arg "
+	}
+send -- "\r"
+sleep 3
+expect {
+       -exact "due to signal 6." {puts "\n\n SIGABRT\r";  disconnect 2 }
+       -exact "due to signal 11." {puts "\n\n SEGFAULT\r";  disconnect 2 }
+       -exact "and has been deleted." { disconnect 3 }
+       -exact "\[vxWorks *\]# "
+}
+log_user 0
+send -- "echo \$?\r"
+expect -re "(\\d+)" {
+	set result $expect_out(1,string)
+	}
+disconnect $result

@@ -1,0 +1,62 @@
+# Boost.Build Configuration
+#
+# Copyright 2016, Wind River Systems, Inc.
+#
+# Use, modification and distribution are subject to the
+# Boost Software License, Version 1.0.  (See accompanying file
+# LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+#  modification history
+#  --------------------
+#  31mar16,brk  written
+#
+
+import option ;
+import feature ;
+import os ;
+
+# composite feature to select all the cross compile options we need
+# as one feature, so the directory path is a reasonable length, 
+# primarily for windows host where path name length matter, and due to host
+# pollution the correct options are not automatically selected
+
+feature.feature cross-compile
+    : vxworks
+    : optional composite propagated 
+    ;
+
+feature.compose <cross-compile>vxworks 
+    : <threadapi>pthread <binary-format>elf <abi>sysv <threading>multi <target-os>vxworks
+    ;
+
+# source cross build environment
+
+cflags = [ os.environ CFLAGS ] ;
+cxxflags = [ os.environ CXXFLAGS ] ;
+compileflags = [ os.environ CPPFLAGS ] ;
+linkflags = [ os.environ LDFLAGS ] ;
+linkflags += [ os.environ LIBS ] ;
+dll-path = [ os.environ RPATH ] ;  
+cc = [ os.environ CC ] ;
+cpp = [ os.environ CPP ] ;
+cxx = [ os.environ CXX ] ;
+ar = [ os.environ AR ] ;
+as = [ os.environ AS ] ;
+#Note: we don't use LIBPATH, because gcc.link.dll puts it first on commandline and we need it after the PIC path in OPTIONS
+
+
+using gcc : : $(cxx) : <cflags>$(cflags) <cxxflags>$(cxxflags) <compileflags>$(compileflags) <linkflags>$(linkflags) <linker-type>vxworks <archiver>$(ar) <dll-path>$(dll-path)   ; 
+using diab : : $(cxx) : <cflags>$(cflags) <cxxflags>$(cxxflags) <compileflags>$(compileflags) <linkflags>$(linkflags) <linker-type>vxworks <archiver>$(ar) <dll-path>$(dll-path)  ; 
+#using intel : : $(cxx) : <cflags>$(cflags) <cxxflags>$(cxxflags) <compileflags>$(compileflags) <linkflags>$(linkflags) <linker-type>vxworks <archiver>$(ar) <dll-path>$(dll-path)  ; 
+    
+project : default-build <toolset>gcc ;
+
+# Python configuration
+import python ;
+if ! [ python.configured ]
+{
+    using python : 2.7 : /usr ;
+}
+
+# Stop on first error
+option.set keep-going : false ;

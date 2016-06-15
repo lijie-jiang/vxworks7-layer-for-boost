@@ -1,0 +1,12 @@
+diff -uNdr boost_1_59_0/libs/rational/test/rational_test.cpp vx7/workspace/VSB_Generic/usr/src/BOOST/boost_1_59_0/libs/rational/test/rational_test.cpp
+--- boost_1_59_0/libs/rational/test/rational_test.cpp	2015-01-29 06:06:21.000000000 -0800
++++ boost_1_59_0/libs/rational/test/rational_test.cpp	2016-03-06 02:15:23.479194011 -0800
+@@ -442,7 +442,7 @@
+ 
+ 
+ // Check if rational is the smallest size possible
+-BOOST_GLOBAL_FIXTURE( rational_size_check )
++BOOST_GLOBAL_FIXTURE( rational_size_check );
+ 
+ 
+ #if BOOST_CONTROL_RATIONAL_HAS_GCD

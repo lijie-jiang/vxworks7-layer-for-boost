@@ -1,0 +1,12 @@
+diff -uNdr boost_1_59_0\boost\xpressive/traits/detail/c_ctype.hpp ..\workspace\VSBsim32\usr\src\BOOST\boost_1_59_0\boost\xpressive/traits/detail/c_ctype.hpp
+--- boost_1_59_0/boost/xpressive/traits/detail/c_ctype.hpp	2014-07-06 19:55:45.000000000 -0700
++++ boost_1_59_0/boost/xpressive/traits/detail/c_ctype.hpp	2016-04-08 21:54:54.776735200 -0700
+@@ -95,7 +95,7 @@
+ struct char_class_impl;
+ 
+ 
+-#if defined(__QNXNTO__)
++#if defined(__QNXNTO__)  || defined (__VXWORKS__)
+ 
+ ///////////////////////////////////////////////////////////////////////////////
+ //

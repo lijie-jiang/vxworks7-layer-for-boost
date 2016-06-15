@@ -1,0 +1,12 @@
+
+diff -uNdr boost_1_59_0/boost/property_tree/detail/info_parser_read.hpp ../workspace/VSB64/usr/src/BOOST/boost_1_59_0/boost/property_tree/detail/info_parser_read.hpp
+--- boost_1_59_0/boost/property_tree/detail/info_parser_read.hpp	2015-07-07 12:20:48.000000000 +0000
++++ boost_1_59_0/boost/property_tree/detail/info_parser_read.hpp	2016-05-17 00:11:47.730229300 +0000
+@@ -65,6 +65,7 @@
+     template <class Ch>
+     bool is_ascii_space(Ch c)
+     {
++        using namespace std;	
+         // Everything outside ASCII is not space.
+         unsigned n = c;
+         if (n > 127)

@@ -1,0 +1,13 @@
+
+diff -uNdr boost_1_59_0/libs/lexical_cast/example/small_examples.cpp ../workspace/VSB64/usr/src/BOOST/boost_1_59_0/libs/lexical_cast/example/small_examples.cpp
+--- boost_1_59_0/libs/lexical_cast/example/small_examples.cpp	2015-04-27 18:10:48.000000000 +0000
++++ boost_1_59_0/libs/lexical_cast/example/small_examples.cpp	2016-05-16 23:36:23.048579200 +0000
+@@ -23,7 +23,7 @@
+ 
+ //[lexical_cast_fixed_buffer
+ //`The following example converts some number and puts it to file:
+-
++using namespace std;
+ void number_to_file(int number, FILE* file)
+ {
+     typedef boost::array<char, 50> buf_t; // You can use std::array if your compiler supports it

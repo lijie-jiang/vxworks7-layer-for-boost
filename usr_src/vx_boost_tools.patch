@@ -1,0 +1,408 @@
+diff -uNdr boost_1_59_0/tools/build/src/tools/builtin.jam vx7/workspace/VsbSim32/usr/src/BOOST/boost_1_59_0/tools/build/src/tools/builtin.jam
+--- boost_1_59_0/tools/build/src/tools/builtin.jam	2015-08-11 06:53:51.000000000 -0700
++++ boost_1_59_0/tools/build/src/tools/builtin.jam	2016-04-07 10:44:35.976853368 -0700
+@@ -41,7 +41,7 @@
+ 
+ 
+ .os-names = aix android bsd cygwin darwin freebsd haiku hpux iphone linux netbsd
+-    openbsd osf qnx qnxnto sgi solaris unix unixware windows
++    openbsd osf qnx qnxnto sgi solaris unix unixware windows vxworks
+     elf  # Not actually an OS -- used for targeting bare metal where object
+          # format is ELF.  This catches both -elf and -eabi gcc targets and well
+          # as other compilers targeting ELF. It is not clear how often we need
+diff -uNdr boost_1_59_0/tools/build/src/tools/diab.jam vx7/workspace/VsbSim32/usr/src/BOOST/boost_1_59_0/tools/build/src/tools/diab.jam
+--- boost_1_59_0/tools/build/src/tools/diab.jam	1969-12-31 16:00:00.000000000 -0800
++++ boost_1_59_0/tools/build/src/tools/diab.jam	2016-04-07 17:09:06.094148263 -0700
+@@ -0,0 +1,130 @@
++# Copyright 2015, Wind River Inc.
++# Distributed under the Boost Software License, Version 1.0.
++# (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
++
++#
++# Diab C++ Compiler
++#
++
++import feature generators common ;
++import toolset : flags ;
++import os ;
++
++feature.extend toolset : diab ;
++
++# Inherit from Unix toolset to get library ordering magic.
++toolset.inherit  diab : unix ;
++
++generators.override diab.prebuilt : builtin.lib-generator ;
++generators.override diab.prebuilt : builtin.prebuilt ;
++generators.override diab.searched-lib-generator : searched-lib-generator ;
++
++
++rule init ( version ? : command * : options * )
++{
++    local condition = [ common.check-init-parameters diab : version $(version) ] ;
++    
++    local command = [ common.get-invocation-command diab : dcc : $(command) ] ;
++    
++    if $(command)
++    {
++        local root = [ common.get-absolute-tool-path $(command[-1]) ] ;
++
++        if $(root)
++        {
++            flags diab .root $(condition) : "\"$(root)\"/" ;
++        }        
++    }      
++    # If we can't find 'CC' anyway, at least show 'CC' in the commands
++    command ?= CC ;
++        
++    common.handle-options diab : $(condition) : $(command) : $(options) ;               
++}
++
++generators.register-c-compiler diab.compile.c++ : CPP : OBJ : <toolset>diab ;
++generators.register-c-compiler diab.compile.c : C : OBJ : <toolset>diab ;
++
++
++# unlike most compliers, Diab defaults to static linking.
++# flags cxx LINKFLAGS <runtime-link>static :  ;
++flags diab.compile OPTIONS <debug-symbols>on : -g ;
++flags diab.link OPTIONS <debug-symbols>on : -g ;
++
++flags diab.compile OPTIONS <optimization>off :  ;
++flags diab.compile OPTIONS <optimization>speed : -speed ;
++flags diab.compile OPTIONS <optimization>space : -size ;
++
++# flags diab.compile OPTIONS <inlining>off  : -Xinline=0  ;
++# flags diab.compile OPTIONS <inlining>on   : -Xinline=10 ;
++# flags diab.compile OPTIONS <inlining>full : -Xinline=50 ;
++
++flags diab.compile OPTIONS <cflags> ;
++flags diab.compile.c++ OPTIONS <cxxflags> ;
++flags diab.compile DEFINES <define> ;
++
++flags diab.compile.c++ OPTIONS <exception-handling>off  : -Xno-exceptions   ;
++# So Dinkum STL knows when exceptions are disabled
++flags diab.compile DEFINES <exception-handling>off  : _NO_EX=1   ;
++flags diab.compile INCLUDES <include> ;
++flags diab.link OPTIONS <linkflags> ;
++
++flags diab.compile OPTIONS <link>shared : -Xpic ;
++#flags diab.compile OPTIONS <link>static : ;
++# get VxWorks link options from shell enviorment
++flags diab.link OPTIONS <link>static : [ os.environ LDFLAGS_STATIC ]  ;
++flags diab.link.dll OPTIONS          : [ os.environ LDFLAGS_SO ] ;
++flags diab.link OPTIONS <link>shared : [ os.environ LDFLAGS_DYNAMIC ] ;
++
++flags diab.link LOPTIONS <link>shared : -Xdynamic -Xshared -Xpic ;
++
++flags diab.link LIBPATH <library-path> ;
++flags diab.link LIBRARIES <library-file> ;
++flags diab.link FINDLIBS-ST <find-static-library> ;
++flags diab.link FINDLIBS-SA <find-shared-library> ;
++
++actions link bind LIBRARIES
++{
++    $(CONFIG_COMMAND) $(OPTIONS) $(LOPTIONS) -o "$(<)" -L$(LIBPATH) "$(>)" "$(LIBRARIES)" -l$(FINDLIBS-ST) -l$(FINDLIBS-SA)
++}
++
++# When creating dynamic libraries, we don't want to be warned about unresolved
++# symbols, therefore all unresolved symbols are marked as expected by
++# '-expect_unresolved *'. This also mirrors the behaviour of the GNU tool
++# chain.
++
++actions link.dll bind LIBRARIES
++{
++    $(.root:E=)dplus $(OPTIONS) $(LOPTIONS) "$(LIBRARIES)" \
++    	-o "$(<[1])" -L$(LIBPATH)  "$(>)" -l$(FINDLIBS-ST) -l$(FINDLIBS-SA) 
++}
++
++#rule compile.asm ( targets * : sources * : properties * )
++#{
++#    setup-fpic $(targets) : $(sources) : $(properties) ;
++#    setup-address-model $(targets) : $(sources) : $(properties) ;
++#}
++
++actions compile.asm
++{
++    "$(CONFIG_COMMAND)" $(LANG) $(OPTIONS) -D$(DEFINES) -I"$(INCLUDES)" -c -o "$(<)" "$(>)"
++}
++
++
++
++actions compile.c
++{
++    $(.root:E=)dcc -c $(OPTIONS) -D$(DEFINES) -I"$(INCLUDES)" -o "$(<)" "$(>)"
++}
++
++actions compile.c++
++{
++    $(.root:E=)dplus -c $(OPTIONS) -D$(DEFINES) -I"$(INCLUDES)" -o "$(<)" "$(>)"
++}
++
++# Always create archive from scratch. See the gcc toolet for rationale.
++RM = [ common.rm-command ] ;
++actions together piecemeal archive
++{
++  $(RM) "$(<)"
++  dar rc $(<) $(>)
++}
+diff -uNdr boost_1_59_0/tools/build/src/tools/gcc.jam vx7/workspace/VsbSim32/usr/src/BOOST/boost_1_59_0/tools/build/src/tools/gcc.jam
+--- boost_1_59_0/tools/build/src/tools/gcc.jam	2015-08-11 06:53:51.000000000 -0700
++++ boost_1_59_0/tools/build/src/tools/gcc.jam	2016-04-07 16:41:10.886476121 -0700
+@@ -387,6 +387,8 @@
+ 
+ toolset.flags gcc.compile.c++ OPTIONS <rtti>off : -fno-rtti ;
+ toolset.flags gcc.compile.c++ OPTIONS <exception-handling>off : -fno-exceptions ;
++# tell Dinkum STL exceptions are off
++toolset.flags gcc.compile.c++ DEFINES <exception-handling>off/<target-os>vxworks : _NO_EX=1 ;
+ 
+ rule setup-fpic ( targets * : sources * : properties * )
+ {
+@@ -415,7 +417,7 @@
+ 
+         # On Windows, fPIC is the default, and specifying -fPIC explicitly leads
+         # to a warning.
+-        if ! $(target) in cygwin windows
++        if ! $(target) in cygwin windows 
+         {
+             OPTIONS on $(targets) += -fPIC ;
+         }
+@@ -814,6 +816,14 @@
+         toolset.flags $(toolset).link RPATH_LINK $(condition) : <xdll-path> :
+             unchecked ;
+ 
++	case vxworks :
++		# On VxWorks we want to reflect what ever special flags have been set in the 
++		# enviorment for the CPU we are targeting in the cross build
++        toolset.flags $(toolset).link OPTIONS     $(condition)/<strip>on    : -Wl,--strip-all                : unchecked ;
++        toolset.flags $(toolset).link OPTIONS     $(condition)/<link>static : [ os.environ LDFLAGS_STATIC ]  : unchecked ;
++ 		toolset.flags $(toolset).link.dll  OPTIONS  $(condition)            : [ os.environ LDFLAGS_SO ]      : unchecked ;          
++        toolset.flags $(toolset).link OPTIONS     $(condition)/<link>shared : [ os.environ LDFLAGS_DYNAMIC ] : unchecked ;
++  
+     case gnu :
+         # Strip the binary when no debugging is needed. We use --strip-all flag
+         # as opposed to -s since icc (intel's compiler) is generally
+@@ -1041,6 +1051,7 @@
+             case *bsd    : option = -pthread ;  # There is no -lrt on BSD.
+             case sgi     : # gcc on IRIX does not support multi-threading.
+             case darwin  : # No threading options.
++            case vxworks : # No threading options.  
+             case *       : option = -pthread ; libs = rt ;
+         }
+ 
+diff -uNdr boost_1_59_0/tools/build/src/tools/intel.jam vx7/workspace/VsbSim32/usr/src/BOOST/boost_1_59_0/tools/build/src/tools/intel.jam
+--- boost_1_59_0/tools/build/src/tools/intel.jam	2015-08-11 06:53:51.000000000 -0700
++++ boost_1_59_0/tools/build/src/tools/intel.jam	2016-04-07 10:44:35.976853368 -0700
+@@ -16,7 +16,12 @@
+ 
+ rule init ( * : * )
+ {
+-    if [ os.name ] = LINUX
++    if [ $(property-set).get <target-os> ] in vxworks
++    {
++        toolset.using intel-vxworks : 
++          $(1) : $(2) : $(3) : $(4) : $(5) : $(6) : $(7) : $(8) : $(9) ;
++    }
++    else if [ os.name ] = LINUX
+     {
+         toolset.using intel-linux : 
+           $(1) : $(2) : $(3) : $(4) : $(5) : $(6) : $(7) : $(8) : $(9) ;
+diff -uNdr boost_1_59_0/tools/build/src/tools/intel-vxworks.jam vx7/workspace/VsbSim32/usr/src/BOOST/boost_1_59_0/tools/build/src/tools/intel-vxworks.jam
+--- boost_1_59_0/tools/build/src/tools/intel-vxworks.jam	1969-12-31 16:00:00.000000000 -0800
++++ boost_1_59_0/tools/build/src/tools/intel-vxworks.jam	2016-04-07 10:44:35.977853336 -0700
+@@ -0,0 +1,197 @@
++# # Copyright Wind River 2015.
++# Distributed under the Boost Software License, Version 1.0.
++# (See accompanying file LICENSE_1_0.txt
++# or copy at http://www.boost.org/LICENSE_1_0.txt)
++
++import intel ;
++import feature : feature ;
++import os ;
++import toolset ;
++import toolset : flags ;
++import gcc ;
++import common ;
++import errors ;
++import generators ;
++
++feature.extend-subfeature toolset intel : platform : vxworks ;
++
++toolset.inherit-generators intel-vxworks 
++  <toolset>intel <toolset-intel:platform>vxworks 
++  : gcc 
++  # Don't inherit PCH generators. They were not tested, and probably
++  # don't work for this compiler.
++  : gcc.mingw.link gcc.mingw.link.dll gcc.compile.c.pch gcc.compile.c++.pch
++  ;
++
++generators.override intel-vxworks.prebuilt : builtin.lib-generator ;
++generators.override intel-vxworks.prebuilt : builtin.prebuilt ;
++generators.override intel-vxworks.searched-lib-generator : searched-lib-generator ;
++
++toolset.inherit-rules intel-vxworks : gcc ;
++toolset.inherit-flags intel-vxworks : gcc 
++        : <inlining>off <inlining>on <inlining>full <optimization>space 
++          <warnings>off <warnings>all <warnings>on
++          <architecture>x86/<address-model>32
++          <architecture>x86/<address-model>64
++        ;
++        
++if [ MATCH (--debug-configuration) : [ modules.peek : ARGV ] ]
++{
++    .debug-configuration = true ;
++}
++                       
++# vectorization diagnostics
++feature vectorize : off on full ;
++
++# Initializes the intel-vxworks toolset
++#   version in mandatory
++#   name (default icc) is used to invoke the specified intel complier
++#   compile and link options allow you to specify addition command line options for each version
++rule init ( version ? :  command * : options * )
++{
++    local condition = [ common.check-init-parameters intel-vxworks
++        : version $(version) ] ;
++    
++    command = [ common.get-invocation-command intel-vxworks : icc 
++        : $(command) : /opt/intel_cc_80/bin ] ;
++
++    common.handle-options intel-vxworks : $(condition) : $(command) : $(options) ;
++
++    gcc.init-link-flags intel-vxworks vxworks $(condition) ;
++
++    # handle <library-path>
++    # local library-path = [ feature.get-values <library-path> : $(options) ] ;
++    # flags intel-vxworks.link USER_OPTIONS $(condition) : [ feature.get-values <dll-path> : $(options) ] ;
++
++    local root = [ feature.get-values <root> : $(options) ] ;
++    local bin ;
++    if $(command) || $(root)
++    {
++        bin ?= [ common.get-absolute-tool-path $(command[-1]) ] ;
++        root ?= $(bin:D) ;
++    
++        if $(root)
++        {
++            # Libraries required to run the executable may be in either
++            # $(root)/lib (10.1 and earlier) 
++            #     or 
++            # $(root)/lib/architecture-name (11.0 and later:
++            local lib_path = $(root)/lib $(root:P)/lib/$(bin:B) ;
++            if $(.debug-configuration)
++            {
++                ECHO notice: using intel libraries :: $(condition) :: $(lib_path) ;
++            }
++            flags intel-vxworks.link RUN_PATH $(condition) : $(lib_path) ;
++        }   
++    }
++
++    local m = [ MATCH (..).* : $(version) ] ;
++    local n = [ MATCH (.)\\. : $(m) ] ;
++    if $(n) {
++      m = $(n) ;
++    }
++
++    local major = $(m) ;
++    
++   
++      flags intel-vxworks.compile OPTIONS $(condition)/<inlining>off : -inline-level=0 ;
++      flags intel-vxworks.compile OPTIONS $(condition)/<inlining>on : -inline-level=1  ;
++      flags intel-vxworks.compile OPTIONS $(condition)/<inlining>full : -inline-level=2  ;
++      flags intel-vxworks.compile OPTIONS $(condition)/<vectorize>off : -vec-report0 ;
++      flags intel-vxworks.compile OPTIONS $(condition)/<vectorize>on : -vec-report1 ;
++      flags intel-vxworks.compile OPTIONS $(condition)/<vectorize>full : -vec-report5 ;
++      flags intel-vxworks.link OPTIONS $(condition)/<runtime-link>static : -static -static-intel ;
++      flags intel-vxworks.link OPTIONS $(condition)/<runtime-link>shared : -shared-intel ;
++   
++    local minor = [ MATCH ".*\\.(.).*" : $(version) ] ;
++
++    }
++}
++
++SPACE = " " ;
++
++flags intel-vxworks.compile OPTIONS <cflags> ;
++flags intel-vxworks.compile.c++ OPTIONS <cxxflags> ;
++flags intel-vxworks.compile INCLUDES <include> ;
++
++flags intel-vxworks.compile OPTIONS <optimization>space : -O1 ; # no specific space optimization flag in icc
++
++# 
++.cpu-type-em64t    = prescott nocona core2 corei7 corei7-avx core-avx-i
++                     conroe conroe-xe conroe-l allendale merom
++                     merom-xe kentsfield kentsfield-xe penryn wolfdale
++                     yorksfield nehalem sandy-bridge ivy-bridge haswell ;
++.cpu-type-amd64    = k8 opteron athlon64 athlon-fx k8-sse3 opteron-sse3
++                     athlon64-sse3 amdfam10 barcelona bdver1 bdver2 bdver3 btver1 btver2 ;
++.cpu-type-x86-64   = $(.cpu-type-em64t) $(.cpu-type-amd64) ;
++
++#flags intel-vxworks.compile OPTIONS <instruction-set>$(.cpu-type-x86-64)/<address-model>32 : -m32 ; # -mcmodel=small ;
++#flags intel-vxworks.compile OPTIONS <instruction-set>$(.cpu-type-x86-64)/<address-model>64 : -m64 ; # -mcmodel=large ;
++
++flags intel-vxworks.compile.c OPTIONS <warnings>off : -w0 ;
++flags intel-vxworks.compile.c OPTIONS <warnings>on : -w1 ;
++flags intel-vxworks.compile.c OPTIONS <warnings>all : -w2 ;
++
++flags intel-vxworks.compile.c++ OPTIONS <warnings>off : -w0 ;
++flags intel-vxworks.compile.c++ OPTIONS <warnings>on : -w1 ;
++flags intel-vxworks.compile.c++ OPTIONS <warnings>all : -w2 ;
++
++actions compile.c
++{
++    "$(CONFIG_COMMAND)" -xc $(OPTIONS) -D$(DEFINES) -I"$(INCLUDES)" -c -o "$(<)" "$(>)"
++}
++
++actions compile.c++
++{
++    "$(CONFIG_COMMAND)" -xc++ $(OPTIONS) -D$(DEFINES) -I"$(INCLUDES)" -c -o "$(<)" "$(>)"
++}
++
++flags intel-vxworks ARFLAGS <archiveflags> ;
++
++# Default value. Mostly for the sake of intel-linux
++# that inherits from gcc, but does not has the same
++# logic to set the .AR variable. We can put the same
++# logic in intel-linux, but that's hardly worth the trouble
++# as on Linux, 'ar' is always available.
++.AR = ar ;
++
++rule archive ( targets * : sources * : properties * )
++{
++  # Always remove archive and start again. 
++  # of the archive.
++  #
++  local clean.a = $(targets[1])(clean) ;
++  TEMPORARY $(clean.a) ;
++  NOCARE $(clean.a) ;
++  LOCATE on $(clean.a) = [ on $(targets[1]) return $(LOCATE) ] ;
++  DEPENDS $(clean.a) : $(sources) ;
++  DEPENDS $(targets) : $(clean.a) ;
++  common.RmTemps $(clean.a) : $(targets) ;
++}
++
++actions piecemeal archive
++{
++  "$(.AR)" $(AROPTIONS) rc "$(<)" "$(>)"
++  "ranlib" -cs "$(<)"
++}
++
++flags intel-vxworks.link USER_OPTIONS <linkflags> ;
++
++# Declare actions for linking
++rule link ( targets * : sources * : properties * )
++{
++  SPACE on $(targets) = " " ;
++  # Serialize execution of the 'link' action, since
++  # running N links in parallel is just slower.
++  JAM_SEMAPHORE on $(targets) = <s>intel-vxworks-link-semaphore ;
++}
++
++actions link bind LIBRARIES
++{
++    "$(CONFIG_COMMAND)" $(USER_OPTIONS) -L"$(LINKPATH)" -o "$(<)" "$(>)" "$(LIBRARIES)" -l$(FINDLIBS-SA) -l$(FINDLIBS-ST) $(OPTIONS)
++}
++
++actions link.dll bind LIBRARIES
++{
++    "$(CONFIG_COMMAND)" $(USER_OPTIONS) -L"$(LINKPATH)" -o "$(<)" -single_module -dynamiclib -install_name "$(<[1]:D=)" "$(>)"  "$(LIBRARIES)" -l$(FINDLIBS-SA) -l$(FINDLIBS-ST) $(OPTIONS)
++}

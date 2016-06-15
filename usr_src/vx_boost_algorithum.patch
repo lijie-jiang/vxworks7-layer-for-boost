@@ -1,0 +1,39 @@
+diff -uNdr boost_1_59_0/boost/algorithm/algorithm.hpp vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/boost/algorithm/algorithm.hpp
+--- boost_1_59_0/boost/algorithm/algorithm.hpp	2015-03-18 21:31:53.000000000 -0700
++++ boost_1_59_0/boost/algorithm/algorithm.hpp	2016-03-09 15:33:57.011454212 -0800
+@@ -17,6 +17,7 @@
+ #ifndef BOOST_ALGORITHM_HPP
+ #define BOOST_ALGORITHM_HPP
+ 
++#include <functional>
+ #include <boost/utility/enable_if.hpp> // for boost::disable_if
+ #include <boost/type_traits/is_integral.hpp>
+ 
+diff -uNdr boost_1_59_0/boost/algorithm/hex.hpp vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/boost/algorithm/hex.hpp
+--- boost_1_59_0/boost/algorithm/hex.hpp	2015-03-18 21:31:53.000000000 -0700
++++ boost_1_59_0/boost/algorithm/hex.hpp	2016-03-11 21:50:08.167692249 -0800
+@@ -45,9 +45,21 @@
+     \brief  Thrown when the input sequence unexpectedly ends
+     
+ */
+-struct hex_decode_error : virtual boost::exception, virtual std::exception {};
+-struct not_enough_input : virtual hex_decode_error {};
+-struct non_hex_input    : virtual hex_decode_error {};
++struct hex_decode_error : virtual boost::exception, virtual std::exception {
++#if  defined(__VXWORKS__) && (__GNUC__ == 4 && __GNUC_MINOR__ < 9)  
++      ~hex_decode_error() throw() {};
++#endif    
++};
++struct not_enough_input : virtual hex_decode_error {
++#if  defined(__VXWORKS__) && (__GNUC__ == 4 && __GNUC_MINOR__ < 9)  
++      ~not_enough_input() throw() {};
++#endif    
++};      
++struct non_hex_input    : virtual hex_decode_error {
++#if  defined(__VXWORKS__) && (__GNUC__ == 4 && __GNUC_MINOR__ < 9)  
++      ~non_hex_input() throw() {};
++#endif 
++};      
+ typedef boost::error_info<struct bad_char_,char> bad_char;
+ 
+ namespace detail {

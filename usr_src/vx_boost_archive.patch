@@ -1,0 +1,13 @@
+diff -uNdr boost_1_59_0/boost/archive/xml_archive_exception.hpp vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/boost/archive/xml_archive_exception.hpp
+--- boost_1_59_0/boost/archive/xml_archive_exception.hpp	2015-05-23 11:51:06.000000000 -0700
++++ boost_1_59_0/boost/archive/xml_archive_exception.hpp	2016-03-11 21:50:10.272624097 -0800
+@@ -45,6 +45,9 @@
+         const char * e1 = NULL,
+         const char * e2 = NULL
+     );
++#if  defined(__VXWORKS__) && (__GNUC__ == 4 && __GNUC_MINOR__ < 9)  
++    virtual BOOST_ARCHIVE_DECL ~xml_archive_exception() BOOST_NOEXCEPT_OR_NOTHROW ;
++#endif    
+ };
+ 
+ }// namespace archive

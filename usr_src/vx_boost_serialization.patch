@@ -1,0 +1,14 @@
+diff -uNdr boost_1_59_0/libs/serialization/src/xml_archive_exception.cpp vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/libs/serialization/src/xml_archive_exception.cpp
+--- boost_1_59_0/libs/serialization/src/xml_archive_exception.cpp	2015-05-23 11:51:06.000000000 -0700
++++ boost_1_59_0/libs/serialization/src/xml_archive_exception.cpp	2016-03-11 21:50:26.698092290 -0800
+@@ -51,6 +51,10 @@
+             break;
+         }
+     }
++#if  defined(__VXWORKS__) && (__GNUC__ == 4 && __GNUC_MINOR__ < 9)  
++BOOST_ARCHIVE_DECL
++        xml_archive_exception::~xml_archive_exception()  BOOST_NOEXCEPT_OR_NOTHROW  {}
++#endif
+ 
+ } // archive
+ } // boost

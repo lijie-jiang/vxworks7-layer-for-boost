@@ -1,0 +1,33 @@
+
+diff -uNdr boost_1_59_0/libs/config/test/Jamfile.v2 vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/libs/config/test/Jamfile.v2
+--- boost_1_59_0/libs/config/test/Jamfile.v2	2015-08-04 04:44:49.000000000 -0700
++++ boost_1_59_0/libs/config/test/Jamfile.v2	2016-02-22 22:09:32.968419479 -0800
+@@ -67,6 +67,7 @@
+           : #input-files
+           : #requirements
+           <exception-handling>off
++          <target-os>vxworks:<build>no      # vx requires complete library rebuild to turn off exceptions
+           [ check-target-builds has_atomic_lib : <source>atomic ]
+           [ check-target-builds has_pthread_lib : <source>pthread ]
+           [ check-target-builds has_rt_lib : <source>rt ]
+@@ -75,7 +76,9 @@
+      [ run config_info.cpp : : : <test-info>always_show_run_output <threading>single <toolset>msvc:<runtime-link>static <toolset>msvc:<link>static ]
+      [ run config_info.cpp : : : <test-info>always_show_run_output <threading>multi : config_info_threaded ]
+      [ run config_info.cpp : : : <test-info>always_show_run_output <rtti>off : config_info_no_rtti ]
+-     [ run config_info.cpp : : : <test-info>always_show_run_output <exception-handling>off : config_info_no_except ]
++     [ run config_info.cpp : : : <test-info>always_show_run_output <exception-handling>off 
++     		<target-os>vxworks:<build>no      
++     		: config_info_no_except ]
+      [ run math_info.cpp : : : <test-info>always_show_run_output <toolset>borland:<runtime-link>static <toolset>borland:<link>static ]
+      [ run abi/abi_test.cpp abi/main.cpp ]
+      [ run limits_test.cpp ../../test/build//boost_test_exec_monitor ]
+@@ -86,6 +89,7 @@
+           <runtime-link>shared
+           <define>BOOST_DYN_LINK=1
+           <define>BOOST_CONFIG_NO_LIB=1
++          <target-os>vxworks:<link>shared  
+           :
+           config_link_test
+     ]
+ 
+

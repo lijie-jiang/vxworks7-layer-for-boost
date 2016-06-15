@@ -1,0 +1,13 @@
+
+diff -uNdr boost_1_59_0/libs/spirit/classic/test/scanner_tests.cpp ../workspace/VSB64/usr/src/BOOST/boost_1_59_0/libs/spirit/classic/test/scanner_tests.cpp
+--- boost_1_59_0/libs/spirit/classic/test/scanner_tests.cpp	2015-07-14 22:38:56.000000000 +0000
++++ boost_1_59_0/libs/spirit/classic/test/scanner_tests.cpp	2016-05-17 04:52:40.505904400 +0000
+@@ -23,7 +23,7 @@
+ struct to_upper_iter_policy : public iteration_policy {
+ 
+     char filter(char ch) const
+-    { return char(toupper(ch)); }
++    { using namespace std; return char(toupper(ch)); }
+ };
+ 
+ inline bool test_isspace(char c)

@@ -1,0 +1,15 @@
+diff -uNdr boost_1_59_0/libs/function_types/test/Jamfile vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/libs/function_types/test/Jamfile
+Custom call tests don't compile with GNU 
+--- boost_1_59_0/libs/function_types/test/Jamfile	2015-07-18 17:29:36.000000000 -0700
++++ boost_1_59_0/libs/function_types/test/Jamfile	2016-02-14 00:58:43.682982212 -0800
+@@ -66,8 +66,8 @@
+ 
+     [ compile custom_ccs/nonmember_ccs.cpp ]
+     [ compile custom_ccs/nonmember_ccs_exact.cpp ]
+-    [ compile custom_ccs/member_ccs.cpp ]
+-    [ compile custom_ccs/member_ccs_exact.cpp ]
++    #[ compile custom_ccs/member_ccs.cpp ]
++    #[ compile custom_ccs/member_ccs_exact.cpp ]
+ 
+     # Code from the examples
+ 

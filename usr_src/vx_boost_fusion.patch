@@ -1,0 +1,12 @@
+
+diff -uNdr boost_1_59_0/boost/fusion/sequence/io/detail/manip.hpp ../workspace/VSB64/usr/src/BOOST/boost_1_59_0/boost/fusion/sequence/io/detail/manip.hpp
+--- boost_1_59_0/boost/fusion/sequence/io/detail/manip.hpp	2015-08-04 00:14:48.000000000 +0000
++++ boost_1_59_0/boost/fusion/sequence/io/detail/manip.hpp	2016-05-16 23:30:49.149302000 +0000
+@@ -132,6 +132,7 @@
+             void
+             check_delim(Char c) const
+             {
++                using namespace std; // isspace() may be in std
+                 if (!isspace(c))
+                 {
+                     if (stream.get() != c)

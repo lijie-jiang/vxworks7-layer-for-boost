@@ -1,0 +1,47 @@
+diff -uNdr boost_1_59_0/libs/program_options/src/parsers.cpp vx7/workspace/VSB_Generic/usr/src/BOOST/boost_1_59_0/libs/program_options/src/parsers.cpp
+--- boost_1_59_0/libs/program_options/src/parsers.cpp	2015-06-08 23:54:19.000000000 -0700
++++ boost_1_59_0/libs/program_options/src/parsers.cpp	2016-03-06 13:33:18.355919072 -0800
+@@ -54,11 +54,15 @@
+ #if defined(__MWERKS__)
+ #include <crtl.h>
+ #else
+-#if !defined(_WIN32) || defined(__COMO_VERSION__)
++#if defined(__VXWORKS__)
++extern const char** environ;
++#else
++#if !defined(_WIN32) || defined(__COMO_VERSION__) 
+ extern char** environ;
+ #endif
+ #endif
+ #endif
++#endif
+ 
+ using namespace std;
+ 
+@@ -190,8 +194,11 @@
+                       const function1<std::string, std::string>& name_mapper)
+     {
+         parsed_options result(&desc);
+-        
++#ifdef __VXWORKS__        
++        for(environment_iterator i((char**)environ), e; i != e; ++i) {
++#else
+         for(environment_iterator i(environ), e; i != e; ++i) {
++#endif        	
+             string option_name = name_mapper(i->first);
+ 
+             if (!option_name.empty()) {
+diff -uNdr boost_1_59_0/libs/program_options/test/Jamfile.v2 vx7/workspace/VSB_Generic/usr/src/BOOST/boost_1_59_0/libs/program_options/test/Jamfile.v2
+--- boost_1_59_0/libs/program_options/test/Jamfile.v2	2015-06-08 23:54:19.000000000 -0700
++++ boost_1_59_0/libs/program_options/test/Jamfile.v2	2016-03-07 08:27:28.117686203 -0800
+@@ -33,7 +33,9 @@
+     [ po-test unrecognized_test.cpp ]
+     [ po-test required_test.cpp : required_test.cfg ]
+     [ po-test exception_txt_test.cpp ]
+-    [ run options_description_test.cpp : : : <rtti>off <define>BOOST_NO_RTTI <define>BOOST_NO_TYPEID : options_description_no_rtti_test ]
++    [ run options_description_test.cpp : : : <rtti>off <define>BOOST_NO_RTTI <define>BOOST_NO_TYPEID
++    	<target-os>vxworks:<build>no  #Dinkum STL only has no-rtti for EC++; which does not include <functional> 
++    	: options_description_no_rtti_test ]
+     ;
+         
+ exe test_convert : test_convert.cpp ;   

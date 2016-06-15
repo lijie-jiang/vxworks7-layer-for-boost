@@ -1,0 +1,14 @@
+An optimization selected based on Dinkum version does not apply to VxWorks
+diff -uNdr boost_orig/iostreams/detail/config/fpos.hpp boost/iostreams/detail/config/fpos.hpp
+--- boost_1_57_0/boost/iostreams/detail/config/fpos.hpp	Mon Mar 31 12:56:02 2014
++++ boost_1_57_0/boost/iostreams/detail/config/fpos.hpp	Mon Dec  1 16:37:39 2014
+@@ -23,7 +23,7 @@
+ #endif
+ 
+ # if (defined(_YVALS) || defined(_CPPLIB_VER)) && !defined(__SGI_STL_PORT) && \
+-     !defined(_STLPORT_VERSION) && !defined(__QNX__)
++     !defined(_STLPORT_VERSION) && !defined(__QNX__) && !defined(__VXWORKS__)
+      /**/
+ #  define BOOST_IOSTREAMS_HAS_DINKUMWARE_FPOS
+ # endif
+
