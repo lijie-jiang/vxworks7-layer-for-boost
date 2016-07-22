@@ -1,4 +1,4 @@
-### VxWorks&reg; 7 recipe layer for Boost
+### VxWorks&reg; 7 Recipe Layer for Boost
 
 This repository will contain a VxWorks&reg;  7 Source Build (VSB) layer later this year. 
 When complete, you will be able to add this layer to your VxWorks install and
