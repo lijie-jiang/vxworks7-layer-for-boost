@@ -1,7 +1,7 @@
 ### VxWorks&reg; 7 Recipe Layer for Boost
 
 This repository will contain a VxWorks&reg;  7 Source Build (VSB) layer later this year. 
-When complete, you will be able to add this layer to your VxWorks install and
+When complete, you will be able to add this layer to your VxWorks install 
 to build and verify boost as part of of you board's VSB project.  
 
 Currently this repository contains a collection of patches to adapt Boost to VxWorks.
@@ -26,4 +26,4 @@ Install the Wind River&reg; VxWorks&reg; 7 operating system
 
 ### Legal Notices
 
-Disclaimer of Warranty / No Support: Wind River does not provide support and maintenance services for this software, under Wind River‚Äôs standard Software Support and Maintenance Agreement or otherwise. Unless required by applicable law, Wind River provides the software (and each contributor provides its contribution) on an ‚ÄúAS IS‚Äù BASIS, WITHOUT WARRANTIES OF ANY KIND, either express or implied, including, without limitation, any warranties of TITLE, NONINFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible for determining the appropriateness of using or redistributing the software and assume any risks associated with your exercise of permissions under the license.
+Disclaimer of Warranty / No Support: Wind River does not provide support and maintenance services for this software, under Wind Riverís standard Software Support and Maintenance Agreement or otherwise. Unless required by applicable law, Wind River provides the software (and each contributor provides its contribution) on an ìAS ISî BASIS, WITHOUT WARRANTIES OF ANY KIND, either express or implied, including, without limitation, any warranties of TITLE, NONINFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible for determining the appropriateness of using or redistributing the software and assume any risks associated with your exercise of permissions under the license.
