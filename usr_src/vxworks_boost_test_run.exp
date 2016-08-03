@@ -1,4 +1,19 @@
-#!/usr/bin/expect -f
+#!/bin/sh
+# each line ends with "\" to keep the TCL interpreter from executing it \
+if [ ! -z "$WIND_BASE" ]; then \
+    TCL_LIBRARY=$WIND_BASE/host/tcl/tcl; \
+    export TCL_LIBRARY; \
+fi; \
+if [ "$WIND_HOST_TYPE" = "x86-win32" ]; then \
+    exec tclsh "$0" ${1+"$@"}; \
+else \
+    exec expect -- "$0" ${1+"$@"}; \
+fi
+
+if {([info command expect] == "") && ($env(WIND_HOST_TYPE) == "x86-win32")} {
+    package require Expect
+}
+### #/usr/bin/expect -f
 #
 # This Expect script executes a boost test RTP on a VxWorks
 # target with telnet, based on a local filepath

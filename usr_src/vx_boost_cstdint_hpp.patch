@@ -1,0 +1,11 @@
+--- boost_1_59_0/boost/cstdint.hpp	2015-08-04 04:44:49.000000000 -0700
++++ boost_1_59_0/boost/cstdint.hpp	2016-06-19 21:50:48.431049730 -0700
+@@ -372,7 +372,7 @@
+ 
+ #if (defined(BOOST_WINDOWS) && !defined(_WIN32_WCE)) \
+     || (defined(_XOPEN_UNIX) && (_XOPEN_UNIX+0 > 0) && !defined(__UCLIBC__)) \
+-    || defined(__CYGWIN__) \
++    || defined(__CYGWIN__) || defined(__VXWORKS__) \
+     || defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__) \
+     || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(sun)
+ 

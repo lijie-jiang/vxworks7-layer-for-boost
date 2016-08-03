@@ -1,7 +1,6 @@
-
-diff -uNdr boost_1_59_0/boost/config/compiler/diab.hpp ../workspace/VSB64/usr/src/BOOST/boost_1_59_0/boost/config/compiler/diab.hpp
+diff -uNdr boost_1_59_0/boost/config/compiler/diab.hpp ../../vx7/workspace/Vsb64/3pp/BOOST/boost_1_59_0/boost/config/compiler/diab.hpp
 --- boost_1_59_0/boost/config/compiler/diab.hpp	1970-01-01 00:00:00.000000000 +0000
-+++ boost_1_59_0/boost/config/compiler/diab.hpp	2016-05-17 06:10:30.480206400 +0000
++++ boost_1_59_0/boost/config/compiler/diab.hpp	2016-06-10 23:46:49.669404900 +0000
 @@ -0,0 +1,27 @@
 +//
 +// 
@@ -30,9 +29,9 @@ diff -uNdr boost_1_59_0/boost/config/compiler/diab.hpp ../workspace/VSB64/usr/sr
 +/* #define BOOST_NO_CXX11_VARIADIC_MACROS */
 +
 +#define BOOST_COMPILER "Wind River Diab " BOOST_STRINGIZE(__VERSION_NUMBER__)
-diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../workspace/VSB64/usr/src/BOOST/boost_1_59_0/boost/config/platform/vxworks.hpp
---- boost_1_59_0/boost/config/platform/vxworks.hpp	2015-08-04 11:44:49.000000000 +0000
-+++ boost_1_59_0/boost/config/platform/vxworks.hpp	2016-05-17 15:50:55.625433000 +0000
+diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../../vx7/workspace/Vsb64/3pp/BOOST/boost_1_59_0/boost/config/platform/vxworks.hpp
+--- boost_1_59_0/boost/config/platform/vxworks.hpp	2015-08-04 04:44:50.000000000 +0000
++++ boost_1_59_0/boost/config/platform/vxworks.hpp	2016-06-12 22:06:49.455931100 +0000
 @@ -1,30 +1,29 @@
  //  (C) Copyright Dustin Spicuzza 2009.
  //      Adapted to vxWorks 6.9 by Peter Brockamp 2012.
@@ -327,7 +326,7 @@ diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../workspace/VSB64/usr
  #ifndef S_ISSOCK
  #  define S_ISSOCK(mode) ((mode & S_IFMT) == S_IFSOCK) // Is file a socket?
  #endif
-@@ -360,10 +347,50 @@
+@@ -360,10 +347,52 @@
  #if !defined(BUS_ADRALN) && defined(BUS_ADRALNR)
  #  define BUS_ADRALN     BUS_ADRALNR                   // Correct a supposed typo in vxWorks' <signal.h>
  #endif
@@ -378,10 +377,12 @@ diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../workspace/VSB64/usr
 +
 +// NONE is used in enums in lamda and other libraries
 +#undef NONE
++// restrict is an iostreams class
++#undef restrict
 +
-diff -uNdr boost_1_59_0/boost/config/select_compiler_config.hpp ../workspace/VSB64/usr/src/BOOST/boost_1_59_0/boost/config/select_compiler_config.hpp
---- boost_1_59_0/boost/config/select_compiler_config.hpp	2015-08-04 11:44:49.000000000 +0000
-+++ boost_1_59_0/boost/config/select_compiler_config.hpp	2016-05-17 06:10:30.511458200 +0000
+diff -uNdr boost_1_59_0/boost/config/select_compiler_config.hpp ../../vx7/workspace/Vsb64/3pp/BOOST/boost_1_59_0/boost/config/select_compiler_config.hpp
+--- boost_1_59_0/boost/config/select_compiler_config.hpp	2015-08-04 04:44:50.000000000 +0000
++++ boost_1_59_0/boost/config/select_compiler_config.hpp	2016-06-10 23:46:49.700655100 +0000
 @@ -48,6 +48,10 @@
  //  Digital Mars C++
  #   define BOOST_COMPILER_CONFIG "boost/config/compiler/digitalmars.hpp"
@@ -393,9 +394,9 @@ diff -uNdr boost_1_59_0/boost/config/select_compiler_config.hpp ../workspace/VSB
  # elif defined(__GNUC__) && !defined(__ibmxl__)
  //  GNU C++:
  #   define BOOST_COMPILER_CONFIG "boost/config/compiler/gcc.hpp"
-diff -uNdr boost_1_59_0/boost/config/stdlib/dinkumware.hpp ../workspace/VSB64/usr/src/BOOST/boost_1_59_0/boost/config/stdlib/dinkumware.hpp
---- boost_1_59_0/boost/config/stdlib/dinkumware.hpp	2015-08-04 11:44:49.000000000 +0000
-+++ boost_1_59_0/boost/config/stdlib/dinkumware.hpp	2016-05-17 06:10:30.527081900 +0000
+diff -uNdr boost_1_59_0/boost/config/stdlib/dinkumware.hpp ../../vx7/workspace/Vsb64/3pp/BOOST/boost_1_59_0/boost/config/stdlib/dinkumware.hpp
+--- boost_1_59_0/boost/config/stdlib/dinkumware.hpp	2015-08-04 04:44:50.000000000 +0000
++++ boost_1_59_0/boost/config/stdlib/dinkumware.hpp	2016-06-10 23:46:49.716280400 +0000
 @@ -96,7 +96,8 @@
  #include <exception>
  #endif
@@ -406,9 +407,9 @@ diff -uNdr boost_1_59_0/boost/config/stdlib/dinkumware.hpp ../workspace/VSB64/us
  #  define BOOST_NO_STD_TYPEINFO
  #endif  
  
-diff -uNdr boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp ../workspace/VSB64/usr/src/BOOST/boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp
---- boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp	2015-08-04 11:44:49.000000000 +0000
-+++ boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp	2016-05-17 06:10:30.542707200 +0000
+diff -uNdr boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp ../../vx7/workspace/Vsb64/3pp/BOOST/boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp
+--- boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp	2015-08-04 04:44:50.000000000 +0000
++++ boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp	2016-06-10 23:46:49.731904900 +0000
 @@ -78,6 +78,7 @@
  #  include <unistd.h>
  #endif

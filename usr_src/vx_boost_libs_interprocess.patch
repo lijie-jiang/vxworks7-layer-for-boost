@@ -1,0 +1,35 @@
+Add VxWorks support to interprocess
+   
+    
+diff -uNdr boost_1_59_0/libs/interprocess/example/Jamfile.v2 vx7/workspace/VSB_Generic/usr/src/BOOST/boost_1_59_0/libs/interprocess/example/Jamfile.v2
+--- boost_1_59_0/libs/interprocess/example/Jamfile.v2	2015-06-24 07:18:17.000000000 -0700
++++ boost_1_59_0/libs/interprocess/example/Jamfile.v2	2016-01-26 00:56:39.053307824 -0800
+@@ -28,7 +28,7 @@
+         <toolset>gcc,<target-os>windows:<linkflags>"-lole32 -loleaut32 -lpsapi -ladvapi32"
+         <host-os>hpux,<toolset>gcc:<linkflags>"-Wl,+as,mpas"
+         <host-os>windows,<toolset>clang:<linkflags>"-lole32 -loleaut32 -lpsapi -ladvapi32"
+-        <host-os>linux:<linkflags>"-lrt"
++        <target-os>linux:<linkflags>"-lrt"
+       :  # test-files
+       :  # requirements
+       ] ;
+@@ -45,7 +45,7 @@
+         <toolset>gcc-mingw:<linkflags>"-lole32 -loleaut32 -lpsapi -ladvapi32"
+         <host-os>hpux,<toolset>gcc:<linkflags>"-Wl,+as,mpas"
+         <host-os>windows,<toolset>clang:<linkflags>"-lole32 -loleaut32 -lpsapi -ladvapi32"
+-        <host-os>linux:<linkflags>"-lrt"
++        <target-os>linux:<linkflags>"-lrt"
+       ] ;
+    }
+ 
+diff -uNdr boost_1_59_0/libs/interprocess/test/Jamfile.v2 vx7/workspace/VSB_Generic/usr/src/BOOST/boost_1_59_0/libs/interprocess/test/Jamfile.v2
+--- boost_1_59_0/libs/interprocess/test/Jamfile.v2	2015-06-24 07:18:17.000000000 -0700
++++ boost_1_59_0/libs/interprocess/test/Jamfile.v2	2016-01-23 11:59:47.547267332 -0800
+@@ -30,7 +30,7 @@
+         <toolset>gcc,<target-os>windows:<linkflags>"-lole32 -loleaut32 -lpsapi -ladvapi32"
+         <host-os>hpux,<toolset>gcc:<linkflags>"-Wl,+as,mpas"
+         <host-os>windows,<toolset>clang:<linkflags>"-lole32 -loleaut32 -lpsapi -ladvapi32"
+-        <host-os>linux:<linkflags>"-lrt"
++        <target-os>linux:<linkflags>"-lrt"
+       ] ;
+    }
