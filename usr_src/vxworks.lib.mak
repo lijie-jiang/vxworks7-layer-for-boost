@@ -1,6 +1,6 @@
 #  vxworks.mak - for boost
 #
-# Copyright 2014-15, Wind River Systems, Inc.
+# Copyright 2014-2016, Wind River Systems, Inc.
 #
 # Use, modification and distribution are subject to the
 # Boost Software License, Version 1.0.  (See accompanying file
@@ -8,7 +8,8 @@
 #
 #  modification history
 #  --------------------
-# 26nov15,brk  use b2 build utility wrapped by vxworks_env.sh
+#  16oct16,brk  clean up for EAR 
+#  26nov15,brk  use b2 build utility wrapped by vxworks_env.sh
 #              (similar to autoconf approch,)  
 #				in preperation for regression test harness support  
 #  26aug15,brk  updates for newer boost and C11 support in VX 
@@ -22,8 +23,6 @@ ifneq ($(wildcard $(VSB_MAKE_CONFIG_FILE)),)
 include $(VSB_MAKE_CONFIG_FILE)
 endif
 
-include $(WIND_USR_MK)/defs.unix.friend.mk
-
 
 ifdef _WRS_CONFIG_BOOST_ATOMIC
 BOOST_BUILD_WITH += --with-atomic
@@ -33,7 +32,7 @@ ifdef _WRS_CONFIG_BOOST_CHRONO
 BOOST_BUILD_WITH += --with-chrono
 endif
 
-# builds dlmalloc C code?
+# builds dlmalloc 
 #ifdef _WRS_CONFIG_BOOST_CONTAINER
 #BOOST_BUILD += --with-container
 #endif
@@ -79,7 +78,7 @@ BOOST_BUILD_WITH += --with-locale
 # Specifically APIs that manipulate the locale_t type.
 # http://pubs.opengroup.org/onlinepubs/9699919799/functions/uselocale.html
 # wcsxfrm_l,  wcscoll_l, strcoll_l, strxfrm_l
-# BOOST_BUILD_EXTRA += locale/src/posix
+# TODO boost build harness requires ICU internationalization support library
 endif 
 
 ifdef _WRS_CONFIG_BOOST_LOG
@@ -88,21 +87,18 @@ endif
 
 ifdef _WRS_CONFIG_BOOST_MATH
 BOOST_BUILD_WITH += --with-math
-#BOOST_BUILD_EXTRA += math/src/tr1
 endif
 
 # mpi requires MPI support
 # (some VX partner did a MPI port, but it's not generally avalible )
 
 ifdef _WRS_CONFIG_BOOST_PROGRAM_OPTIONS
-# environ conflict
 BOOST_BUILD_WITH += --with-program_options
 endif 
 
 # python requires python support
 
 ifdef _WRS_CONFIG_BOOST_RANDOM
-# looks like it needs /dev/urandom for entropy?
 BOOST_BUILD_WITH += --with-random
 endif 
 
@@ -128,7 +124,6 @@ endif
 
 ifdef _WRS_CONFIG_BOOST_THREAD
 BOOST_BUILD_WITH += --with-thread
-#BOOST_BUILD_EXTRA += thread/src/pthread
 endif
 
 ifdef _WRS_CONFIG_BOOST_TIMER
@@ -151,6 +146,7 @@ EXTRA_INCLUDE += -I$(realpath .)
 EXTRA_DEFINE += -DBOOST_TEST_LIMITED_SIGNAL_DETAILS -DBOOST_LOG_WITHOUT_DEFAULT_FACTORIES 
 
 # dlmalloc in containers should not use sbrk()
+
 EXTRA_DEFINE += -DHAVE_MORECORE=0
 
 

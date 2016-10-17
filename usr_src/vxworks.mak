@@ -1,6 +1,6 @@
 #  vxworks.mak - for boost test code
 #
-# Copyright 2015, Wind River Systems, Inc.
+# Copyright 2015,2016 Wind River Systems, Inc.
 #
 # Use, modification and distribution are subject to the
 # Boost Software License, Version 1.0.  (See accompanying file
@@ -8,6 +8,8 @@
 #
 #  modification history
 #  --------------------
+#  16oct16,brk  clean up for EAR 
+#  29sep16,brk  add bin directory to LD_LIBRARY_PATH
 #  26aug15,brk  written
 #
 ifndef __DEFS_VSBVARS_MK_INCLUDED
@@ -17,8 +19,6 @@ endif
 ifneq ($(wildcard $(VSB_MAKE_CONFIG_FILE)),)
 include $(VSB_MAKE_CONFIG_FILE)
 endif
-
-include $(WIND_USR_MK)/defs.unix.friend.mk
 
 
 ifdef _WRS_CONFIG_BOOST_ACCUMULATORS_TESTS
@@ -312,7 +312,6 @@ endif
 # python requires python support
 
 ifdef _WRS_CONFIG_BOOST_RANDOM_TESTS
-# looks like it needs /dev/urandom for entropy?
 BOOST_BUILD_TEST += random
 endif 
 
@@ -457,7 +456,8 @@ EXTRA_DEFINE += -DHAVE_MORECORE=0
 
 # Rather than removing all warnings, suppress the ones that are obviously extranious 
 ifeq ($(TOOL),gnu)
-EXTRA_DEFINE += -Wno-comment -Wno-parentheses -Wno-reorder -Wno-narrowing -Wno-error=unused-parameter
+EXTRA_DEFINE += -Wno-error=unused-parameter -Wno-unused-local-typedefs
+EXTRA_DEFINE += -Wno-comment -Wno-parentheses -Wno-reorder -Wno-narrowing
 BOOST_TOOL:= gcc
 endif
 
@@ -493,7 +493,7 @@ JOBS ?= 1
 #  for the testing script
 WORKSPACE :=$(strip $(dir $(VSB_DIR)))
 LAYER_SRC_PATH :=$(_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX)$(subst $(WORKSPACE),,$(PKG_SRC_BUILD_DIR))
-VSB_LD_LIBRARY_PATH :=$(_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX)$(subst $(WORKSPACE),,$(LIBDIR)/$(TOOL_COMMON_DIR))
+VSB_LD_LIBRARY_PATH :="$(_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX)$(subst $(WORKSPACE),,$(ROOT_DIR)/$(TOOL)/bin);$(_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX)$(subst $(WORKSPACE),,$(LIBDIR)/$(TOOL_COMMON_DIR))"
 
 ifneq ($(strip $(_WRS_CONFIG_BOOST_TELNET_ADDR)),)
  ifeq "$(WIND_HOST_TYPE)" "x86-win32"
@@ -516,7 +516,7 @@ boost_build: $(AUTO_INCLUDE_VSB_CONFIG_QUOTE) $(VXWORKS_ENV_SH)  $(__AUTO_INCLUD
 	. ./$(VXWORKS_ENV_SH) &&  cd status   &&  \
 			BOOST_TELNET_ADDR="$(_WRS_CONFIG_BOOST_TELNET_ADDR)"  \
 			LAYER_SRC_PATH="$(LAYER_SRC_PATH)" \
-			VSB_LD_LIBRARY_PATH="$(VSB_LD_LIBRARY_PATH)" \
+			VSB_LD_LIBRARY_PATH=$(VSB_LD_LIBRARY_PATH) \
 	nice ../b2 -j$(JOBS) --prefix=$(ROOT_DIR) --libdir=$(LIBDIR)/$(TOOL_COMMON_DIR) --includedir=$(VSB_DIR)/usr/h/public   \
 		   link=static toolset=$(BOOST_TOOL) cross-compile=vxworks $(BOOST_TEST_EXE)  $(BOOST_WORKAROUND) \
 		  "--limit-tests=$(BOOST_LIMIT_TESTS)"  -q  -d1

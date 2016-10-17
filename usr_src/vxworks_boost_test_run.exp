@@ -29,6 +29,8 @@ if {([info command expect] == "") && ($env(WIND_HOST_TYPE) == "x86-win32")} {
 #
 #  modification history
 #  --------------------
+#  02oct16,brk  use -- in run command to mark end of options 
+#  23sep16,brk  use new -x option to get exit status 
 #  31mar16,brk  written
 #
 
@@ -59,7 +61,7 @@ expect {
 send -- "cmd\r"
 sleep 0.1
 expect -exact "\[vxWorks *\]# "
-send -- "set env LD_LIBRARY_PATH=$ld_library_path\r"
+send -- "set env \"LD_LIBRARY_PATH=$ld_library_path\"\r"
 sleep 0.1
 expect -exact "\[vxWorks *\]# "
 log_user 1	
@@ -67,6 +69,7 @@ log_user 1
 send -- "cd $src_dir/status\r"
 sleep 0.1
 expect -exact "\[vxWorks *\]# "
+send -- "run -x -- "
 foreach arg $::argv { 
 	send -- "$arg "
 	}

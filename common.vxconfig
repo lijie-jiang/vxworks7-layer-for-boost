@@ -1,0 +1,667 @@
+# Copyright (c) 2014 Wind River Systems, Inc.
+#
+# Use, modification and distribution are subject to the
+# Boost Software License, Version 1.0.  (See accompanying file
+# LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+#
+# Modification History
+# --------------------
+# 26nov14,brk  Created
+#
+
+#
+# DESCRIPTION
+#
+# This file provides an option to build boost code
+choice BOOST_SHARED_LINK_TYPE
+       prompt "Shared Libraries"
+       default BOOST_BUILD_ALL_SHARED
+
+    config BOOST_BUILD_ALL_SHARED
+       bool "Build all shared libraries"
+       
+    config BOOST_BUILD_MINIMAL_SHARED
+       bool "Build only the system shared libraries"
+       help
+         A shared system library is required by tests in some libraries.
+         The tests are built with the static link feature, some tests overide this selection
+         and build shared libraries. In the some cases the system.so library is also required
+         by these tests. 
+
+    config BOOST_BUILD_NO_SHARED
+       bool "Build NO shared libraries"
+
+endchoice
+
+config  BOOST_ATOMIC
+        bool "Build atomic"
+        default n
+
+config  BOOST_CHRONO
+        bool "Build chrono"
+        default n
+
+config  BOOST_CONTEXT
+        bool "Build context"
+        default n
+
+config  BOOST_DATE_TIME
+        bool "Build date time"
+        default n
+
+config  BOOST_COROUTINE
+        bool "Build coroutine"
+        default n
+
+config  BOOST_EXCEPTION
+        bool "Build exception"
+        default n
+
+config  BOOST_FILESYSTEM
+        bool "Build filesystem"
+        default n
+
+config  BOOST_GRAPH
+        bool "Build graph"
+        default n
+
+config  BOOST_INTERPROCESS
+        bool "Build interprocess"
+        default n
+
+config  BOOST_IOSTREAMS
+        bool "Build iostreams"
+        default n
+
+config  BOOST_LOCALE
+        bool "Build locale"
+        default n
+
+config  BOOST_LOG
+        bool "Build log"
+        default n
+
+config  BOOST_MATH
+        bool "Build math tr1"
+        default n
+
+config  BOOST_PROGRAM_OPTIONS
+        bool "Build program options"
+        default n
+
+config  BOOST_RANDOM
+        bool "Build random"
+        default n
+
+config  BOOST_REGEX
+        bool "Build regex"
+        default n
+
+config  BOOST_SERIALIZATION
+        bool "Build serialization"
+        default n
+
+# signals package is depriated in favour of thread safe signals2 
+# signals2 is header only  
+# 
+#config  BOOST_SIGNALS
+#        bool "Build signals"
+#        default n
+
+config  BOOST_SYSTEM
+        bool "Build system (error_code)"
+        default n
+
+config  BOOST_THREAD
+        bool "Build thread"
+        depends on DEFAULT_PTHREAD_PRIO_INHERIT
+        default n
+
+# build timer as sanity check, small and works with all configurations		
+config  BOOST_TIMER
+        bool "Build timer"
+        default y
+
+config  BOOST_TESTS
+        bool "Build BOOST Tests"
+        default n
+
+menu  "BOOST Tests"
+    visible if BOOST_TESTS
+    
+config  BOOST_TELNET_ADDR
+		depends on BOOST_TESTS
+		string "IP Address of target to execute tests on"
+		default ""  
+		help
+			If left blank the tests are just compiled, if specified an 'expect' script is used to telnet to the target and execute tests.
+			The target must support telnet and have the host filesytem mounted in order to find the test RTPs.   
+			rlogin should be disabled and so no user login is required.
+
+config  BOOST_HOST_FILEPATH_MAPPING_PREFIX
+		depends on BOOST_TESTS
+		string "Path prefix to access VSB workspace from target"
+		default "/hostfs/ws"  
+		help
+		   The target needs to use one of several filesystems to access host in order to load the test executables, the default value
+		   is the valid when the TCF (debugger) conection is used. Other possiblites are NFS, FTP mounts which are typically 
+		   <hostname>:    
+
+config  BOOST_ACCUMULATORS_TESTS
+		depends on BOOST_TESTS
+	    bool "Build accumulator tests"
+        default n
+
+config  BOOST_ALGORITHM_TESTS
+		depends on BOOST_TESTS
+	    bool "Build algorithm tests"
+        default n
+
+config  BOOST_ALIGN_TESTS
+		depends on BOOST_TESTS
+	    bool "Build align tests"
+        default n
+
+config  BOOST_ARRAY_TESTS
+		depends on BOOST_TESTS
+	    bool "Build array Tests"
+        default n
+
+config  BOOST_ASIO_TESTS
+		depends on BOOST_TESTS
+	    bool "Build asynchronous IO (ASIO) tests"
+        default n
+
+config  BOOST_ASSERT_TESTS
+		depends on BOOST_TESTS
+	    bool "Build assert tests"
+        default n
+
+config  BOOST_ATOMIC_TESTS
+		depends on BOOST_ATOMIC && BOOST_TESTS
+        bool "Build atomic tests"
+        default n
+
+config  BOOST_BIMAP_TESTS
+		depends on BOOST_TESTS
+	    bool "Build bimap tests"
+        default n
+
+config  BOOST_BIND_TESTS
+		depends on BOOST_TESTS
+	    bool "Build bind tests"
+        default n
+
+config  BOOST_CHRONO_TESTS
+		depends on BOOST_CHRONO && BOOST_TESTS
+        bool "Build chrono tests"
+        default n
+
+config  BOOST_CIRCULAR_BUFFER_TESTS
+		depends on BOOST_TESTS
+	    bool "Build circular buffer tests"
+        default n
+
+config  BOOST_CONCEPT_CHECK_TESTS
+		depends on BOOST_TESTS
+	    bool "Build concept check tests"
+        default n
+
+config  BOOST_CONFIG_TESTS
+		depends on BOOST_TESTS
+	    bool "Build config tests"
+        default n
+
+config  BOOST_CONTAINER_TESTS
+		depends on BOOST_TESTS
+	    bool "Build container tests"
+        default n
+
+config  BOOST_CONTEXT_TESTS
+		depends on BOOST_TESTS
+	    bool "Build context tests"
+        default n
+
+config  BOOST_CONVERSION_TESTS
+		depends on BOOST_TESTS
+	    bool "Build conversion Tests"
+        default n
+
+config  BOOST_CONVERT_TESTS
+		depends on BOOST_TESTS
+	    bool "Build convert tests"
+        default n
+
+config  BOOST_CORE_TESTS
+		depends on BOOST_TESTS
+	    bool "Build core tests"
+        default n
+
+config  BOOST_COROUTINE_TESTS
+		depends on BOOST_COROUTINE && BOOST_TESTS
+	    bool "Build coroutine tests"
+        default n
+
+# coroutine2 requires C++14
+
+config  BOOST_CRC_TESTS
+		depends on BOOST_TESTS
+	    bool "Build CRC Tests"
+        default n
+
+config  BOOST_DATE_TIME_TESTS
+		depends on BOOST_DATE_TIME && BOOST_TESTS
+        bool "Build date time tests"
+        default n
+
+config  BOOST_DETAIL_TESTS
+		depends on BOOST_TESTS
+        bool "Build detail tests"
+        default n
+
+config  BOOST_DISJOINT_SETS_TESTS
+		depends on BOOST_TESTS
+        bool "Build disjoint sets tests"
+        default n
+
+config  BOOST_DYNAMIC_BITSET_TESTS
+		depends on BOOST_TESTS
+        bool "Build dynamic bitset tests"
+        default n
+
+config  BOOST_ENDIAN_TESTS
+		depends on BOOST_TESTS
+        bool "Build endian tests"
+        default n
+
+config  BOOST_EXCEPTION_TESTS
+		depends on BOOST_EXCEPTION && BOOST_TESTS
+        bool "Build exception tests"
+        default n
+
+config  BOOST_FILESYSTEM_TESTS
+		depends on BOOST_FILESYSTEM && BOOST_TESTS
+        bool "Build filesystem tests"
+        default n
+
+config  BOOST_FLYWEIGHT_TESTS
+		depends on BOOST_TESTS
+        bool "Build flyweight tests"
+        default n
+
+config  BOOST_FOREACH_TESTS
+		depends on BOOST_TESTS
+        bool "Build foreach tests"
+        default n
+
+config  BOOST_FORMAT_TESTS
+		depends on BOOST_TESTS
+        bool "Build format tests"
+        default n
+
+config  BOOST_FUNCTION_TESTS
+		depends on BOOST_TESTS
+        bool "Build function tests"
+        default n
+
+config  BOOST_FUNCTIONAL_TESTS
+		depends on BOOST_TESTS
+        bool "Build functional tests"
+        default n
+
+config  BOOST_FUNCTIONAL_TYPES_TESTS
+		depends on BOOST_TESTS
+        bool "Build functional types tests"
+        default n
+
+config  BOOST_FUSION_TESTS
+		depends on BOOST_TESTS
+        bool "Build fusion tests"
+        default n
+
+config  BOOST_GEOMETRY_TESTS
+		depends on BOOST_TESTS
+        bool "Build geometry tests"
+        default n
+
+config  BOOST_GIL_TESTS
+		depends on BOOST_TESTS
+        bool "Build Generic Image Library (GIL) tests"
+        default n
+
+config  BOOST_GRAPH_TESTS
+		depends on BOOST_GRAPH && BOOST_TESTS
+        bool "Build graph tests"
+        default n
+
+# graph parallel - depends on MPI
+
+config  BOOST_HEAP_TESTS
+		depends on BOOST_TESTS
+        bool "Build heap tests"
+        default n
+
+config  BOOST_ICL_TESTS
+		depends on BOOST_TESTS
+        bool "Build interval container library (ICL) tests"
+        default n
+
+config  BOOST_INTEGER_TESTS
+		depends on BOOST_TESTS
+        bool "Build integer tests"
+        default n
+
+config  BOOST_INTERPROCESS_TESTS
+		depends on BOOST_TESTS
+        bool "Build interprocess tests"
+        default n
+
+config  BOOST_INTRUSIVE_TESTS
+		depends on BOOST_TESTS
+        bool "Build intrusive tests"
+        default n
+
+config  BOOST_IO_TESTS
+		depends on BOOST_TESTS
+        bool "Build IO tests"
+        default n
+
+config  BOOST_IOSTREAMS_TESTS
+		depends on BOOST_IOSTREAMS && BOOST_TESTS
+        bool "Build iostreams tests"
+        default n
+
+config  BOOST_LAMBDA_TESTS
+		depends on BOOST_TESTS
+        bool "Build lambda tests"
+        default n
+
+config  BOOST_LEXICAL_CAST_TESTS
+		depends on BOOST_TESTS
+        bool "Build lexical cast tests"
+        default n
+
+config  BOOST_LOCAL_FUNCTION_TESTS
+		depends on BOOST_TESTS
+        bool "Build local function tests"
+        default n
+
+config  BOOST_LOCALE_TESTS
+		depends on BOOST_LOCALE && BOOST_TESTS
+        bool "Build locale tests"
+        default n
+
+config  BOOST_LOG_TESTS
+		depends on BOOST_LOG && BOOST_TESTS
+        bool "Build log tests"
+        default n
+
+config  BOOST_LOGIC_TESTS
+		depends on BOOST_TESTS
+        bool "Build logic tests"
+        default n
+
+config  BOOST_LOCKFREE_TESTS
+		depends on BOOST_TESTS
+        bool "Build lockfree tests"
+        default n
+
+config  BOOST_MATH_TESTS
+		depends on BOOST_MATH && BOOST_TESTS
+        bool "Build math tr1 tests"
+        default n
+
+config  BOOST_MOVE_TESTS
+		depends on BOOST_TESTS
+        bool "Build move tests"
+        default n
+
+# MPI not supported
+
+config  BOOST_MPL_TESTS
+		depends on BOOST_TESTS
+        bool "Build meta-programming library (MPL) tests"
+        default n
+
+config  BOOST_MSM_TESTS
+		depends on BOOST_TESTS
+        bool "Build meta state machine (MSM) tests"
+        default n
+
+config  BOOST_MULTI_ARRAY_TESTS
+		depends on BOOST_TESTS
+        bool "Build multi-array tests"
+        default n
+
+config  BOOST_MULTI_INDEX_TESTS
+		depends on BOOST_TESTS
+        bool "Build multi-index tests"
+        default n
+
+config  BOOST_MULTIPRECISION_TESTS
+		depends on BOOST_TESTS
+        bool "Build multiprecision tests"
+        default n
+
+config  BOOST_OPTIONAL_TESTS
+		depends on BOOST_TESTS
+        bool "Build optional tests"
+        default n
+
+# requires python
+#config  BOOST_PARAMETER_TESTS
+#		depends on BOOST_TESTS
+#        bool "Build parameter tests"
+#        default n
+
+config  BOOST_PHOENIX_TESTS
+		depends on BOOST_TESTS
+        bool "Build phoenix tests"
+        default n
+
+config  BOOST_POLYGON_TESTS
+		depends on BOOST_TESTS
+        bool "Build polygon tests"
+        default n
+
+config  BOOST_POOL_TESTS
+		depends on BOOST_TESTS
+        bool "Build pool tests"
+        default n
+
+config  BOOST_PREDEF_TESTS
+		depends on BOOST_TESTS
+        bool "Build predef tests"
+        default n
+
+config  BOOST_PREPROCESSOR_TESTS
+		depends on BOOST_TESTS
+        bool "Build preprocessor tests"
+        default n
+
+config  BOOST_PROGRAM_OPTIONS_TESTS
+		depends on BOOST_PROGRAM_OPTIONS && BOOST_TESTS
+        bool "Build program options tests"
+        default n
+
+config  BOOST_PROPERTY_MAP_TESTS
+		depends on BOOST_TESTS
+        bool "Build property map tests"
+        default n
+
+config  BOOST_PROPERTY_TREE_TESTS
+		depends on BOOST_TESTS
+        bool "Build property tree tests"
+        default n
+
+config  BOOST_PROTO_TESTS
+		depends on BOOST_TESTS
+        bool "Build proto tests"
+        default n
+
+# python not supported
+
+config  BOOST_RANDOM_TESTS
+		depends on BOOST_RANDOM && BOOST_TESTS
+        bool "Build random tests"
+        default n
+
+config  BOOST_RANGE_TESTS
+		depends on BOOST_TESTS
+        bool "Build range tests"
+        default n
+
+config  BOOST_RATIO_TESTS
+		depends on BOOST_TESTS
+        bool "Build ratio tests"
+        default n
+
+config  BOOST_RATIONAL_TESTS
+		depends on BOOST_TESTS
+        bool "Build rational tests"
+        default n
+
+config  BOOST_REGEX_TESTS
+		depends on BOOST_TESTS
+        bool "Build regular expression (REGEX) tests"
+        default n
+
+config  BOOST_SCOPE_EXIT_TESTS
+		depends on BOOST_TESTS
+        bool "Build scope exit tests"
+        default n
+
+config  BOOST_SERIALIZATION_TESTS
+		depends on BOOST_SERIALIZATION && BOOST_TESTS
+        bool "Build serialization tests"
+        default n
+
+# signals is depricated
+
+config  BOOST_SIGNALS2_TESTS
+		depends on BOOST_TESTS
+        bool "Build (threadsafe) signals 2 tests"
+        default n
+
+config  BOOST_SMART_PTR_TESTS
+		depends on BOOST_TESTS
+        bool "Build smart pointer tests"
+        default n
+
+config  BOOST_SORT_TESTS
+		depends on BOOST_TESTS
+        bool "Build sort tests"
+        default n
+
+config  BOOST_SPIRIT_TESTS
+		depends on BOOST_TESTS
+        bool "Build spirit (EBNF parser) tests"
+        default n
+
+config  BOOST_STATECHART_TESTS
+		depends on BOOST_TESTS
+        bool "Build statechart tests"
+        default n
+
+config  BOOST_STATIC_ASSERT_TESTS
+		depends on BOOST_TESTS
+        bool "Build static assert tests"
+        default n
+
+config  BOOST_SYSTEM_TESTS
+		depends on BOOST_SYSTEM && BOOST_TESTS
+		bool "Build system (error_code) tests"
+        default n
+
+config  BOOST_TEST_TESTS
+		depends on BOOST_TESTS
+        bool "Build tests of test harness"
+        default n
+
+config  BOOST_THREAD_TESTS
+		depends on BOOST_THREAD && BOOST_TESTS
+        bool "Build thread tests"
+        default n
+		
+config  BOOST_THROW_EXCEPTION_TESTS
+		depends on BOOST_TESTS
+		bool "Build throw exception tests"
+        default n
+
+config  BOOST_TIMER_TESTS
+		depends on BOOST_TIMER && BOOST_TESTS
+        bool "Build timer tests"
+        default n
+    
+config  BOOST_TOKENIZER_TESTS
+		depends on BOOST_TESTS
+	    bool "Build tokenizer tests"
+        default n
+    
+#TR1 depricated
+    
+config  BOOST_TTI_TESTS
+		depends on BOOST_TESTS
+	    bool "Build type traits introspection (TTI) tests"
+        default n
+
+config  BOOST_TUPLE_TESTS
+		depends on BOOST_TESTS
+	    bool "Build tuple tests"
+        default n
+
+config  BOOST_TYPE_ERASURE_TESTS
+		depends on BOOST_TESTS
+	    bool "Build type erasure tests"
+        default n
+
+# For use with no runtime information(no-rtti); vxworks only supports this with EC++
+#config  BOOST_TYPE_INDEX_TESTS
+#		depends on BOOST_TESTS
+#	    bool "Build type index tests"
+#        default n
+
+config  BOOST_TYPE_TRAITS_TESTS
+		depends on BOOST_TESTS
+	    bool "Build type traitis tests"
+        default n
+
+config  BOOST_TYPEOF_TESTS
+		depends on BOOST_TESTS
+	    bool "Build typeof tests"
+        default n
+
+config  BOOST_UNITS_TESTS
+		depends on BOOST_TESTS
+	    bool "Build units tests"
+        default n
+    
+config  BOOST_UNORDERED_TESTS
+		depends on BOOST_TESTS
+	    bool "Build unordered tests"
+        default n
+    
+config  BOOST_UTILITY_TESTS
+		depends on BOOST_TESTS
+	    bool "Build utility tests"
+        default n
+    
+config  BOOST_UUID_TESTS
+		depends on BOOST_TESTS
+	    bool "Build universally unique identifier (UUID) tests"
+        default n
+
+config  BOOST_VARIANT_TESTS
+		depends on BOOST_TESTS
+	    bool "Build varient tests"
+        default n
+
+#wave -unsupported
+
+config  BOOST_XPRESSIVE_TESTS
+		depends on BOOST_TESTS
+	    bool "Build Xpressive tests"
+        default n
+
+endmenu    

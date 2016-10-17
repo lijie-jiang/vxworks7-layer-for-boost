@@ -1,0 +1,32 @@
+/* layer.vsbl file for boost layer  */
+/*
+ * Copyright (c) 2014, 2016 Wind River Systems, Inc.
+ *
+ * Use, modification and distribution are subject to the
+ * Boost Software License, Version 1.0.  (See accompanying file
+ * LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
+/*
+Modification history
+--------------------
+24may16,brk  Updated to HLD
+28nov14,brk  Created.
+*/
+
+
+Layer BOOST {
+ SYNOPSIS 	Boost C++ Libraries
+ HELP     	Boost provides free peer-reviewed portable C++ source libraries. \
+            This layer enables boost for VxWorks. Support for boost itself is not \
+			provided by Wind River. Please use the resources at boost.org instead.
+ VERSION    1.59.0.0
+ FEATURE    OPEN_SOURCE
+ VENDOR     Wind River
+ VSB_REQUIRES RTP
+ LAYER_REQUIRES  UNIX 
+ PARENT       
+ OPTIONAL     YES
+ DEFAULT      NO
+ DOC_BUILD    NO
+}
