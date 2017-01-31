@@ -32,19 +32,16 @@ The **expect** executable used for adapting the Boost test harness to cross comp
 
 ### Setup
 
-1) Obtain the VxWorks Boost layer:
-
-     -  Go to  https://github.com/Wind-River/vxworks7-layer-for-boost
-
-     -  Download a zip of the layer using the link provided by github.
+1. Obtain the VxWorks Boost layer:
+  *  Go to  https://github.com/Wind-River/vxworks7-layer-for-boost
+  *  Download a zip of the layer using the link provided by github.
 	 ![](./docs/download.png)
-
-     -	Unzip into your VxWorks install directory in an appropriate place in the packages directory, typically;
+  *	Unzip into your VxWorks install directory in an appropriate place in the packages directory, typically;
       ***InstallDir*/vxworks-7/pkgs/app**
 	  
-2) If you are using the Boost **streams** library you must obtain the **bzip2** layer and place it in your vxworks 7 install in a similar manner: https://github.com/Wind-River/vxworks7-layer-for-bzip2 	  
+2. If you are using the Boost **streams** library you must obtain the **bzip2** layer and place it in your vxworks 7 install in a similar manner: https://github.com/Wind-River/vxworks7-layer-for-bzip2 	  
 
-3) From a shell prompt: 	  
+3. From a shell prompt: 	  
 
 ```
 $ cd InstallDir
@@ -57,7 +54,7 @@ $ cd simVSB
 
 ### Building
 
-1) After creating the VSB (VxWorks Source Build Project) include the Boost layer in the Workbench configuration editor:
+After creating the VSB (VxWorks Source Build Project) include the Boost layer in the Workbench configuration editor:
 ![](./docs/layer selection.png)
 
    The VSB build will unpack Boost into ***vsbDir*/3pp/BOOST**.
