@@ -1,6 +1,6 @@
 #  vxworks.mak - for boost
 #
-# Copyright 2014-2016, Wind River Systems, Inc.
+# Copyright 2014-2017 Wind River Systems, Inc.
 #
 # Use, modification and distribution are subject to the
 # Boost Software License, Version 1.0.  (See accompanying file
@@ -8,8 +8,8 @@
 #
 #  modification history
 #  --------------------
-#  16oct16,brk  clean up for EAR 
-#  26nov15,brk  use b2 build utility wrapped by vxworks_env.sh
+# 07feb17,brk  llvm support 
+# 26nov15,brk  use b2 build utility wrapped by vxworks_env.sh
 #              (similar to autoconf approch,)  
 #				in preperation for regression test harness support  
 #  26aug15,brk  updates for newer boost and C11 support in VX 
@@ -32,10 +32,10 @@ ifdef _WRS_CONFIG_BOOST_CHRONO
 BOOST_BUILD_WITH += --with-chrono
 endif
 
-# builds dlmalloc 
-#ifdef _WRS_CONFIG_BOOST_CONTAINER
-#BOOST_BUILD += --with-container
-#endif
+# builds dlmalloc C code?
+ifdef _WRS_CONFIG_BOOST_CONTAINER
+BOOST_BUILD += --with-container
+endif
 
 # context - TODO need logic to build correct assembly code 
 ifdef _WRS_CONFIG_BOOST_CONTEXT
@@ -146,7 +146,6 @@ EXTRA_INCLUDE += -I$(realpath .)
 EXTRA_DEFINE += -DBOOST_TEST_LIMITED_SIGNAL_DETAILS -DBOOST_LOG_WITHOUT_DEFAULT_FACTORIES 
 
 # dlmalloc in containers should not use sbrk()
-
 EXTRA_DEFINE += -DHAVE_MORECORE=0
 
 
@@ -167,13 +166,19 @@ EXTRA_DEFINE += -DBOOST_NO_CXX11_HDR_INITIALIZER_LIST -CG_allow_xmm -CG_allow_x8
 BOOST_TOOL:= intel-vxworks
 endif
 
+ifeq ($(TOOL),llvm)
+EXTRA_DEFINE += 
+BOOST_TOOL:= clang-vxworks
+endif
+
+
 RTP_BASE_DIR = boost
 
 LIB_BASE_NAME = boost
 
 OBJS=$(CPP_SOURCE:.cpp=.o) 
 
-ADDED_LIBS = -Wl,-lunix 
+ADDED_LIBS = -lunix 
 
 LIB_FORMAT:= static
 

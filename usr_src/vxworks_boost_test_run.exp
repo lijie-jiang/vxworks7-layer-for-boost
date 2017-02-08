@@ -18,7 +18,7 @@ if {([info command expect] == "") && ($env(WIND_HOST_TYPE) == "x86-win32")} {
 # This Expect script executes a boost test RTP on a VxWorks
 # target with telnet, based on a local filepath
 #
-# it is assumed rlogin is disabled and 
+# it is assumed rlogin is disabled and
 # no login credentials are necessary
 #
 # Copyright 2016, Wind River Systems, Inc.
@@ -29,12 +29,13 @@ if {([info command expect] == "") && ($env(WIND_HOST_TYPE) == "x86-win32")} {
 #
 #  modification history
 #  --------------------
-#  02oct16,brk  use -- in run command to mark end of options 
-#  23sep16,brk  use new -x option to get exit status 
+#  16dec16,dlk  Add VX_FP_TASK flag (-t 0x01000000) when launching RTPs.
+#  02oct16,brk  use -- in run command to mark end of options
+#  23sep16,brk  use new -x option to get exit status
 #  31mar16,brk  written
 #
 
-set telnet_ip $::env(BOOST_TELNET_ADDR) 
+set telnet_ip $::env(BOOST_TELNET_ADDR)
 set src_dir $::env(LAYER_SRC_PATH)
 set ld_library_path $::env(VSB_LD_LIBRARY_PATH)
 
@@ -51,7 +52,7 @@ proc disconnect { return } {
 }
 
 #log_user 0
-spawn telnet $telnet_ip
+spawn telnet {*}$telnet_ip
 match_max 100000
 expect {
 	timeout {puts "Connection timed out\r"; exit 1}
@@ -64,18 +65,22 @@ expect -exact "\[vxWorks *\]# "
 send -- "set env \"LD_LIBRARY_PATH=$ld_library_path\"\r"
 sleep 0.1
 expect -exact "\[vxWorks *\]# "
-log_user 1	
+log_user 1
 
 send -- "cd $src_dir/status\r"
 sleep 0.1
 expect -exact "\[vxWorks *\]# "
-send -- "run -x -- "
-foreach arg $::argv { 
+send -- "run -x -t 0x01000000 -- "
+foreach arg $::argv {
 	send -- "$arg "
 	}
 send -- "\r"
 sleep 3
 expect {
+       timeout { puts "\nRTP Execution Timeout; rebooting\n"
+                 send -- "\x18"
+                 sleep 15
+                 exit 1 }
        -exact "due to signal 6." {puts "\n\n SIGABRT\r";  disconnect 2 }
        -exact "due to signal 11." {puts "\n\n SEGFAULT\r";  disconnect 2 }
        -exact "and has been deleted." { disconnect 3 }

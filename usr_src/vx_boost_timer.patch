@@ -1,8 +1,15 @@
-diff -uNdr boost_1_59_0/libs/timer/test/Jamfile.v2 vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/libs/timer/test/Jamfile.v2
-explicitly skip one test that requires a lot the Vxworks ain't got
---- boost_1_59_0/libs/timer/test/Jamfile.v2	2013-12-28 06:11:49.000000000 -0800
-+++ boost_1_59_0/libs/timer/test/Jamfile.v2	2016-02-09 16:04:54.419655897 -0800
-@@ -44,7 +44,8 @@
+diff -uNdr boost_1_59_0/libs/timer/test/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/timer/test/Jamfile.v2
+--- boost_1_59_0/libs/timer/test/Jamfile.v2	2013-12-28 09:11:49.000000000 -0500
++++ boost_1_59_0/libs/timer/test/Jamfile.v2	2017-02-01 11:07:17.000000000 -0500
+@@ -37,6 +37,7 @@
+        : echo "Hello, world"
+ 	     :
+ 	     : <test-info>always_show_run_output
++	     <target-os>vxworks:<build>no      # skip for vxworks; nested echo invocation not supported by VX shell 
+      ]
+      [ compile original_timer_test.cpp
+      ]
+@@ -44,7 +45,8 @@
         : $(parent) -text -brief # command line
         : # input files
         : <dependency>/boost/filesystem//boost_filesystem

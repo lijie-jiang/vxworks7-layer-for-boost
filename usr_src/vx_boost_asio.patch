@@ -1,23 +1,123 @@
-diff -uNdr boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp vx7/workspace/VSB_Generic/usr/src/BOOST/boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp
-This patch updates ASIO support for VxWorks, but there are three outstanding issues:
-. 1) no if_indextoname() defect V7NET-748
-. 2) no support for serial, boost needs a Vxworks specific implmentation 
-. 3) the last two tests don't sucessfully compile, the code uses poll() instead of falling back to select() like it should  
---- boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp	2015-03-23 13:24:12.000000000 -0700
-+++ boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp	2016-03-29 16:12:04.964038100 -0700
+diff -uNdr boost_1_59_0/boost/asio/detail/config.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/asio/detail/config.hpp
+--- boost_1_59_0/boost/asio/detail/config.hpp	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/boost/asio/detail/config.hpp	2016-11-08 11:19:06.000000000 -0500
+@@ -742,7 +742,8 @@
+ # if !defined(BOOST_ASIO_DISABLE_POSIX_STREAM_DESCRIPTOR)
+ #  if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && (defined(BOOST_ASIO_HAS_DEV_POLL) || defined(BOOST_ASIO_HAS_DEV_EPOLL))
+ #   define BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR 1
+ #  endif // !defined(BOOST_ASIO_WINDOWS)
+          //   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
+diff -uNdr boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp
+--- boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/boost/asio/detail/impl/descriptor_ops.ipp	2016-11-22 17:15:55.000000000 -0500
 @@ -22,7 +22,8 @@
  
  #if !defined(BOOST_ASIO_WINDOWS) \
    && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
 -  && !defined(__CYGWIN__)
-+  && !defined(__CYGWIN__) \
-+  && !defined(__VXWORKS__) 
++  && !defined(__CYGWIN__) 
++
  
  #include <boost/asio/detail/push_options.hpp>
  
-diff -uNdr boost_1_59_0\boost\asio/detail/impl/socket_ops.ipp ..\workspace\VSBsim32\usr\src\BOOST\boost_1_59_0\boost\asio/detail/impl/socket_ops.ipp
---- boost_1_59_0/boost/asio/detail/impl/socket_ops.ipp	2015-03-23 13:24:12.000000000 -0700
-+++ boost_1_59_0/boost/asio/detail/impl/socket_ops.ipp	2016-03-29 22:25:43.405996300 -0700
+diff -uNdr boost_1_59_0/boost/asio/detail/impl/reactive_serial_port_service.ipp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/asio/detail/impl/reactive_serial_port_service.ipp
+--- boost_1_59_0/boost/asio/detail/impl/reactive_serial_port_service.ipp	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/boost/asio/detail/impl/reactive_serial_port_service.ipp	2016-11-22 18:55:27.000000000 -0500
+@@ -19,7 +19,11 @@
+ #include <boost/asio/detail/config.hpp>
+ 
+ #if defined(BOOST_ASIO_HAS_SERIAL_PORT)
+-#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__)
++#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__) 
++
++#ifdef __VXWORKS__
++#include <ioLib.h>
++#endif
+ 
+ #include <cstring>
+ #include <boost/asio/detail/reactive_serial_port_service.hpp>
+@@ -66,7 +70,10 @@
+     descriptor_ops::close(fd, state, ignored_ec);
+     return ec;
+   }
+-
++#ifdef __VXWORKS__
++  s = descriptor_ops::error_wrapper(::ioctl(
++         fd, FIOSETOPTIONS, OPT_RAW), ec);
++#else  
+   // Set up default serial port options.
+   termios ios;
+   errno = 0;
+@@ -88,6 +95,7 @@
+     errno = 0;
+     s = descriptor_ops::error_wrapper(::tcsetattr(fd, TCSANOW, &ios), ec);
+   }
++#endif  
+   if (s < 0)
+   {
+     boost::system::error_code ignored_ec;
+@@ -112,8 +120,18 @@
+ {
+   termios ios;
+   errno = 0;
++#if  defined (__VXWORKS__)
++  descriptor_ops::error_wrapper(::ioctl(descriptor_service_.native_handle(impl), 
++					FIOGETOPTIONS, &ios.tty_iflag),ec);
++  descriptor_ops::error_wrapper(::ioctl(descriptor_service_.native_handle(impl), 
++					SIO_HW_OPTS_GET, &ios.c_cflag), ec);
++  descriptor_ops::error_wrapper(::ioctl(descriptor_service_.native_handle(impl), 
++					SIO_BAUD_GET, &ios.BaudRate), ec);
++#else 
++
+   descriptor_ops::error_wrapper(::tcgetattr(
+         descriptor_service_.native_handle(impl), &ios), ec);
++#endif
+   if (ec)
+     return ec;
+ 
+@@ -121,8 +139,17 @@
+     return ec;
+ 
+   errno = 0;
++#if  defined (__VXWORKS__)
++  descriptor_ops::error_wrapper(::ioctl(descriptor_service_.native_handle(impl), 
++					FIOSETOPTIONS, &ios.tty_iflag), ec);
++  descriptor_ops::error_wrapper(::ioctl(descriptor_service_.native_handle(impl), 
++					SIO_HW_OPTS_SET, &ios.c_cflag), ec);
++  descriptor_ops::error_wrapper(::ioctl(descriptor_service_.native_handle(impl), 
++					SIO_BAUD_SET, &ios.BaudRate), ec);
++#else 
+   descriptor_ops::error_wrapper(::tcsetattr(
+         descriptor_service_.native_handle(impl), TCSANOW, &ios), ec);
++#endif  
+   return ec;
+ }
+ 
+@@ -133,8 +160,17 @@
+ {
+   termios ios;
+   errno = 0;
++#if  defined (__VXWORKS__)
++  descriptor_ops::error_wrapper(::ioctl(descriptor_service_.native_handle(impl), 
++					FIOGETOPTIONS, &ios.tty_iflag),ec);
++  descriptor_ops::error_wrapper(::ioctl(descriptor_service_.native_handle(impl), 
++					SIO_HW_OPTS_GET, &ios.c_cflag), ec);
++  descriptor_ops::error_wrapper(::ioctl(descriptor_service_.native_handle(impl), 
++					SIO_BAUD_GET, &ios.BaudRate), ec);
++#else   
+   descriptor_ops::error_wrapper(::tcgetattr(
+         descriptor_service_.native_handle(impl), &ios), ec);
++#endif  
+   if (ec)
+     return ec;
+ 
+diff -uNdr boost_1_59_0/boost/asio/detail/impl/socket_ops.ipp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/asio/detail/impl/socket_ops.ipp
+--- boost_1_59_0/boost/asio/detail/impl/socket_ops.ipp	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/boost/asio/detail/impl/socket_ops.ipp	2016-11-07 14:06:55.000000000 -0500
 @@ -33,6 +33,10 @@
  # include <string>
  #endif // defined(BOOST_ASIO_WINDOWS_RUNTIME)
@@ -78,15 +178,207 @@ diff -uNdr boost_1_59_0\boost\asio/detail/impl/socket_ops.ipp ..\workspace\VSBsi
    fd_set write_fds;
    FD_ZERO(&write_fds);
    FD_SET(s, &write_fds);
-diff -uNdr boost_1_59_0\boost\asio/detail/socket_types.hpp ..\workspace\VSBsim32\usr\src\BOOST\boost_1_59_0\boost\asio/detail/socket_types.hpp
---- boost_1_59_0/boost/asio/detail/socket_types.hpp	2015-03-23 13:24:12.000000000 -0700
-+++ boost_1_59_0/boost/asio/detail/socket_types.hpp	2016-03-29 16:12:04.979638100 -0700
-@@ -53,7 +53,7 @@
+diff -uNdr boost_1_59_0/boost/asio/detail/reactive_descriptor_service.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/asio/detail/reactive_descriptor_service.hpp
+--- boost_1_59_0/boost/asio/detail/reactive_descriptor_service.hpp	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/boost/asio/detail/reactive_descriptor_service.hpp	2016-11-08 10:52:08.000000000 -0500
+@@ -19,7 +19,7 @@
+ 
+ #if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) 
+ 
+ #include <boost/asio/buffer.hpp>
+ #include <boost/asio/io_service.hpp>
+diff -uNdr boost_1_59_0/boost/asio/detail/reactive_serial_port_service.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/asio/detail/reactive_serial_port_service.hpp
+--- boost_1_59_0/boost/asio/detail/reactive_serial_port_service.hpp	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/boost/asio/detail/reactive_serial_port_service.hpp	2016-11-22 18:52:37.000000000 -0500
+@@ -19,8 +19,10 @@
+ #include <boost/asio/detail/config.hpp>
+ 
+ #if defined(BOOST_ASIO_HAS_SERIAL_PORT)
+-#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__)
+-
++#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__) 
++#ifdef __VXWORKS__
++#include <taskLib.h>
++#endif
+ #include <string>
+ #include <boost/asio/error.hpp>
+ #include <boost/asio/io_service.hpp>
+@@ -141,8 +143,12 @@
+       boost::system::error_code& ec)
+   {
+     errno = 0;
++#ifdef __VXWORKS__
++    /* TODO */
++#else    
+     descriptor_ops::error_wrapper(::tcsendbreak(
+           descriptor_service_.native_handle(impl), 0), ec);
++#endif    
+     return ec;
+   }
+ 
+diff -uNdr boost_1_59_0/boost/asio/detail/socket_types.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/asio/detail/socket_types.hpp
+--- boost_1_59_0/boost/asio/detail/socket_types.hpp	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/boost/asio/detail/socket_types.hpp	2016-11-22 17:36:55.000000000 -0500
+@@ -53,9 +53,12 @@
  # include <boost/asio/detail/old_win_sdk_compat.hpp>
  #else
  # include <sys/ioctl.h>
 -# if !defined(__SYMBIAN32__)
-+# if !defined(__SYMBIAN32__) && !defined(__VXWORKS__)
++# if !defined(__SYMBIAN32__) && !defined(__VXWORKS__ )
  #  include <sys/poll.h>
  # endif
++# if (_WRS_VXWORKS_MAJOR > 6 )
++#  include <sys/poll.h>
++# endif
  # include <sys/types.h>
+ # include <sys/stat.h>
+ # include <fcntl.h>
+diff -uNdr boost_1_59_0/boost/asio/impl/serial_port_base.ipp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/asio/impl/serial_port_base.ipp
+--- boost_1_59_0/boost/asio/impl/serial_port_base.ipp	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/boost/asio/impl/serial_port_base.ipp	2016-11-22 18:59:21.000000000 -0500
+@@ -33,6 +33,11 @@
+ # define BOOST_ASIO_OPTION_STORAGE termios
+ #endif
+ 
++#ifdef __VXWORKS__
++#include <sioLib.h>
++#define CSTOPB  STOPB
++#endif
++
+ #include <boost/asio/detail/push_options.hpp>
+ 
+ namespace boost {
+@@ -41,7 +46,7 @@
+ boost::system::error_code serial_port_base::baud_rate::store(
+     BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec) const
+ {
+-#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
++#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined (__VXWORKS__)
+   storage.BaudRate = value_;
+ #else
+   speed_t baud;
+@@ -121,6 +126,7 @@
+   ::cfsetospeed(&storage, baud);
+ # endif
+ #endif
++
+   ec = boost::system::error_code();
+   return ec;
+ }
+@@ -128,8 +134,8 @@
+ boost::system::error_code serial_port_base::baud_rate::load(
+     const BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec)
+ {
+-#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+-  value_ = storage.BaudRate;
++#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined (__VXWORKS__) 
++    value_ = storage.BaudRate;
+ #else
+   speed_t baud = ::cfgetospeed(&storage);
+   switch (baud)
+@@ -203,6 +209,7 @@
+     return ec;
+   }
+ #endif
++
+   ec = boost::system::error_code();
+   return ec;
+ }
+@@ -245,6 +252,24 @@
+   default:
+     break;
+   }
++#elif defined(__VXWORKS__)
++  switch (value_)
++  {
++  case none:
++      storage.c_cflag &= ~(CLOCAL);
++      storage.tty_iflag &= ~(OPT_TANDEM);
++    break;
++  case software:
++    storage.c_cflag &= ~(CLOCAL);
++    storage.tty_iflag |= OPT_TANDEM;
++    break;
++  case hardware:
++    storage.c_cflag &= CLOCAL;
++    storage.tty_iflag &= ~(OPT_TANDEM);
++    break;
++  default:
++    break;
++  }
+ #else
+   switch (value_)
+   {
+@@ -301,6 +326,19 @@
+   {
+     value_ = none;
+   }
++#elif  defined(__VXWORKS__)
++  if (storage.tty_iflag && OPT_TANDEM)
++  {
++    value_ = software;
++  }
++  else if (storage.c_cflag && CLOCAL)
++  {
++    value_ = hardware;
++  }
++  else
++  {
++    value_ = none;
++  }
+ #else
+   if (storage.c_iflag & (IXOFF | IXON))
+   {
+@@ -356,6 +394,22 @@
+     break;
+   default:
+     break;
++  }
++#elif  defined(__VXWORKS__)
++  switch (value_)
++  {
++  case none:
++    storage.c_cflag &= ~(PARENB | PARODD);
++    break;
++  case even:
++    storage.c_cflag |= PARENB;
++    storage.c_cflag &= ~PARODD;
++    break;
++  case odd:
++    storage.c_cflag |= (PARENB | PARODD);
++    break;
++  default:
++    break;
+   }
+ #else
+   switch (value_)
+diff -uNdr boost_1_59_0/boost/asio/serial_port_base.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/asio/serial_port_base.hpp
+--- boost_1_59_0/boost/asio/serial_port_base.hpp	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/boost/asio/serial_port_base.hpp	2016-11-08 15:25:01.000000000 -0500
+@@ -21,7 +21,7 @@
+ #if defined(BOOST_ASIO_HAS_SERIAL_PORT) \
+   || defined(GENERATING_DOCUMENTATION)
+ 
+-#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__)
++#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__) && !defined(__VXWORKS__)
+ # include <termios.h>
+ #endif // !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__)
+ 
+@@ -34,6 +34,14 @@
+ # define BOOST_ASIO_OPTION_STORAGE DCB
+ #else
+ # define BOOST_ASIO_OPTION_STORAGE termios
++#ifdef __VXWORKS__
++struct termios
++      {
++       unsigned int c_cflag;
++       unsigned int tty_iflag;
++       unsigned int BaudRate;
++      };
++#endif  
+ #endif
+ 
+ #include <boost/asio/detail/push_options.hpp>

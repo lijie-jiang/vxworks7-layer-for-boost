@@ -1,6 +1,6 @@
 /* layer.vsbl file for boost layer  */
 /*
- * Copyright (c) 2014, 2016 Wind River Systems, Inc.
+ * Copyright (c) 2014, 2016-2017 Wind River Systems, Inc.
  *
  * Use, modification and distribution are subject to the
  * Boost Software License, Version 1.0.  (See accompanying file
@@ -10,23 +10,28 @@
 /*
 Modification history
 --------------------
+18jan17,dlk  Add LAYER_REQUIRES BZIP2, as BZIP2 is no longer default.
+09jan17,dlk  Add some FEATURE_REQUIRES items.
 24may16,brk  Updated to HLD
 28nov14,brk  Created.
 */
 
 
 Layer BOOST {
- SYNOPSIS 	Boost C++ Libraries
- HELP     	Boost provides free peer-reviewed portable C++ source libraries. \
-            This layer enables boost for VxWorks. Support for boost itself is not \
-			provided by Wind River. Please use the resources at boost.org instead.
- VERSION    1.59.0.0
- FEATURE    OPEN_SOURCE
- VENDOR     Wind River
- VSB_REQUIRES RTP
- LAYER_REQUIRES  UNIX 
- PARENT       
- OPTIONAL     YES
- DEFAULT      NO
- DOC_BUILD    NO
+     SYNOPSIS          Boost C++ Libraries
+     HELP              Boost provides free peer-reviewed portable C++ source libraries. \
+                       This layer enables boost for VxWorks. Support for boost itself is not \
+                       provided by Wind River. Please use the resources at boost.org instead.
+     VERSION           1.59.0.0
+     FEATURE           OPEN_SOURCE
+     FEATURE_REQUIRES  {CORE_IO SET_GET_RLIMIT} \
+                       {SHELL RTP_EXIT_STATUS}
+     VENDOR            Wind River
+     VSB_REQUIRES      RTP
+     LAYER_REQUIRES    UNIX BZIP2
+     SUBSCRIBE         UNIX
+     PARENT
+     OPTIONAL          YES
+     DEFAULT           NO
+     DOC_BUILD         NO
 }

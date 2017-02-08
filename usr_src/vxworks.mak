@@ -8,7 +8,7 @@
 #
 #  modification history
 #  --------------------
-#  16oct16,brk  clean up for EAR 
+#  06dec16,brk  add rule for build_run_tests.sh
 #  29sep16,brk  add bin directory to LD_LIBRARY_PATH
 #  26aug15,brk  written
 #
@@ -19,6 +19,7 @@ endif
 ifneq ($(wildcard $(VSB_MAKE_CONFIG_FILE)),)
 include $(VSB_MAKE_CONFIG_FILE)
 endif
+
 
 
 ifdef _WRS_CONFIG_BOOST_ACCUMULATORS_TESTS
@@ -312,6 +313,7 @@ endif
 # python requires python support
 
 ifdef _WRS_CONFIG_BOOST_RANDOM_TESTS
+# looks like it needs /dev/urandom for entropy?
 BOOST_BUILD_TEST += random
 endif 
 
@@ -456,8 +458,7 @@ EXTRA_DEFINE += -DHAVE_MORECORE=0
 
 # Rather than removing all warnings, suppress the ones that are obviously extranious 
 ifeq ($(TOOL),gnu)
-EXTRA_DEFINE += -Wno-error=unused-parameter -Wno-unused-local-typedefs
-EXTRA_DEFINE += -Wno-comment -Wno-parentheses -Wno-reorder -Wno-narrowing
+EXTRA_DEFINE += -Wno-comment -Wno-parentheses -Wno-reorder -Wno-narrowing -Wno-error=unused-parameter
 BOOST_TOOL:= gcc
 endif
 
@@ -493,14 +494,14 @@ JOBS ?= 1
 #  for the testing script
 WORKSPACE :=$(strip $(dir $(VSB_DIR)))
 LAYER_SRC_PATH :=$(_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX)$(subst $(WORKSPACE),,$(PKG_SRC_BUILD_DIR))
-VSB_LD_LIBRARY_PATH :="$(_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX)$(subst $(WORKSPACE),,$(ROOT_DIR)/$(TOOL)/bin);$(_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX)$(subst $(WORKSPACE),,$(LIBDIR)/$(TOOL_COMMON_DIR))"
+VSB_LD_LIBRARY_PATH :=$(_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX)$(subst $(WORKSPACE),,$(ROOT_DIR)/$(TOOL)/bin);$(_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX)$(subst $(WORKSPACE),,$(LIBDIR)/$(TOOL_COMMON_DIR))
 
 ifneq ($(strip $(_WRS_CONFIG_BOOST_TELNET_ADDR)),)
  ifeq "$(WIND_HOST_TYPE)" "x86-win32"
 BOOST_TEST_EXE = "testing.launcher=vxworks_boost_test_run.bat"
  else
 BOOST_TEST_EXE ="testing.launcher=./vxworks_boost_test_run.exp"
- endif
+endif
 else
 BOOST_TEST_EXE ="testing.execute=off"  
 endif  
@@ -508,20 +509,44 @@ endif
 ifeq "$(WIND_HOST_TYPE)" "x86-win32"
 # Shorten paths on windows to avoid path length issues 
 BOOST_WORKAROUND += --abbreviate-paths
+CHMOD = touch 
+else
+CHMOD = chmod +x 
 endif 
+
+BOOST_ARGS =  --prefix=$(ROOT_DIR) --libdir=$(LIBDIR)/$(TOOL_COMMON_DIR) --includedir=$(VSB_DIR)/usr/h/public   
+BOOST_ARGS+=  link=static toolset=$(BOOST_TOOL) cross-compile=vxworks $(BOOST_WORKAROUND)
+
+# create a shell script for customers who whould prefer to invoke the test harness outside 
+# the VSB build
+build_run_tests.sh: $(AUTO_INCLUDE_VSB_CONFIG_QUOTE) $(VXWORKS_ENV_SH)  $(__AUTO_INCLUDE_LIST_UFILE)
+	@echo "#!/bin/bash"                                                 > $@
+	@echo "# build and run boost test harness "                         >> $@
+	@echo ". ./$(VXWORKS_ENV_SH)"                                       >> $@
+	@echo "if [ -z \"\$$BOOST_TELNET_ADDR\" ] ; then                  " >> $@
+	@echo "    export BOOST_TELNET_ADDR=\"$(_WRS_CONFIG_BOOST_TELNET_ADDR)\" " >> $@
+	@echo "fi "                                                         >> $@
+	@echo "if [ -z \"\$$LAYER_SRC_PATH\" ] ; then                     " >> $@
+	@echo "    export LAYER_SRC_PATH=\"$(LAYER_SRC_PATH)\"            " >> $@
+	@echo "fi "                                                         >> $@
+	@echo "export PKG_SRC_BUILD_DIR=\"$(PKG_SRC_BUILD_DIR)\"          " >> $@ 
+	@echo "export VSB_LD_LIBRARY_PATH=\"$(VSB_LD_LIBRARY_PATH)\"      " >> $@ 
+	@echo "cd status  "                                                 >> $@
+	@echo "../b2 $(BOOST_ARGS) \\">> $@
+	@echo "     \"\$$@\"  testing.launcher=./vxworks_boost_test_run.exp" >>$@
+	@$(CHMOD)  $@
 
 
 ifdef BOOST_BUILD_TEST
-boost_build: $(AUTO_INCLUDE_VSB_CONFIG_QUOTE) $(VXWORKS_ENV_SH)  $(__AUTO_INCLUDE_LIST_UFILE)  
+boost_build: $(AUTO_INCLUDE_VSB_CONFIG_QUOTE) $(VXWORKS_ENV_SH)  $(__AUTO_INCLUDE_LIST_UFILE) build_run_tests.sh
 	. ./$(VXWORKS_ENV_SH) &&  cd status   &&  \
 			BOOST_TELNET_ADDR="$(_WRS_CONFIG_BOOST_TELNET_ADDR)"  \
 			LAYER_SRC_PATH="$(LAYER_SRC_PATH)" \
-			VSB_LD_LIBRARY_PATH=$(VSB_LD_LIBRARY_PATH) \
-	nice ../b2 -j$(JOBS) --prefix=$(ROOT_DIR) --libdir=$(LIBDIR)/$(TOOL_COMMON_DIR) --includedir=$(VSB_DIR)/usr/h/public   \
-		   link=static toolset=$(BOOST_TOOL) cross-compile=vxworks $(BOOST_TEST_EXE)  $(BOOST_WORKAROUND) \
-		  "--limit-tests=$(BOOST_LIMIT_TESTS)"  -q  -d1
+			PKG_SRC_BUILD_DIR="$(PKG_SRC_BUILD_DIR)"  \
+			VSB_LD_LIBRARY_PATH="$(VSB_LD_LIBRARY_PATH)" \
+	nice ../b2 -j$(JOBS) $(BOOST_ARGS) $(BOOST_TEST_EXE) "--limit-tests=$(BOOST_LIMIT_TESTS)"  -q  -d2
 else
-boost_build:
+boost_build: build_run_tests.sh 
 	$(info No BOOST tests are selected, nothing will be built) 
 endif
 

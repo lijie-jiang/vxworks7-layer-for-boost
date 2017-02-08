@@ -1,0 +1,13 @@
+diff -uNdr BOOST/boost_1_59_0/boost/type_traits/intrinsics.hpp BOOST_VX/boost_1_59_0/boost/type_traits/intrinsics.hpp
+--- boost_1_59_0/boost/type_traits/intrinsics.hpp	2015-05-21 10:51:23.000000000 -0700
++++ boost_1_59_0/boost/type_traits/intrinsics.hpp	2016-12-14 18:31:19.331180306 -0800
+@@ -242,7 +242,8 @@
+ #   define BOOST_IS_CLASS(T) __is_class(T)
+ #   define BOOST_IS_ENUM(T) __is_enum(T)
+ #   define BOOST_IS_POLYMORPHIC(T) __is_polymorphic(T)
+-#   if (!defined(unix) && !defined(__unix__)) || defined(__LP64__)
++#   if (!defined(unix) && !defined(__unix__) && \
++       !(defined(__VXWORKS__) && defined(__i386__))) || defined(__LP64__)
+       // GCC sometimes lies about alignment requirements
+       // of type double on 32-bit unix platforms, use the
+       // old implementation instead in that case:

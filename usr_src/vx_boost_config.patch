@@ -1,6 +1,6 @@
-diff -uNdr boost_1_59_0/boost/config/compiler/diab.hpp ../../vx7/workspace/Vsb64/3pp/BOOST/boost_1_59_0/boost/config/compiler/diab.hpp
---- boost_1_59_0/boost/config/compiler/diab.hpp	1970-01-01 00:00:00.000000000 +0000
-+++ boost_1_59_0/boost/config/compiler/diab.hpp	2016-06-10 23:46:49.669404900 +0000
+diff -uNdr boost_1_59_0/boost/config/compiler/diab.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/config/compiler/diab.hpp
+--- boost_1_59_0/boost/config/compiler/diab.hpp	1969-12-31 19:00:00.000000000 -0500
++++ boost_1_59_0/boost/config/compiler/diab.hpp	2016-11-07 14:06:55.000000000 -0500
 @@ -0,0 +1,27 @@
 +//
 +// 
@@ -29,9 +29,9 @@ diff -uNdr boost_1_59_0/boost/config/compiler/diab.hpp ../../vx7/workspace/Vsb64
 +/* #define BOOST_NO_CXX11_VARIADIC_MACROS */
 +
 +#define BOOST_COMPILER "Wind River Diab " BOOST_STRINGIZE(__VERSION_NUMBER__)
-diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../../vx7/workspace/Vsb64/3pp/BOOST/boost_1_59_0/boost/config/platform/vxworks.hpp
---- boost_1_59_0/boost/config/platform/vxworks.hpp	2015-08-04 04:44:50.000000000 +0000
-+++ boost_1_59_0/boost/config/platform/vxworks.hpp	2016-06-12 22:06:49.455931100 +0000
+diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/config/platform/vxworks.hpp
+--- boost_1_59_0/boost/config/platform/vxworks.hpp	2015-08-04 07:44:49.000000000 -0400
++++ boost_1_59_0/boost/config/platform/vxworks.hpp	2016-11-22 18:01:55.000000000 -0500
 @@ -1,30 +1,29 @@
  //  (C) Copyright Dustin Spicuzza 2009.
  //      Adapted to vxWorks 6.9 by Peter Brockamp 2012.
@@ -326,7 +326,7 @@ diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../../vx7/workspace/Vs
  #ifndef S_ISSOCK
  #  define S_ISSOCK(mode) ((mode & S_IFMT) == S_IFSOCK) // Is file a socket?
  #endif
-@@ -360,10 +347,52 @@
+@@ -360,10 +347,64 @@
  #if !defined(BUS_ADRALN) && defined(BUS_ADRALNR)
  #  define BUS_ADRALN     BUS_ADRALNR                   // Correct a supposed typo in vxWorks' <signal.h>
  #endif
@@ -371,7 +371,9 @@ diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../../vx7/workspace/Vs
 +#  define BOOST_NO_CXX11_HDR_UNORDERED_MAP
 +#  define BOOST_NO_CXX11_HDR_UNORDERED_SET 
 +#else
++#ifndef  BOOST_SYSTEM_NO_DEPRECATED
 +#  define BOOST_SYSTEM_NO_DEPRECATED  // workaround link error in spirit
++#endif
 +#endif
 +
 +
@@ -380,9 +382,19 @@ diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../../vx7/workspace/Vs
 +// restrict is an iostreams class
 +#undef restrict
 +
-diff -uNdr boost_1_59_0/boost/config/select_compiler_config.hpp ../../vx7/workspace/Vsb64/3pp/BOOST/boost_1_59_0/boost/config/select_compiler_config.hpp
---- boost_1_59_0/boost/config/select_compiler_config.hpp	2015-08-04 04:44:50.000000000 +0000
-+++ boost_1_59_0/boost/config/select_compiler_config.hpp	2016-06-10 23:46:49.700655100 +0000
++// use fake poll() from Unix layer in ASIO to get full functionality 
++// most libraries will use select() but this define allows 'iostream' functionality
++// which is based on poll() only
++#if (_WRS_VXWORKS_MAJOR > 6)
++#  ifndef BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR
++#    define BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR
++#  endif
++#else 
++#  define BOOST_ASIO_DISABLE_SERIAL_PORT
++#endif
+diff -uNdr boost_1_59_0/boost/config/select_compiler_config.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/config/select_compiler_config.hpp
+--- boost_1_59_0/boost/config/select_compiler_config.hpp	2015-08-04 07:44:49.000000000 -0400
++++ boost_1_59_0/boost/config/select_compiler_config.hpp	2016-11-07 14:06:55.000000000 -0500
 @@ -48,6 +48,10 @@
  //  Digital Mars C++
  #   define BOOST_COMPILER_CONFIG "boost/config/compiler/digitalmars.hpp"
@@ -394,9 +406,9 @@ diff -uNdr boost_1_59_0/boost/config/select_compiler_config.hpp ../../vx7/worksp
  # elif defined(__GNUC__) && !defined(__ibmxl__)
  //  GNU C++:
  #   define BOOST_COMPILER_CONFIG "boost/config/compiler/gcc.hpp"
-diff -uNdr boost_1_59_0/boost/config/stdlib/dinkumware.hpp ../../vx7/workspace/Vsb64/3pp/BOOST/boost_1_59_0/boost/config/stdlib/dinkumware.hpp
---- boost_1_59_0/boost/config/stdlib/dinkumware.hpp	2015-08-04 04:44:50.000000000 +0000
-+++ boost_1_59_0/boost/config/stdlib/dinkumware.hpp	2016-06-10 23:46:49.716280400 +0000
+diff -uNdr boost_1_59_0/boost/config/stdlib/dinkumware.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/config/stdlib/dinkumware.hpp
+--- boost_1_59_0/boost/config/stdlib/dinkumware.hpp	2015-08-04 07:44:49.000000000 -0400
++++ boost_1_59_0/boost/config/stdlib/dinkumware.hpp	2016-11-07 14:06:55.000000000 -0500
 @@ -96,7 +96,8 @@
  #include <exception>
  #endif
@@ -407,9 +419,9 @@ diff -uNdr boost_1_59_0/boost/config/stdlib/dinkumware.hpp ../../vx7/workspace/V
  #  define BOOST_NO_STD_TYPEINFO
  #endif  
  
-diff -uNdr boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp ../../vx7/workspace/Vsb64/3pp/BOOST/boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp
---- boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp	2015-08-04 04:44:50.000000000 +0000
-+++ boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp	2016-06-10 23:46:49.731904900 +0000
+diff -uNdr boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp
+--- boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp	2015-08-04 07:44:49.000000000 -0400
++++ boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp	2016-11-07 14:06:55.000000000 -0500
 @@ -78,6 +78,7 @@
  #  include <unistd.h>
  #endif

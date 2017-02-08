@@ -42,13 +42,51 @@ cpp = [ os.environ CPP ] ;
 cxx = [ os.environ CXX ] ;
 ar = [ os.environ AR ] ;
 as = [ os.environ AS ] ;
-#Note: we don't use LIBPATH, because gcc.link.dll puts it first on commandline and we need it after the PIC path in OPTIONS
+linker = [ os.environ LD ] ;
 
+#   Note: we don't use LIBPATH, because gcc.link.dll puts it first on commandline 
+#         and we need it after the PIC path in OPTIONS
+#
 
-using gcc : : $(cxx) : <cflags>$(cflags) <cxxflags>$(cxxflags) <compileflags>$(compileflags) <linkflags>$(linkflags) <linker-type>vxworks <archiver>$(ar) <dll-path>$(dll-path)   ; 
-using diab : : $(cxx) : <cflags>$(cflags) <cxxflags>$(cxxflags) <compileflags>$(compileflags) <linkflags>$(linkflags) <linker-type>vxworks <archiver>$(ar) <dll-path>$(dll-path)  ; 
-#using intel : : $(cxx) : <cflags>$(cflags) <cxxflags>$(cxxflags) <compileflags>$(compileflags) <linkflags>$(linkflags) <linker-type>vxworks <archiver>$(ar) <dll-path>$(dll-path)  ; 
-    
+using gcc : : $(cxx) : 
+                    <cflags>$(cflags) 
+                    <cxxflags>$(cxxflags) 
+                    <compileflags>$(compileflags) 
+                    <linkflags>$(linkflags) 
+                    <linker-type>vxworks 
+                    <archiver>$(ar) 
+                    <dll-path>$(dll-path) ; 
+
+using diab : : $(cxx) : 
+                    <cflags>$(cflags) 
+                    <cxxflags>$(cxxflags) 
+                    <compileflags>$(compileflags) 
+                    <linkflags>$(linkflags) 
+                    <linker-type>vxworks 
+                    <archiver>$(ar) 
+                    <dll-path>$(dll-path) 
+                    <linker>$(linker) ;   
+
+using clang-vxworks : : $(cxx) : 
+                    <cflags>$(cflags) 
+                    <cxxflags>$(cxxflags) 
+                    <compileflags>$(compileflags) 
+                    <linkflags>$(linkflags) 
+                    <linker-type>vxworks 
+                    <archiver>$(ar) 
+                    <dll-path>$(dll-path)
+                    <linker>$(linker) ; 
+
+using intel-vxworks : : $(cxx) : 
+                    <cflags>$(cflags) 
+                    <cxxflags>$(cxxflags) 
+                    <compileflags>$(compileflags) 
+                    <linkflags>$(linkflags) 
+                    <linker-type>vxworks 
+                    <archiver>$(ar) 
+                    <dll-path>$(dll-path)
+                    <linker>$(linker) ; 
+                    
 project : default-build <toolset>gcc ;
 
 # Python configuration

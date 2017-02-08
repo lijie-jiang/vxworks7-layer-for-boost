@@ -1,0 +1,730 @@
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/allocation/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/allocation/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/allocation/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/allocation/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/buffers/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/buffers/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/buffers/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/buffers/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/chat/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/chat/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/chat/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/chat/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -30,10 +30,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/echo/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/echo/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/echo/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/echo/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -30,10 +30,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/fork/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/fork/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/fork/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/fork/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+@@ -44,10 +44,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/http/client/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/http/client/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/http/client/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/http/client/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/http/server/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/http/server/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/http/server/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/http/server/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -37,10 +37,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/http/server2/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/http/server2/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/http/server2/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/http/server2/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -37,10 +37,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/http/server3/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/http/server3/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/http/server3/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/http/server3/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -36,10 +36,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/http/server4/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/http/server4/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/http/server4/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/http/server4/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -35,10 +35,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/icmp/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/icmp/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/icmp/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/icmp/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/invocation/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/invocation/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/invocation/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/invocation/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/iostreams/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/iostreams/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/iostreams/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/iostreams/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/local/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/local/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/local/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/local/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -30,10 +30,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+@@ -45,10 +45,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+@@ -60,10 +60,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+@@ -75,10 +75,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/multicast/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/multicast/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/multicast/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/multicast/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/nonblocking/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/nonblocking/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/nonblocking/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/nonblocking/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/porthopper/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/porthopper/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/porthopper/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/porthopper/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/serialization/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/serialization/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/serialization/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/serialization/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -30,10 +30,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/services/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/services/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/services/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/services/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -31,10 +31,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/socks4/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/socks4/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/socks4/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/socks4/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/spawn/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/spawn/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/spawn/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/spawn/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -31,10 +31,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/ssl/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/ssl/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/ssl/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/ssl/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -40,10 +40,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+     <library>ssl
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/timeouts/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/timeouts/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/timeouts/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/timeouts/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/timers/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/timers/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/timers/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/timers/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+@@ -45,7 +45,7 @@
+       /boost/system//boost_system
+     : <define>BOOST_ALL_NO_LIB=1
+       <threading>multi
+-      <os>NT,<toolset>gcc:<library>ws2_32
+-      <os>NT,<toolset>gcc:<library>mswsock
++      <target-os>windows,<toolset>gcc:<library>ws2_32
++      <target-os>windows,<toolset>gcc:<library>mswsock
+     ;
+ }
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/tutorial/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/tutorial/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/tutorial/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/tutorial/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -30,10 +30,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp03/windows/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp03/windows/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp03/windows/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp03/windows/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp11/allocation/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp11/allocation/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp11/allocation/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp11/allocation/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp11/buffers/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp11/buffers/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp11/buffers/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp11/buffers/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp11/chat/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp11/chat/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp11/chat/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp11/chat/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -30,10 +30,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp11/echo/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp11/echo/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp11/echo/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp11/echo/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -30,10 +30,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp11/futures/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp11/futures/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp11/futures/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp11/futures/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -29,10 +29,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp11/http/server/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp11/http/server/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp11/http/server/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp11/http/server/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -37,10 +37,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/example/cpp11/spawn/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/example/cpp11/spawn/Jamfile.v2
+--- boost_1_59_0/libs/asio/example/cpp11/spawn/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/example/cpp11/spawn/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -31,10 +31,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/test/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/test/Jamfile.v2
+--- boost_1_59_0/libs/asio/test/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/test/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -41,18 +41,18 @@
+     <library>/boost/regex//boost_regex
+     <define>BOOST_ALL_NO_LIB=1
+     <threading>multi
+-    <os>LINUX:<define>_XOPEN_SOURCE=600
+-    <os>LINUX:<define>_GNU_SOURCE=1
++    <target-os>linux:<define>_XOPEN_SOURCE=600
++    <target-os>linux:<define>_GNU_SOURCE=1
+     <os>SOLARIS:<define>_XOPEN_SOURCE=500
+     <os>SOLARIS:<define>__EXTENSIONS__
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>cw:<library>ws2_32
+-    <os>NT,<toolset>cw:<library>mswsock
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>cw:<library>ws2_32
++    <target-os>windows,<toolset>cw:<library>mswsock
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+     <os>QNXNTO:<library>socket
+diff -uNdr boost_1_59_0/libs/asio/test/latency/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/test/latency/Jamfile.v2
+--- boost_1_59_0/libs/asio/test/latency/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/test/latency/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -30,10 +30,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
+diff -uNdr boost_1_59_0/libs/asio/test/ssl/Jamfile.v2 ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/libs/asio/test/ssl/Jamfile.v2
+--- boost_1_59_0/libs/asio/test/ssl/Jamfile.v2	2015-03-23 16:24:12.000000000 -0400
++++ boost_1_59_0/libs/asio/test/ssl/Jamfile.v2	2016-11-07 14:06:55.000000000 -0500
+@@ -40,10 +40,10 @@
+     <threading>multi
+     <os>SOLARIS:<library>socket
+     <os>SOLARIS:<library>nsl
+-    <os>NT:<define>_WIN32_WINNT=0x0501
+-    <os>NT,<toolset>gcc:<library>ws2_32
+-    <os>NT,<toolset>gcc:<library>mswsock
+-    <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
++    <target-os>windows:<define>_WIN32_WINNT=0x0501
++    <target-os>windows,<toolset>gcc:<library>ws2_32
++    <target-os>windows,<toolset>gcc:<library>mswsock
++    <target-os>windows,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+     <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+     <os>HPUX:<library>ipv6
+   ;
