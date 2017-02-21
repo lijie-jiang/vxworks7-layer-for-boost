@@ -83,7 +83,7 @@ try:
     #else '#', which is what we want to see
     stdout.write("Executed: " + test[2].decode("UTF-8").replace("\r\n", "\nResult: ", 1).replace("\r\n[vxWorks *]#","\n[vxWorks *]#") + "\n\n")
     tn.write("echo \$?\r\n".encode("UTF-8"))
-    stdout.write("Executed: " + tn.read_until("#".encode("UTF-8"), 60).decode("UTF-8").replace("\r\n", "\nResult: ", 1).replace("\r\n[vxWorks *]#","\n[vxWorks *]#") + "\n\n") #output the last bit of output before exiting
+    stdout.write("Executed: " + tn.read_until("#".encode("UTF-8"), 100).decode("UTF-8").replace("\r\n", "\nResult: ", 1).replace("\r\n[vxWorks *]#","\n[vxWorks *]#") + "\n\n") #output the last bit of output before exiting
     
 except Exception as error:
     stdout.write("\n\nAn error occured:\n\t\t\t" + str(error) + "\n\n")
