@@ -60,7 +60,7 @@ try:
     to_run += "\r\n"
     tn.write(to_run.encode("UTF-8"))
     #tn.write("\r\n".encode("UTF-8"))
-    test = tn.expect(["due to signal 6.".encode("UTF-8"), "due to signal 11.".encode("UTF-8"), "and has been deleted.".encode("UTF-8"), "#".encode("UTF-8")], 60)
+    test = tn.expect(["due to signal 6.".encode("UTF-8"), "due to signal 11.".encode("UTF-8"), "and has been deleted.".encode("UTF-8"), "#".encode("UTF-8")], 100)
     result = test[0] #will give the index of which ever thing our expeect found (-1 for timeout)
     if result != 3:
         stdout.write("\n\nAn error occured when trying to execute: " + to_run + "The error was:\n\t\t\t")
@@ -83,7 +83,7 @@ try:
     #else '#', which is what we want to see
     stdout.write("Executed: " + test[2].decode("UTF-8").replace("\r\n", "\nResult: ", 1).replace("\r\n[vxWorks *]#","\n[vxWorks *]#") + "\n\n")
     tn.write("echo \$?\r\n".encode("UTF-8"))
-    stdout.write("Executed: " + tn.read_until("#".encode("UTF-8"), 100).decode("UTF-8").replace("\r\n", "\nResult: ", 1).replace("\r\n[vxWorks *]#","\n[vxWorks *]#") + "\n\n") #output the last bit of output before exiting
+    stdout.write("Executed: " + tn.read_until("#".encode("UTF-8"), 60).decode("UTF-8").replace("\r\n", "\nResult: ", 1).replace("\r\n[vxWorks *]#","\n[vxWorks *]#") + "\n\n") #output the last bit of output before exiting
     
 except Exception as error:
     stdout.write("\n\nAn error occured:\n\t\t\t" + str(error) + "\n\n")
