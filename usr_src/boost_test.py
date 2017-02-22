@@ -54,7 +54,7 @@ try:
     tn.write("cd {src_dir}/status\r\n".format(src_dir=src_dir).encode("UTF-8"))
     r = tn.expect(["#".encode("UTF-8")], 45)
     stdout.write("Executed: " + r[2].decode("UTF-8").replace("\r\n", "\nResult: ", 1).replace("\r\n[vxWorks *]#","\n[vxWorks *]#") + "\n\n")
-    to_run = "run -x -t 0x01000000 -- "
+    to_run = "run -x -t 0x01000000 -u 100000 -- "
     for arg in args.argv:
         to_run += arg.replace("\\","/") + " "
     to_run += "\r\n"
