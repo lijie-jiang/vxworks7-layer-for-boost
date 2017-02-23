@@ -11,6 +11,7 @@ import os
 import argparse
 from sys import stdout
 import sys
+import re
 
 #from datetime import datetime
 #now = datetime.now() #for a timestamped log file
@@ -83,8 +84,10 @@ try:
     #else '#', which is what we want to see
     stdout.write("Executed: " + test[2].decode("UTF-8").replace("\r\n", "\nResult: ", 1).replace("\r\n[vxWorks *]#","\n[vxWorks *]#") + "\n\n")
     tn.write("echo \$?\r\n".encode("UTF-8"))
-    stdout.write("Executed: " + tn.read_until("#".encode("UTF-8"), 60).decode("UTF-8").replace("\r\n", "\nResult: ", 1).replace("\r\n[vxWorks *]#","\n[vxWorks *]#") + "\n\n") #output the last bit of output before exiting
-    
+    echo_output = tn.read_until("#".encode("UTF-8"), 60).decode("UTF-8")
+    stdout.write("Executed: " + echo_output.replace("\r\n", "\nResult: ", 1).replace("\r\n[vxWorks *]#","\n[vxWorks *]#") + "\n\n") #output the last bit of output before exiting
+    echo_value = int(re.findall(r'\d+', echo_output)[0]) #finds the first integer inside the echo string
+                
 except Exception as error:
     stdout.write("\n\nAn error occured:\n\t\t\t" + str(error) + "\n\n")
     tn.write("exit\r\n".encode("UTF-8"))
@@ -95,4 +98,4 @@ if not exited: #if we did not timeout. If we did, we do not want to stop things 
     tn.write("exit\r\n".encode("UTF-8"))
 stdout.write("Telnet disconnected...")
 stdout.close()
-sys.exit(0)
+sys.exit(echo_value)
