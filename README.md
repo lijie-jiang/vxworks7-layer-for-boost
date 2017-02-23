@@ -128,7 +128,7 @@ $ vxprj vsb config -s  \
 -add "_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX=bkuhlfedora:"
 ```
 The tests are executed by telnet-ing to the target using an expect script found in the Boost layer: **vxworks_boost_test_run.exp.** 
-Or, for 64 bit Windows machines: **boost_test.exe**
+Or, for 64 bit Windows machines: **boost_test.exe.**
 
 There is a *chicken and egg* problem here. You must create a VIP from the VSB before running the Boost tests, so it is necessary to build the VSB twice in order to run the tests. For example; execute the following in you workspace:
 
@@ -159,6 +159,9 @@ $ vxprj vsb config -s -add  \
 "_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX=bkuhlfedora:"
 $ make
 ```
+
+If you are running Windows, in the above commands, replace `wrenv.linux` with `wrenv` and `vxsim_linux` with `vxsim_windows`.
+
 Test pass/failure results appear on the console; the results are also stored in the Boost build directory: 
 ***vsbDir*/3pp/BOOST/boost_1_59_0/bin.v2/libs/*library_name***.
 
@@ -191,7 +194,7 @@ $ export BOOST_TELNET_ADDR=192.168.200.1"
 $ ./build_run_tests.sh  --limit-tests=math
 ```
 
-If you are running Windows, in the above commands, replace `wrenv.linux` with `wrenv` and `vxsim_linux` with `vxsim_windows`
+If you are running Windows, in the above commands, replace `wrenv.linux` with `wrenv` and `vxsim_linux` with `vxsim_windows`.
 
 This is wrapper of the Boost **b2** command, and by default will test the entire set of Boost libraries, even those that are unsupported.  So the command should be invoked with options modifying the behavior for your testing requirments. For complete **b2** documetation please consult the boost documetation http://www.boost.org/build/doc/html/bbv2/overview/invocation.html. The following are the options used by the VSB boost layer that are not included in **build_run_tests.sh** :
 
