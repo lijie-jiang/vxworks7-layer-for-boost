@@ -1,0 +1,112 @@
+diff -uNdr boost_1_59_0.orig/boost/date_time/gregorian_calendar.ipp boost_1_59_0/boost/date_time/gregorian_calendar.ipp
+--- boost_1_59_0.orig/boost/date_time/gregorian_calendar.ipp	2015-03-03 14:19:01.000000000 -0800
++++ boost_1_59_0/boost/date_time/gregorian_calendar.ipp	2017-02-25 16:46:37.862953671 -0800
+@@ -44,12 +44,12 @@
+     unsigned long week = (juliantoday + day - julianbegin + 4)/7;
+ 
+     if ((week >= 1) && (week <= 52)) {
+-      return week;
++      return static_cast<int>(week);
+     }
+ 
+     if (week == 53) {
+       if((day==6) ||(day == 5 && is_leap_year(ymd.year))) {
+-        return week; //under these circumstances week == 53.
++        return static_cast<int>(week); //under these circumstances week == 53.
+       } else {
+         return 1; //monday - wednesday is in week 1 of next year
+       }
+@@ -60,10 +60,10 @@
+       juliantoday = julian_day_number(ymd);
+       day = (julianbegin + 3) % 7;
+       week = (juliantoday + day - julianbegin + 4)/7;
+-      return week;
++      return static_cast<int>(week);
+     }
+ 
+-    return week;  //not reachable -- well except if day == 5 and is_leap_year != true
++    return static_cast<int>(week);  //not reachable -- well except if day == 5 and is_leap_year != true
+ 
+   }
+ 
+@@ -79,7 +79,7 @@
+     unsigned short y = static_cast<unsigned short>(ymd.year + 4800 - a);
+     unsigned short m = static_cast<unsigned short>(ymd.month + 12*a - 3);
+     unsigned long  d = ymd.day + ((153*m + 2)/5) + 365*y + (y/4) - (y/100) + (y/400) - 32045;
+-    return d;
++    return static_cast<date_int_type_>(d);
+   }
+ 
+   //! Convert a year-month-day into the julian day number
+diff -uNdr boost_1_59_0.orig/boost/date_time/microsec_time_clock.hpp boost_1_59_0/boost/date_time/microsec_time_clock.hpp
+--- boost_1_59_0.orig/boost/date_time/microsec_time_clock.hpp	2015-03-03 14:19:01.000000000 -0800
++++ boost_1_59_0/boost/date_time/microsec_time_clock.hpp	2017-02-25 16:52:20.576297118 -0800
+@@ -83,7 +83,7 @@
+       timeval tv;
+       gettimeofday(&tv, 0); //gettimeofday does not support TZ adjust on Linux.
+       std::time_t t = tv.tv_sec;
+-      boost::uint32_t sub_sec = tv.tv_usec;
++      boost::uint32_t sub_sec = static_cast<boost::uint32_t>(tv.tv_usec);
+ #elif defined(BOOST_HAS_FTIME)
+       winapi::file_time ft;
+       winapi::get_system_time_as_file_time(ft);
+diff -uNdr boost_1_59_0.orig/boost/date_time/posix_time/posix_time_duration.hpp boost_1_59_0/boost/date_time/posix_time/posix_time_duration.hpp
+--- boost_1_59_0.orig/boost/date_time/posix_time/posix_time_duration.hpp	2015-03-03 14:19:01.000000000 -0800
++++ boost_1_59_0/boost/date_time/posix_time/posix_time_duration.hpp	2017-02-25 15:50:49.619521525 -0800
+@@ -21,7 +21,7 @@
+   {
+   public:
+     explicit hours(long h) :
+-      time_duration(h,0,0)
++      time_duration(static_cast<hour_type>(h),0,0)
+     {}
+   };
+ 
+@@ -32,7 +32,7 @@
+   {
+   public:
+     explicit minutes(long m) :
+-      time_duration(0,m,0)
++      time_duration(0,static_cast<min_type>(m),0)
+     {}
+   };
+ 
+@@ -43,7 +43,7 @@
+   {
+   public:
+     explicit seconds(long s) :
+-      time_duration(0,0,s)
++      time_duration(0,0,static_cast<sec_type>(s))
+     {}
+   };
+ 
+diff -uNdr boost_1_59_0.orig/boost/date_time/time_system_counted.hpp boost_1_59_0/boost/date_time/time_system_counted.hpp
+--- boost_1_59_0.orig/boost/date_time/time_system_counted.hpp	2015-03-03 14:19:01.000000000 -0800
++++ boost_1_59_0/boost/date_time/time_system_counted.hpp	2017-02-25 17:01:08.639646035 -0800
+@@ -54,7 +54,7 @@
+         return date_type(time_count_.as_special());
+       }
+       else {
+-        typename calendar_type::date_int_type dc = day_count();
++        typename calendar_type::date_int_type dc = static_cast<typename calendar_type::date_int_type>(day_count());
+         //std::cout << "time_rep here:" << dc << std::endl;
+         ymd_type ymd = calendar_type::from_day_number(dc);
+         return date_type(ymd);
+diff -uNdr boost_1_59_0.orig/boost/date_time/wrapping_int.hpp boost_1_59_0/boost/date_time/wrapping_int.hpp
+--- boost_1_59_0.orig/boost/date_time/wrapping_int.hpp	2015-03-03 14:19:01.000000000 -0800
++++ boost_1_59_0/boost/date_time/wrapping_int.hpp	2017-02-26 13:30:58.848333807 -0800
+@@ -148,12 +148,12 @@
+     if ((value_) > wrap_max)
+     {
+       ++wrap;
+-      value_ -= (wrap_max - wrap_min + 1);
++      value_ = static_cast<int_type>(value_ - (wrap_max - wrap_min + 1));
+     }
+     else if((value_) < wrap_min)
+     {
+       --wrap;
+-      value_ += (wrap_max - wrap_min + 1);
++      value_ = static_cast<int_type>(value_ + (wrap_max - wrap_min + 1));
+     }
+     return wrap;
+   }

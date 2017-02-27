@@ -1,6 +1,42 @@
-diff -uNdr boost_1_59_0/boost/archive/xml_archive_exception.hpp vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/boost/archive/xml_archive_exception.hpp
---- boost_1_59_0/boost/archive/xml_archive_exception.hpp	2015-05-23 11:51:06.000000000 -0700
-+++ boost_1_59_0/boost/archive/xml_archive_exception.hpp	2016-03-11 21:50:10.272624097 -0800
+diff -uNdr boost_1_59_0.orig/boost/archive/basic_archive.hpp boost_1_59_0/boost/archive/basic_archive.hpp
+--- boost_1_59_0.orig/boost/archive/basic_archive.hpp	2015-05-23 11:51:06.000000000 -0700
++++ boost_1_59_0/boost/archive/basic_archive.hpp	2017-02-26 14:03:31.215079262 -0800
+@@ -43,7 +43,7 @@
+     base_type t;
+ public:
+     library_version_type(): t(0) {};
+-    explicit library_version_type(const unsigned int & t_) : t(t_){
++    explicit library_version_type(const unsigned int & t_) : t(static_cast<base_type>(t_)){
+         BOOST_ASSERT(t_ <= boost::integer_traits<base_type>::const_max);
+     }
+     library_version_type(const library_version_type & t_) : 
+@@ -112,11 +112,11 @@
+ public:
+     // should be private - but then can't use BOOST_STRONG_TYPE below
+     class_id_type() : t(0) {};
+-    explicit class_id_type(const int t_) : t(t_){
++    explicit class_id_type(const int t_) : t(static_cast<base_type>(t_)){
+         BOOST_ASSERT(t_ <= boost::integer_traits<base_type>::const_max);
+     }
+-    explicit class_id_type(const std::size_t t_) : t(t_){
+- //       BOOST_ASSERT(t_ <= boost::integer_traits<base_type>::const_max);
++    explicit class_id_type(const std::size_t t_) : t(static_cast<base_type>(t_)){
++//       BOOST_ASSERT(t_ <= boost::integer_traits<base_type>::const_max);
+     }
+     class_id_type(const class_id_type & t_) : 
+         t(t_.t)
+@@ -151,7 +151,7 @@
+ public:
+     object_id_type(): t(0) {};
+     // note: presumes that size_t >= unsigned int.
+-    explicit object_id_type(const std::size_t & t_) : t(t_){
++    explicit object_id_type(const std::size_t & t_) : t(static_cast<base_type>(t_)){
+         BOOST_ASSERT(t_ <= boost::integer_traits<base_type>::const_max);
+     }
+     object_id_type(const object_id_type & t_) : 
+diff -uNdr boost_1_59_0.orig/boost/archive/xml_archive_exception.hpp boost_1_59_0/boost/archive/xml_archive_exception.hpp
+--- boost_1_59_0.orig/boost/archive/xml_archive_exception.hpp	2015-05-23 11:51:06.000000000 -0700
++++ boost_1_59_0/boost/archive/xml_archive_exception.hpp	2017-02-23 11:49:51.010322941 -0800
 @@ -45,6 +45,9 @@
          const char * e1 = NULL,
          const char * e2 = NULL

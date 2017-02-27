@@ -1,0 +1,377 @@
+diff -uNdr boost_1_59_0.orig/libs/pool/example/time_pool_alloc.cpp boost_1_59_0/libs/pool/example/time_pool_alloc.cpp
+--- boost_1_59_0.orig/libs/pool/example/time_pool_alloc.cpp	2015-01-15 09:05:29.000000000 -0800
++++ boost_1_59_0/libs/pool/example/time_pool_alloc.cpp	2017-02-26 14:53:04.725199258 -0800
+@@ -47,7 +47,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       a.deallocate(a.allocate(1), 1);
+   }
+-  end[0][0] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][0] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -55,7 +55,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       std::free(std::malloc(sizeof(larger_structure<N>)));
+   }
+-  end[0][1] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][1] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -63,7 +63,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       delete new (std::nothrow) larger_structure<N>;
+   }
+-  end[0][2] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][2] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -71,7 +71,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       alloc::deallocate(alloc::allocate());
+   }
+-  end[0][3] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][3] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -79,7 +79,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       alloc_sync::deallocate(alloc_sync::allocate());
+   }
+-  end[0][4] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][4] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -92,7 +92,7 @@
+         p.free(t);
+     }
+   }
+-  end[0][5] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][5] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   std::cout << "Test " << test_number++ << ": Alloc & Dealloc " << num_ints << " structures of size " << sizeof(larger_structure<N>) << ":" << std::endl;
+   std::cout << "  std::allocator: " << end[0][0] << " seconds" << std::endl;
+@@ -122,7 +122,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       a.deallocate(a.allocate(1), 1);
+   }
+-  end[0][0] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][0] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -130,7 +130,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       std::free(std::malloc(sizeof(int)));
+   }
+-  end[0][1] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][1] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -138,7 +138,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       delete new (std::nothrow) int;
+   }
+-  end[0][2] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][2] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -146,7 +146,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       alloc::deallocate(alloc::allocate());
+   }
+-  end[0][3] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][3] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -154,7 +154,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       alloc_sync::deallocate(alloc_sync::allocate());
+   }
+-  end[0][4] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][4] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -167,8 +167,7 @@
+         p2.free(t);
+     }
+   }
+-  end[0][5] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
+-
++  end[0][5] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -179,7 +178,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       a.deallocate(p[i], 1);
+   }
+-  end[1][0] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[1][0] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -189,7 +188,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       std::free(p[i]);
+   }
+-  end[1][1] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[1][1] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -199,7 +198,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       delete p[i];
+   }
+-  end[1][2] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[1][2] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -209,7 +208,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       alloc::deallocate(p[i]);
+   }
+-  end[1][3] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[1][3] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -219,7 +218,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       alloc_sync::deallocate(p[i]);
+   }
+-  end[1][4] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[1][4] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -231,7 +230,7 @@
+       if (p[i] != 0)
+         pl.free(p[i]);
+   }
+-  end[1][5] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[1][5] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   delete [] p;
+ 
+@@ -273,7 +272,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.push_back(0);
+   }
+-  end[0][0] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][0] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -282,7 +281,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.push_back(0);
+   }
+-  end[0][1] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][1] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -291,7 +290,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.push_back(0);
+   }
+-  end[0][2] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][2] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -300,7 +299,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.push_back(0);
+   }
+-  end[0][3] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][3] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -309,7 +308,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.push_back(0);
+   }
+-  end[0][4] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[0][4] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+ 
+   start = std::clock();
+@@ -319,7 +318,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.insert(0);
+   }
+-  end[1][0] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[1][0] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -328,7 +327,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.insert(0);
+   }
+-  end[1][1] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[1][1] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -337,7 +336,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.insert(0);
+   }
+-  end[1][2] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[1][2] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -346,7 +345,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.insert(0);
+   }
+-  end[1][3] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[1][3] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -355,7 +354,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.insert(0);
+   }
+-  end[1][4] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[1][4] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+ 
+   start = std::clock();
+@@ -365,7 +364,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.push_back(0);
+   }
+-  end[2][0] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[2][0] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -374,7 +373,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.push_back(0);
+   }
+-  end[2][1] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[2][1] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -383,7 +382,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.push_back(0);
+   }
+-  end[2][2] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[2][2] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -392,7 +391,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.push_back(0);
+   }
+-  end[2][3] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[2][3] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   start = std::clock();
+   for(l = 0; l < num_loops; ++l)
+@@ -401,7 +400,7 @@
+     for (unsigned long i = 0; i < num_ints; ++i)
+       x.push_back(0);
+   }
+-  end[2][4] = (std::clock() - start) / ((double) CLOCKS_PER_SEC);
++  end[2][4] = static_cast<double>(std::clock() - start) / ((double) CLOCKS_PER_SEC);
+ 
+   std::cout << "Test 0: Insertion & deletion of " << num_ints << " ints in a vector:" << std::endl;
+   std::cout << "  std::allocator: " << end[0][0] << " seconds" << std::endl;
+diff -uNdr boost_1_59_0.orig/libs/pool/test/test_bug_2696.cpp boost_1_59_0/libs/pool/test/test_bug_2696.cpp
+--- boost_1_59_0.orig/libs/pool/test/test_bug_2696.cpp	2015-01-15 09:05:29.000000000 -0800
++++ boost_1_59_0/libs/pool/test/test_bug_2696.cpp	2017-02-26 15:21:25.111934543 -0800
+@@ -18,9 +18,9 @@
+    static char * malloc BOOST_PREVENT_MACRO_SUBSTITUTION(const size_type bytes)
+    { 
+ #ifndef BOOST_POOL_VALGRIND
+-      static const unsigned max_size = sizeof(void*) * 40 + boost::integer::static_lcm<sizeof(size_type), sizeof(void *)>::value + sizeof(size_type);
++      static const size_type max_size = sizeof(void*) * 40 + boost::integer::static_lcm<sizeof(size_type), sizeof(void *)>::value + sizeof(size_type);
+ #else
+-      static const unsigned max_size = sizeof(void*) * 40;
++      static const size_type max_size = sizeof(void*) * 40;
+ #endif
+       if(bytes > max_size)
+          return 0;
+@@ -34,7 +34,7 @@
+ 
+ int main() 
+ {
+-   static const unsigned alloc_size = sizeof(void*);
++   static const unsigned alloc_size = static_cast<unsigned>(sizeof(void*));
+    boost::pool<limited_allocator_new_delete> p1(alloc_size, 10, 40);
+    for(int i = 1; i <= 40; ++i)
+       BOOST_TEST((p1.ordered_malloc)(i));
+diff -uNdr boost_1_59_0.orig/libs/pool/test/test_bug_5526.cpp boost_1_59_0/libs/pool/test/test_bug_5526.cpp
+--- boost_1_59_0.orig/libs/pool/test/test_bug_5526.cpp	2015-01-15 09:05:29.000000000 -0800
++++ boost_1_59_0/libs/pool/test/test_bug_5526.cpp	2017-02-26 14:36:20.141825384 -0800
+@@ -15,13 +15,13 @@
+ {
+    bad()
+    {
+-      buf = static_cast<int*>(boost::singleton_pool<int, sizeof(int)>::malloc());
++      buf = static_cast<int*>(boost::singleton_pool<int, static_cast<unsigned>(sizeof(int))>::malloc());
+       *buf = 0x1234;
+    }
+    ~bad()
+    {
+       BOOST_ASSERT(*buf == 0x1234);
+-      boost::singleton_pool<int, sizeof(int)>::free(buf);
++      boost::singleton_pool<int, static_cast<unsigned>(sizeof(int))>::free(buf);
+    }
+    int* buf;
+ };
+diff -uNdr boost_1_59_0.orig/libs/pool/test/test_msvc_mem_leak_detect.cpp boost_1_59_0/libs/pool/test/test_msvc_mem_leak_detect.cpp
+--- boost_1_59_0.orig/libs/pool/test/test_msvc_mem_leak_detect.cpp	2015-01-15 09:05:29.000000000 -0800
++++ boost_1_59_0/libs/pool/test/test_msvc_mem_leak_detect.cpp	2017-02-26 14:20:28.071786965 -0800
+@@ -37,14 +37,14 @@
+     }
+ 
+     {
+-        (boost::singleton_pool<Foo, sizeof(int)>::malloc)();
++        (boost::singleton_pool<Foo, static_cast<unsigned>(sizeof(int))>::malloc)();
+     }
+-    boost::singleton_pool<Foo, sizeof(int)>::purge_memory();
++    boost::singleton_pool<Foo, static_cast<unsigned>(sizeof(int))>::purge_memory();
+ 
+     {
+         std::vector<int, boost::pool_allocator<int> > v;
+         v.push_back(8);
+     }
+     boost::singleton_pool<boost::pool_allocator_tag,
+-        sizeof(int)>::release_memory();
++          static_cast<unsigned>(sizeof(int))>::release_memory();
+ }
+diff -uNdr boost_1_59_0.orig/libs/pool/test/test_simple_seg_storage.cpp boost_1_59_0/libs/pool/test/test_simple_seg_storage.cpp
+--- boost_1_59_0.orig/libs/pool/test/test_simple_seg_storage.cpp	2015-01-15 09:05:29.000000000 -0800
++++ boost_1_59_0/libs/pool/test/test_simple_seg_storage.cpp	2017-02-25 16:12:02.186225747 -0800
+@@ -88,7 +88,7 @@
+     /* Store::segregate(block, sz, partition_sz, end) */
+     std::size_t partition_sz
+         = boost::integer::static_lcm<sizeof(void*), sizeof(int)>::value;
+-    boost::uniform_int<> dist(partition_sz, 10000);
++    boost::uniform_int<> dist(static_cast<int>(partition_sz), 10000);
+     boost::variate_generator<boost::mt19937&,
+         boost::uniform_int<> > die(gen, dist);
+     std::size_t block_size = die();
