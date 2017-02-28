@@ -21,25 +21,27 @@ if {([info command expect] == "") && ($env(WIND_HOST_TYPE) == "x86-win32")} {
 # it is assumed rlogin is disabled and
 # no login credentials are necessary
 #
-# Copyright 2016, Wind River Systems, Inc.
+# Copyright 2016-2017  Wind River Systems, Inc.
 #
 # Use, modification and distribution are subject to the
 # Boost Software License, Version 1.0.  (See accompanying file
 # LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-#  modification history
-#  --------------------
-#  16dec16,dlk  Add VX_FP_TASK flag (-t 0x01000000) when launching RTPs.
-#  02oct16,brk  use -- in run command to mark end of options
-#  23sep16,brk  use new -x option to get exit status
-#  31mar16,brk  written
+# modification history
+# --------------------
+# 21feb17,dlk  Increase timeout to 100s, sleep after reboot to 25s, and
+#              RTP initial task stack size to 100000 bytes.
+# 16dec16,dlk  Add VX_FP_TASK flag (-t 0x01000000) when launching RTPs.
+# 02oct16,brk  use -- in run command to mark end of options
+# 23sep16,brk  use new -x option to get exit status
+# 31mar16,brk  written
 #
 
 set telnet_ip $::env(BOOST_TELNET_ADDR)
 set src_dir $::env(LAYER_SRC_PATH)
 set ld_library_path $::env(VSB_LD_LIBRARY_PATH)
 
-set timeout 60
+set timeout 100
 
 proc disconnect { return } {
 	log_user 0
@@ -70,7 +72,7 @@ log_user 1
 send -- "cd $src_dir/status\r"
 sleep 0.1
 expect -exact "\[vxWorks *\]# "
-send -- "run -x -t 0x01000000 -- "
+send -- "run -x -t 0x01000000 -u 100000 -- "
 foreach arg $::argv {
 	send -- "$arg "
 	}
@@ -79,7 +81,7 @@ sleep 3
 expect {
        timeout { puts "\nRTP Execution Timeout; rebooting\n"
                  send -- "\x18"
-                 sleep 15
+                 sleep 25
                  exit 1 }
        -exact "due to signal 6." {puts "\n\n SIGABRT\r";  disconnect 2 }
        -exact "due to signal 11." {puts "\n\n SEGFAULT\r";  disconnect 2 }

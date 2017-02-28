@@ -1,0 +1,98 @@
+diff -uNdr boost_1_59_0.orig/boost/pool/pool_alloc.hpp boost_1_59_0/boost/pool/pool_alloc.hpp
+--- boost_1_59_0.orig/boost/pool/pool_alloc.hpp	2015-01-15 09:05:29.000000000 -0800
++++ boost_1_59_0/boost/pool/pool_alloc.hpp	2017-02-26 13:48:44.081710127 -0800
+@@ -177,7 +177,7 @@
+          initialization. See ticket #2359 for a complete explanation at
+          http://svn.boost.org/trac/boost/ticket/2359) .
+        */
+-      singleton_pool<pool_allocator_tag, sizeof(T), UserAllocator, Mutex,
++      singleton_pool<pool_allocator_tag, static_cast<unsigned>(sizeof(T)), UserAllocator, Mutex,
+                      NextSize, MaxSize>::is_from(0);
+     }
+ 
+@@ -194,7 +194,7 @@
+          initialization. See ticket #2359 for a complete explanation
+          at http://svn.boost.org/trac/boost/ticket/2359 .
+        */
+-      singleton_pool<pool_allocator_tag, sizeof(T), UserAllocator, Mutex,
++      singleton_pool<pool_allocator_tag, static_cast<unsigned>(sizeof(T)), UserAllocator, Mutex,
+                      NextSize, MaxSize>::is_from(0);
+     }
+ 
+@@ -227,7 +227,7 @@
+           "Total allocated is now " << debug_info<true>::allocated << std::endl;
+ #endif
+       const pointer ret = static_cast<pointer>(
+-          singleton_pool<pool_allocator_tag, sizeof(T), UserAllocator, Mutex,
++              singleton_pool<pool_allocator_tag, static_cast<unsigned>(sizeof(T)), UserAllocator, Mutex,
+               NextSize, MaxSize>::ordered_malloc(n) );
+       if ((ret == 0) && n)
+         boost::throw_exception(std::bad_alloc());
+@@ -252,7 +252,7 @@
+       if (ptr == 0 || n == 0)
+         return;
+ #endif
+-      singleton_pool<pool_allocator_tag, sizeof(T), UserAllocator, Mutex,
++      singleton_pool<pool_allocator_tag, static_cast<unsigned>(sizeof(T)), UserAllocator, Mutex,
+           NextSize, MaxSize>::ordered_free(ptr, n);
+     }
+ };
+@@ -364,7 +364,7 @@
+       //! instance of this allocator is constructed during global
+       //! initialization. See ticket #2359 for a complete explanation
+       //! at http://svn.boost.org/trac/boost/ticket/2359 .
+-      singleton_pool<fast_pool_allocator_tag, sizeof(T),
++      singleton_pool<fast_pool_allocator_tag, static_cast<unsigned>(sizeof(T)),
+                      UserAllocator, Mutex, NextSize, MaxSize>::is_from(0);
+     }
+ 
+@@ -381,7 +381,7 @@
+       //! instance of this allocator is constructed during global
+       //! initialization. See ticket #2359 for a complete explanation
+       //! at http://svn.boost.org/trac/boost/ticket/2359 .
+-      singleton_pool<fast_pool_allocator_tag, sizeof(T),
++      singleton_pool<fast_pool_allocator_tag, static_cast<unsigned>(sizeof(T)),
+                      UserAllocator, Mutex, NextSize, MaxSize>::is_from(0);
+     }
+ 
+@@ -412,10 +412,10 @@
+     {
+       const pointer ret = (n == 1) ?
+           static_cast<pointer>(
+-              (singleton_pool<fast_pool_allocator_tag, sizeof(T),
++                  (singleton_pool<fast_pool_allocator_tag, static_cast<unsigned>(sizeof(T)),
+                   UserAllocator, Mutex, NextSize, MaxSize>::malloc)() ) :
+           static_cast<pointer>(
+-              singleton_pool<fast_pool_allocator_tag, sizeof(T),
++                  singleton_pool<fast_pool_allocator_tag, static_cast<unsigned>(sizeof(T)),
+                   UserAllocator, Mutex, NextSize, MaxSize>::ordered_malloc(n) );
+       if (ret == 0)
+         boost::throw_exception(std::bad_alloc());
+@@ -428,7 +428,7 @@
+     static pointer allocate()
+     { //! Allocate memory.
+       const pointer ret = static_cast<pointer>(
+-          (singleton_pool<fast_pool_allocator_tag, sizeof(T),
++              (singleton_pool<fast_pool_allocator_tag, static_cast<unsigned>(sizeof(T)),
+               UserAllocator, Mutex, NextSize, MaxSize>::malloc)() );
+       if (ret == 0)
+         boost::throw_exception(std::bad_alloc());
+@@ -442,15 +442,15 @@
+         return;
+ #endif
+       if (n == 1)
+-        (singleton_pool<fast_pool_allocator_tag, sizeof(T),
++        (singleton_pool<fast_pool_allocator_tag, static_cast<unsigned>(sizeof(T)),
+             UserAllocator, Mutex, NextSize, MaxSize>::free)(ptr);
+       else
+-        (singleton_pool<fast_pool_allocator_tag, sizeof(T),
++        (singleton_pool<fast_pool_allocator_tag, static_cast<unsigned>(sizeof(T)),
+             UserAllocator, Mutex, NextSize, MaxSize>::free)(ptr, n);
+     }
+     static void deallocate(const pointer ptr)
+     { //! deallocate/free
+-      (singleton_pool<fast_pool_allocator_tag, sizeof(T),
++      (singleton_pool<fast_pool_allocator_tag, static_cast<unsigned>(sizeof(T)),
+           UserAllocator, Mutex, NextSize, MaxSize>::free)(ptr);
+     }
+ };

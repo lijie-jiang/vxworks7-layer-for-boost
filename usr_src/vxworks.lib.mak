@@ -214,8 +214,9 @@ BOOST_BUILD_WITH_TARGETS:=$(BOOST_BUILD_WITH)
 endif
 
 ifeq "$(WIND_HOST_TYPE)" "x86-win32"
-# Shorten paths on windows to avoid path length issues 
-BOOST_WIN_WORKAROUND :=  --abbreviate-paths
+# Shorten paths on windows to avoid path length issues
+# Don't add postfix (default on windows) to library names layout    
+BOOST_WIN_WORKAROUND :=  --abbreviate-paths --layout=system
 endif 
 
 ifdef BOOST_BUILD_WITH_TARGETS

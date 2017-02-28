@@ -1,0 +1,14 @@
+diff -uNdr boost_1_59_0.orig/boost/mpl/aux_/preprocessed/gcc/template_arity.hpp boost_1_59_0/boost/mpl/aux_/preprocessed/gcc/template_arity.hpp
+--- boost_1_59_0.orig/boost/mpl/aux_/preprocessed/gcc/template_arity.hpp	2015-07-18 07:39:03.000000000 -0700
++++ boost_1_59_0/boost/mpl/aux_/preprocessed/gcc/template_arity.hpp	2017-02-26 14:14:11.991771787 -0800
+@@ -80,8 +80,8 @@
+ template< typename F, int N >
+ struct template_arity_impl
+ {
+-    BOOST_STATIC_CONSTANT(int, value =
+-          sizeof(::boost::mpl::aux::arity_helper(type_wrapper<F>(), arity_tag<N>())) - 1
++    BOOST_STATIC_CONSTANT(int, value = static_cast<int>(
++          sizeof(::boost::mpl::aux::arity_helper(type_wrapper<F>(), arity_tag<N>())) - 1)
+         );
+ };
+ 

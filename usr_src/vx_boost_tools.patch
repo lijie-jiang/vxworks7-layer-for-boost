@@ -1,6 +1,6 @@
-diff -uNdr boost_1_59_0/tools/build/src/tools/builtin.jam ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/tools/build/src/tools/builtin.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/builtin.jam ../../workspace/LLVM64bit/3pp/BOOST/boost_1_59_0/tools/build/src/tools/builtin.jam
 --- boost_1_59_0/tools/build/src/tools/builtin.jam	2015-08-11 09:53:51.000000000 -0400
-+++ boost_1_59_0/tools/build/src/tools/builtin.jam	2016-12-05 12:13:18.000000000 -0500
++++ boost_1_59_0/tools/build/src/tools/builtin.jam	2017-02-07 09:56:26.000000000 -0500
 @@ -41,7 +41,7 @@
  
  
@@ -10,9 +10,164 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/builtin.jam ../../workspace/VSB_Si
      elf  # Not actually an OS -- used for targeting bare metal where object
           # format is ELF.  This catches both -elf and -eabi gcc targets and well
           # as other compilers targeting ELF. It is not clear how often we need
-diff -uNdr boost_1_59_0/tools/build/src/tools/diab.jam ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/tools/build/src/tools/diab.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/clang-vxworks.jam ../../workspace/LLVM64bit/3pp/BOOST/boost_1_59_0/tools/build/src/tools/clang-vxworks.jam
+--- boost_1_59_0/tools/build/src/tools/clang-vxworks.jam	1969-12-31 19:00:00.000000000 -0500
++++ boost_1_59_0/tools/build/src/tools/clang-vxworks.jam	2017-02-07 14:31:26.000000000 -0500
+@@ -0,0 +1,151 @@
++# Copyright Brian Kuhl 2017.
++# Distributed under the Boost Software License, Version 1.0.
++# (See accompanying file LICENSE_1_0.txt
++# or copy at http://www.boost.org/LICENSE_1_0.txt)
++
++import clang ;
++import feature : feature get-values ;
++import os ;
++import toolset ;
++import toolset : flags ;
++import gcc ;
++import common ;
++import errors ;
++import generators ;
++
++
++feature.extend-subfeature toolset clang : platform : vxworks ;
++
++toolset.inherit-generators clang-vxworks 
++  <toolset>clang <toolset-clang:platform>vxworks 
++  : gcc 
++  # Don't inherit PCH generators. They were not tested, and probably
++  # don't work for this compiler.
++  : gcc.mingw.link gcc.mingw.link.dll gcc.compile.c.pch gcc.compile.c++.pch
++  ;
++
++generators.override clang-vxworks.prebuilt : builtin.lib-generator ;
++generators.override clang-vxworks.prebuilt : builtin.prebuilt ;
++generators.override clang-vxworks.searched-lib-generator : searched-lib-generator ;
++
++
++toolset.inherit-rules clang-vxworks : gcc ;
++toolset.inherit-flags clang-vxworks : gcc 
++        : <inlining>off <inlining>on <inlining>full <optimization>space 
++          <warnings>off <warnings>all <warnings>on
++          <architecture>x86/<address-model>32
++          <architecture>x86/<address-model>64
++        ;
++        
++if [ MATCH (--debug-configuration) : [ modules.peek : ARGV ] ]
++{
++    .debug-configuration = true ;
++}
++                       
++# vectorization diagnostics
++feature vectorize : off on full ;
++
++# Initializes the clang-vxworks toolset
++#   version in optional
++#   compile and link options allow you to specify addition command line options for each version
++rule init ( version ? :  command * : options * )
++{
++    command = [ common.get-invocation-command clang-vxworks : ccllvm 
++        : $(command) ] ;
++    
++    linker = [ get-values <linker> : $(options) ] ;
++    linker   ?= ld ;
++    
++    # Determine the version
++    local command-string = $(command:J=" ") ;
++    if $(command)
++    {    
++        version ?= [ MATCH "^([0-9.]+)"
++            : [ SHELL "$(command-string) -dumpversion" ] ] ;
++    }
++
++    local condition = [ common.check-init-parameters clang-vxworks
++        : version $(version) ] ;    
++
++    common.handle-options clang-vxworks : $(condition) : $(command) : $(options) ;
++
++    gcc.init-link-flags clang-vxworks vxworks $(condition) ;
++
++    toolset.flags clang-vxworks.link      .LD  : $(linker) ;
++}
++
++SPACE = " " ;
++
++toolset.flags clang-vxworks.compile OPTIONS <cflags> ;
++toolset.flags clang-vxworks.compile.c++ OPTIONS <cxxflags> ;
++toolset.flags clang-vxworks.compile INCLUDES <include> ;
++
++# Declare flags and action for compilation.
++toolset.flags clang-vxworks.compile OPTIONS <optimization>off   : -O0 ;
++toolset.flags clang-vxworks.compile OPTIONS <optimization>speed : -O3 ;
++toolset.flags clang-vxworks.compile OPTIONS <optimization>space : -Os ;
++
++# For clang, 'on' and 'full' are identical
++toolset.flags clang-vxworks.compile OPTIONS <inlining>off  : -fno-inline ;
++toolset.flags clang-vxworks.compile OPTIONS <inlining>on   : -Wno-inline ;
++toolset.flags clang-vxworks.compile OPTIONS <inlining>full : -Wno-inline ;
++
++toolset.flags clang-vxworks.compile OPTIONS <warnings>off : -w ;
++toolset.flags clang-vxworks.compile OPTIONS <warnings>on  : -Wall ;
++toolset.flags clang-vxworks.compile OPTIONS <warnings>all : -Wall -pedantic ;
++toolset.flags clang-vxworks.compile OPTIONS <warnings-as-errors>on : -Werror ;
++
++toolset.flags clang-vxworks.compile OPTIONS <debug-symbols>on : -g ;
++toolset.flags clang-vxworks.compile OPTIONS <profiling>on : -pg ;
++toolset.flags clang-vxworks.compile OPTIONS <rtti>off : -fno-rtti ;
++
++toolset.flags clang-vxworks.compile OPTIONS <flags> ;
++
++
++actions compile.c
++{
++    "$(CONFIG_COMMAND)" -x c $(OPTIONS) -D$(DEFINES) -I"$(INCLUDES)" -c -o "$(<)" "$(>)"
++}
++
++actions compile.c++
++{
++    "$(CONFIG_COMMAND)" -x c++ $(OPTIONS) -D$(DEFINES) -I"$(INCLUDES)" -c -o "$(<)" "$(>)"
++}
++
++
++
++flags clang-vxworks ARFLAGS <archiveflags> ;
++
++# Default value. Mostly for the sake of clang-linux
++# that inherits from gcc, but does not has the same
++# logic to set the .AR variable. We can put the same
++# logic in clang-linux, but that's hardly worth the trouble
++# as on Linux, 'ar' is always available.
++.AR = ar ;
++
++
++actions piecemeal archive
++{
++  "$(.AR)" $(AROPTIONS) rcu "$(<)" "$(>)"
++}
++
++flags clang-vxworks.link USER_OPTIONS <linkflags> ;
++
++# Declare actions for linking
++rule link ( targets * : sources * : properties * )
++{
++  SPACE on $(targets) = " " ;
++  # Serialize execution of the 'link' action, since
++  # running N links in parallel is just slower.
++  JAM_SEMAPHORE on $(targets) = <s>clang-vxworks-link-semaphore ;
++}
++
++actions link bind LIBRARIES
++{
++    "$(.LD)" $(USER_OPTIONS) -L"$(LINKPATH)" -o "$(<)" "$(>)" "$(LIBRARIES)" $(START-GROUP) $(FINDLIBS-ST-PFX) -l$(FINDLIBS-ST) $(FINDLIBS-SA-PFX) -l$(FINDLIBS-SA) $(END-GROUP) $(OPTIONS) 
++    }
++
++actions link.dll bind LIBRARIES
++{
++    "$(.LD)" $(USER_OPTIONS) -L"$(LINKPATH)" -o "$(<)" "$(>)" "$(LIBRARIES)" $(START-GROUP) $(FINDLIBS-ST-PFX) -l$(FINDLIBS-ST) $(FINDLIBS-SA-PFX) -l$(FINDLIBS-SA) $(END-GROUP) $(OPTIONS) -fpic -shared -non-static
++}
+diff -uNdr boost_1_59_0/tools/build/src/tools/diab.jam ../../workspace/LLVM64bit/3pp/BOOST/boost_1_59_0/tools/build/src/tools/diab.jam
 --- boost_1_59_0/tools/build/src/tools/diab.jam	1969-12-31 19:00:00.000000000 -0500
-+++ boost_1_59_0/tools/build/src/tools/diab.jam	2016-12-05 12:13:18.000000000 -0500
++++ boost_1_59_0/tools/build/src/tools/diab.jam	2017-02-07 09:56:26.000000000 -0500
 @@ -0,0 +1,130 @@
 +# Copyright 2015, Wind River Inc.
 +# Distributed under the Boost Software License, Version 1.0.
@@ -144,9 +299,9 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/diab.jam ../../workspace/VSB_Sim32
 +  $(RM) "$(<)"
 +  dar rc $(<) $(>)
 +}
-diff -uNdr boost_1_59_0/tools/build/src/tools/gcc.jam ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/tools/build/src/tools/gcc.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/gcc.jam ../../workspace/LLVM64bit/3pp/BOOST/boost_1_59_0/tools/build/src/tools/gcc.jam
 --- boost_1_59_0/tools/build/src/tools/gcc.jam	2015-08-11 09:53:51.000000000 -0400
-+++ boost_1_59_0/tools/build/src/tools/gcc.jam	2016-12-05 12:13:18.000000000 -0500
++++ boost_1_59_0/tools/build/src/tools/gcc.jam	2017-02-07 09:56:26.000000000 -0500
 @@ -387,6 +387,8 @@
  
  toolset.flags gcc.compile.c++ OPTIONS <rtti>off : -fno-rtti ;
@@ -188,9 +343,9 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/gcc.jam ../../workspace/VSB_Sim32/
              case *       : option = -pthread ; libs = rt ;
          }
  
-diff -uNdr boost_1_59_0/tools/build/src/tools/intel.jam ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/tools/build/src/tools/intel.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/intel.jam ../../workspace/LLVM64bit/3pp/BOOST/boost_1_59_0/tools/build/src/tools/intel.jam
 --- boost_1_59_0/tools/build/src/tools/intel.jam	2015-08-11 09:53:51.000000000 -0400
-+++ boost_1_59_0/tools/build/src/tools/intel.jam	2016-12-05 12:13:19.000000000 -0500
++++ boost_1_59_0/tools/build/src/tools/intel.jam	2017-02-07 09:56:26.000000000 -0500
 @@ -16,7 +16,12 @@
  
  rule init ( * : * )
@@ -205,10 +360,10 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/intel.jam ../../workspace/VSB_Sim3
      {
          toolset.using intel-linux : 
            $(1) : $(2) : $(3) : $(4) : $(5) : $(6) : $(7) : $(8) : $(9) ;
-diff -uNdr boost_1_59_0/tools/build/src/tools/intel-vxworks.jam ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/tools/build/src/tools/intel-vxworks.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/intel-vxworks.jam ../../workspace/LLVM64bit/3pp/BOOST/boost_1_59_0/tools/build/src/tools/intel-vxworks.jam
 --- boost_1_59_0/tools/build/src/tools/intel-vxworks.jam	1969-12-31 19:00:00.000000000 -0500
-+++ boost_1_59_0/tools/build/src/tools/intel-vxworks.jam	2016-12-05 12:13:19.000000000 -0500
-@@ -0,0 +1,197 @@
++++ boost_1_59_0/tools/build/src/tools/intel-vxworks.jam	2017-02-07 10:46:56.000000000 -0500
+@@ -0,0 +1,194 @@
 +# # Copyright Wind River 2015.
 +# Distributed under the Boost Software License, Version 1.0.
 +# (See accompanying file LICENSE_1_0.txt
@@ -250,9 +405,6 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/intel-vxworks.jam ../../workspace/
 +{
 +    .debug-configuration = true ;
 +}
-+                       
-+# vectorization diagnostics
-+feature vectorize : off on full ;
 +
 +# Initializes the intel-vxworks toolset
 +#   version in mandatory
@@ -316,7 +468,7 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/intel-vxworks.jam ../../workspace/
 +   
 +    local minor = [ MATCH ".*\\.(.).*" : $(version) ] ;
 +
-+    }
++
 +}
 +
 +SPACE = " " ;
@@ -406,9 +558,9 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/intel-vxworks.jam ../../workspace/
 +{
 +    "$(CONFIG_COMMAND)" $(USER_OPTIONS) -L"$(LINKPATH)" -o "$(<)" -single_module -dynamiclib -install_name "$(<[1]:D=)" "$(>)"  "$(LIBRARIES)" -l$(FINDLIBS-SA) -l$(FINDLIBS-ST) $(OPTIONS)
 +}
-diff -uNdr boost_1_59_0/tools/build/src/tools/testing.jam ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/tools/build/src/tools/testing.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/testing.jam ../../workspace/LLVM64bit/3pp/BOOST/boost_1_59_0/tools/build/src/tools/testing.jam
 --- boost_1_59_0/tools/build/src/tools/testing.jam	2015-08-11 09:53:51.000000000 -0400
-+++ boost_1_59_0/tools/build/src/tools/testing.jam	2016-12-05 13:03:26.000000000 -0500
++++ boost_1_59_0/tools/build/src/tools/testing.jam	2017-02-07 09:56:26.000000000 -0500
 @@ -389,15 +389,38 @@
      # test are found. So, we collect all paths from dependency libraries (via
      # xdll-path property) and add whatever explicit dll-path user has specified.
@@ -437,7 +589,7 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/testing.jam ../../workspace/VSB_Si
 +           local target-dll-paths ;
 +           for local e in $(dll-paths)
 +           {
-+               target-dll-paths += [ path.join  $(prefix) [ path.relative $(e) $(parent) ] ] ;
++               target-dll-paths += [ path.join  $(prefix) [ path.relative $(e) $(parent) : noerror ] ] ;
 +           }
 +           PATH_SETUP on $(target) = [ common.prepend-path-variable-command
 +                 [ os.shared-library-path-variable ] : $(target-dll-paths) ] ;
@@ -452,9 +604,9 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/testing.jam ../../workspace/VSB_Si
      }
  }
  
-diff -uNdr boost_1_59_0/tools/build/src/util/os.jam ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/tools/build/src/util/os.jam
+diff -uNdr boost_1_59_0/tools/build/src/util/os.jam ../../workspace/LLVM64bit/3pp/BOOST/boost_1_59_0/tools/build/src/util/os.jam
 --- boost_1_59_0/tools/build/src/util/os.jam	2015-08-11 09:53:51.000000000 -0400
-+++ boost_1_59_0/tools/build/src/util/os.jam	2016-12-05 12:13:19.000000000 -0500
++++ boost_1_59_0/tools/build/src/util/os.jam	2017-02-07 09:56:26.000000000 -0500
 @@ -65,6 +65,7 @@
  # constant whose value would be the same as the default, below.
  .shared-library-path-variable-NT = $(.executable-path-variable-NT) ;

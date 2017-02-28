@@ -474,6 +474,11 @@ EXTRA_DEFINE += -DBOOST_NO_CXX11_HDR_INITIALIZER_LIST -CG_allow_xmm -CG_allow_x8
 BOOST_TOOL:= intel
 endif
 
+ifeq ($(TOOL),llvm)
+EXTRA_DEFINE += 
+BOOST_TOOL:= clang-vxworks
+endif
+
 RTP_BASE_DIR = boost
 
 LIB_BASE_NAME = boost
@@ -508,7 +513,7 @@ endif
 
 ifeq "$(WIND_HOST_TYPE)" "x86-win32"
 # Shorten paths on windows to avoid path length issues 
-BOOST_WORKAROUND += --abbreviate-paths
+BOOST_WORKAROUND += --abbreviate-paths  --layout=system
 CHMOD = touch 
 else
 CHMOD = chmod +x 
