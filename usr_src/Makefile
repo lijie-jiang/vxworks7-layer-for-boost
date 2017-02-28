@@ -56,7 +56,7 @@ UNZIP_FILES := $(PKG_BUILD_DIR)/* -x  \
 export BOOST_TEST_DIRS
 export BOOST_BUILD
 
-PKG_EXTRA_SRC := project-config.jam status/vxworks_boost_test_run.exp 
+PKG_EXTRA_SRC := project-config.jam status/vxworks_boost_test_run.exp status/boost_test.exe
 
 ifeq  "$(WIND_HOST_TYPE)" "x86-win32" 
 PKG_EXTRA_SRC += b2.exe

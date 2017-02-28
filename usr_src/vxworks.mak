@@ -503,7 +503,7 @@ VSB_LD_LIBRARY_PATH :=$(_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX)$(subst $
 
 ifneq ($(strip $(_WRS_CONFIG_BOOST_TELNET_ADDR)),)
  ifeq "$(WIND_HOST_TYPE)" "x86-win32"
-BOOST_TEST_EXE = "testing.launcher=vxworks_boost_test_run.bat"
+BOOST_TEST_EXE = "testing.launcher=boost_test"
  else
 BOOST_TEST_EXE ="testing.launcher=./vxworks_boost_test_run.exp"
 endif
@@ -549,7 +549,7 @@ boost_build: $(AUTO_INCLUDE_VSB_CONFIG_QUOTE) $(VXWORKS_ENV_SH)  $(__AUTO_INCLUD
 			LAYER_SRC_PATH="$(LAYER_SRC_PATH)" \
 			PKG_SRC_BUILD_DIR="$(PKG_SRC_BUILD_DIR)"  \
 			VSB_LD_LIBRARY_PATH="$(VSB_LD_LIBRARY_PATH)" \
-	nice ../b2 -j$(JOBS) $(BOOST_ARGS) $(BOOST_TEST_EXE) "--limit-tests=$(BOOST_LIMIT_TESTS)"  -q  -d2
+	nice ../b2 -j$(JOBS) $(BOOST_ARGS) $(BOOST_TEST_EXE) "--limit-tests=$(BOOST_LIMIT_TESTS)"  -a  -d2
 else
 boost_build: build_run_tests.sh 
 	$(info No BOOST tests are selected, nothing will be built) 
