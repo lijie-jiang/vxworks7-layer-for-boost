@@ -237,11 +237,12 @@ For your RTP application project:
 2. Add your code to the project.
 
 3. Add the link commands for the Boost libraries you are using. 
-  *  If you are using Workbench, select the RTP application project name, then **Properties > Build Properties > libraries**. For example, add: 
-```
--lboost_timer 
--lunix
-```
+  *  If you are using Workbench, select the RTP application project name, then **Properties > Build Properties > libraries**. 
+     For example, add: 
+     ```
+     -lboost_timer 
+     -lunix
+     ```
   *  Click **Apply** and **OK**. 
   
 4. Update the include paths. For example, using Workbench, select select the RTP application project name, then **Properties > Build Properties > Paths > Generate**. Click **Apply**, and **OK**.
