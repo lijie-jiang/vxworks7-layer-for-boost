@@ -243,7 +243,8 @@ For your RTP application project:
      -lboost_timer 
      -lunix
      ```
-  *  Click **Apply** and **OK**.   
+  *  Click **Apply** and **OK**.
+  
 4. Update the include paths. For example, using Workbench, select select the RTP application project name, then **Properties > Build Properties > Paths > Generate**. Click **Apply**, and **OK**.
 
 5. Build the RTP project. 
