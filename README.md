@@ -232,17 +232,20 @@ If you are using Workbench, you may want to turn off C++ indexing before you bui
 Your VIP project (based on your VSB) does not require any special configuration with regard to Boost or standard VxWorks C++ support (which is included by default).  
 
 For your RTP application project:
+
 1. Create the project and base it on the VSB project.
 
 2. Add your code to the project.
 
 3. Add the link commands for the Boost libraries you are using. 
   *  If you are using Workbench, select the RTP application project name, then **Properties > Build Properties > libraries**. 
-     For example, add: 
+     For example, add:
+     
      ```
      -lboost_timer 
      -lunix
      ```
+     
   *  Click **Apply** and **OK**.
   
 4. Update the include paths. For example, using Workbench, select select the RTP application project name, then **Properties > Build Properties > Paths > Generate**. Click **Apply**, and **OK**.
