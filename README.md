@@ -1,18 +1,18 @@
 ## VxWorks&reg; 7 Recipe Layer for Boost
 
-This repository contains a VxWorks&reg;  7 Source Build (VSB) layer. 
+This repository contains a VxWorks&reg; 7 Source Build (VSB) layer. 
 Add this layer to your VxWorks install to build and verify Boost as part of your board's VSB project.  
 
 This repository contains a collection of patches to adapt Boost to VxWorks.
 Boost is many libraries and not all of them will work with VxWorks, some of them require
 C++ support not available in VxWorks, or are dependent on other libraries not available 
-for VxWorks. The **vxworks7-boost** project goal is to validate as many boost libraries
+for VxWorks. The **vxworks7-boost** project goal is to validate as many Boost libraries
 as possible and then push the required changes to boost.org. Until the patches are
-incorporated into boost they will exist here.
+incorporated into Boost they will exist here.
 
-This layer does not contain boost and only provides a recipe to adapt boost to VxWorks. 
+This layer does not contain Boost and only provides a recipe to adapt Boost to VxWorks. 
 Boost is not part of any VxWorks product, and is not covered by your Wind River support agreement.
-If you need help, please use the resources available and boost.org, or contact your Wind River sales
+If you need help, use the resources available and boost.org, or contact your Wind River sales
 representative to arrange for consulting services.
 
 ## Project License
@@ -22,26 +22,28 @@ The source code for this project is provided under the Boost Software License - 
 ## Prerequisite(s)
 
 Install the Wind River&reg; VxWorks&reg; 7 operating system from March 2017 or later.
-The Boost layer has a dependency on the Unix compatibility layer in this release;
+The Boost layer has a dependency on the UNIX compatibility layer in this release;
 ***InstallDir*/vxworks-7/pkgs/os/utils/unix** 
 
-If you are on a system **without internet conectivity** you must obtain the boost sources and put them in: ***InstallDir*/vxworks-7/download**. On a Linux build host from http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz/download, and on Windows  http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.zip/download. If you are online these will downloaded by **wget** or **curl** during the build. 
+If you are on a system **without internet conectivity** you must obtain the Boost sources and put them in: ***InstallDir*/vxworks-7/download**. On a Linux build host obtain these sources from http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz/download, and on Windows from http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.zip/download. If you are online, these are downloaded by **wget** or **curl** during the build. 
 
-The **expect** executable used for adapting the Boost test harness to cross compilation is not provided on Windows build host, and must be licensed separately, it has not been verified. It can be obtained from http://www.activestate.com/activetcl/expect. It is not required to build Boost, only to execute the test harness.
+The **expect** executable used for adapting the Boost test harness to cross compilation is not provided on Windows build hosts, and must be licensed separately, it has not been verified. It can be obtained from http://www.activestate.com/activetcl/expect. It is not required to build Boost, only to execute the test harness.
 
 
-## Setup
+## Installation
 
 1. Obtain the VxWorks Boost layer:
   *  Go to  https://github.com/Wind-River/vxworks7-layer-for-boost
-  *  Download a zip of the layer using the link provided by github.
+  *  Download a zip of the layer using the link provided by GitHub.
 	 ![](./docs/download.png)
   *	Unzip into your VxWorks install directory in an appropriate place in the packages directory, typically;
       ***InstallDir*/vxworks-7/pkgs/app**
 	  
-2. If you are using the Boost **streams** library you must obtain the **bzip2** layer and place it in your vxworks 7 install in a similar manner: https://github.com/Wind-River/vxworks7-layer-for-bzip2 	  
+2. If you are using the Boost **streams** library you must obtain the **bzip2** layer and place it in your VxWorks 7 install in a similar manner: https://github.com/Wind-River/vxworks7-layer-for-bzip2 	  
 
-3. From a shell prompt: 	  
+## VxWorks Configuration and Build
+
+Create a VSB project based on your BSP, with Workbench or from the command line. For example, on Linux: 	  
 
 ```
 $ cd InstallDir
@@ -52,7 +54,7 @@ $ wrtool prj vsb create –bsp vxsim_linux simVSB
 $ cd simVSB  
 ```
 
-or on Windows:
+Or, on Windows:
 
 ```
 $ cd InstallDir
@@ -63,19 +65,17 @@ $ wrtool prj vsb create –bsp vxsim_windows simVSB
 $ cd simVSB
 ```
 
-## Building
-
-After creating the VSB (VxWorks Source Build Project) include the Boost layer in the Workbench configuration editor:
+After creating the VSB (VxWorks source build project), include the BOOST layer using the Workbench configuration editor:
 ![](./docs/layer selection.png)
 
-   The VSB build will unpack Boost into ***vsbDir*/3pp/BOOST**.
-And copy the headers to ***vsbDir*/usr/h/public/boost**.
+   The VSB build unpacks Boost into ***vsbDir*/3pp/BOOST**.
+And copies the headers to ***vsbDir*/usr/h/public/boost**.
 The buildable portions of Boost become visible selections in the Workbench configuration menu once the layer is enabled. 
 ![](./docs/wb_boost_menu.png)
 
-   Only the Boost timer library is built by default, selecting the layer also installs the headers in the VSB.
-Other libraries must be selected in the Workbench configuration tool before they are built. 
-You can also select to build the portions of Boost you want on the command line (in workbench) with **vxprj** or **wrtool**:
+   Only the Boost timer library is included by default, selecting the layer also installs the headers in the VSB.
+Other libraries must be selected in the Workbench configuration tool before they are included. 
+You can also select to build the portions of Boost you want on the command line (in Workbench) with **vxprj** or **wrtool**:
 ```
 $ vxprj vsb add BOOST
 $ vxprj vsb config -s -add "_WRS_CONFIG_BOOST_MATH=y"
@@ -87,10 +87,13 @@ $ wrtool prj vsb add BOOST
 $ wrtool prj vsb value set BOOST_MATH y
 $ make 
 ```
+If you are using Workbench, you may want to turn off C++ indexing before you build the VSB, as the Boost libraries are large. Right-click on the VSB project name, select **Properties > C/C++ General > Indexer**, and un-check **Enable Indexer**. Click **Apply**, and **OK**.
 
-The Makefile that actually builds the code is ***InstallDir*/vxworks-7/pkgs/app/boost/usr_src/vxworks.lib.mak**. This is copied to the Boost source directory ***vsbDir*/3pp/BOOST/boost_1_59_0/**.
+The Makefile that actually builds the code is ***InstallDir*/vxworks-7/pkgs/app/boost/usr_src/vxworks.lib.mak**. This is copied to the Boost source directory, ***vsbDir*/3pp/BOOST/boost_1_59_0/**.
+
+## b2 Usage
  
-The initial build of the Boost layer creates the **vxworks_env.sh** which contains the current VSB cross build environment. This is propagated to the Boost jam build environment by the generic **project_config.jam** file provided in the Boost layer. Once these files are in place it is possible to invoke the **b2** outside the VSB build by first sourcing **vxworks_env.sh**.  Duplicate the command found in the build log. For example:
+The initial build of the Boost layer creates the **vxworks_env.sh** which contains the current VSB cross build environment. This is propagated to the Boost jam build environment by the generic **project_config.jam** file provided in the Boost layer. Once these files are in place, you can optionally invoke the **b2** outside of the VSB build by first sourcing **vxworks_env.sh**.  Duplicate the command found in the build log. For example:
 
 ```
 $ cd  3pp/BOOST/boost_1_59_0
@@ -101,7 +104,7 @@ $ ./b2 install --prefix=VSBDir/usr/root --libdir=VSBDir/usr/lib/common \
 --with-test -q -d2
 ```
 
-It is recommended you simply build the BOOST layer for incremental builds. 
+As a best practice, simply build the BOOST layer for incremental builds. 
 ```
 $ vxprj vsb build BOOST
 ```
@@ -112,13 +115,14 @@ $ vxprj vsb config -s -add "_WRS_CONFIG_BOOST_THREAD=y"
 ``` 
 
 ## Testing 
- Most of Boost is header only libraries and so to verify them with a specific VxWorks configuration requires running the regression tests for the library you wish to verify.  All regression tests are dependent on the tests harness library. So it must be included first, for example:
+
+Most of Boost is header only libraries. Therefore, to verify them with a specific VxWorks configuration, you must run regression tests for the library you wish to verify. All regression tests are dependent on the test harness library so it must be included first. For example:
 ``` 
 $ vxprj vsb config -s -add "_WRS_CONFIG_BOOST_TESTS=y"
 $ vxprj vsb config -s -add "_WRS_CONFIG_BOOST_MATH_TESTS=y"
 ```
 The default behavior is to simply build the tests during the final VSB build stage.
-To actually execute the tests after each one is built you specify the telnet address of your tests system.
+To actually execute the tests after each one is built, specify the telnet address of your tests system.
 ```
 $ vxprj vsb config -s -add "BOOST_TELNET_ADDR=192.168.200.1"
 ```
@@ -198,7 +202,7 @@ If you are running Windows, in the above commands, replace `wrenv.linux` with `w
 
 This is wrapper of the Boost **b2** command, and by default will test the entire set of Boost libraries, even those that are unsupported.  So the command should be invoked with options modifying the behavior for your testing requirments. For complete **b2** documetation please consult the boost documetation http://www.boost.org/build/doc/html/bbv2/overview/invocation.html. The following are the options used by the VSB boost layer that are not included in **build_run_tests.sh** :
 
-| Option |   Behaviour  | 
+| Option |   Behavior  | 
 | ------ | ----------- |
 | -q     |  quit after the first test failure |
 | -d2    |  debug level 2, print command invocations |  
