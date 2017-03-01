@@ -65,8 +65,7 @@ try:
     #sleep(1)
     test = tn.expect(["due to signal 6.".encode("UTF-8"), "due to signal 11.".encode("UTF-8"), "and has been deleted.".encode("UTF-8"), "vxWorks *".encode("UTF-8")], 100)
     result = test[0] #will give the index of which ever thing our expeect found (-1 for timeout)
-    if result != 3:
-        stdout.write("\n\nAn error occured when trying to execute: " + to_run + "info:\n" + test[2].decode("UTF-8"))
+    stdout.write("\n"+ test[2].decode("UTF-8")+"\n")
     if result == -1:
         stdout.write("After trying to run, we timed out... Rebooting...\n")
         tn.write("\x18".encode("UTF-8")) #resart the telnet session
@@ -87,7 +86,6 @@ try:
     echo_value = int(re.findall(r'\d+', echo_output)[0]) #finds the first integer inside the echo string
                 
 except Exception as error:
-    stdout.write("\n\nAn error occured:\n\t\t\t" + str(error) + "\n\n")
     if not tn: #if we failed before telnet was even defined
         stdout.write("Telnet connection error. Ensure your BOOST_TELNET_ADDR environment variable is correct.")
         sys.exit(-1)
