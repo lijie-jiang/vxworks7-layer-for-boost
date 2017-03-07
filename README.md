@@ -337,8 +337,8 @@ This table indicates the results we have obtained with a 32-bit build of an Inte
 | rational	     | Pass
 | regex	         | 
 | scope exit     | 	
-| serialization	 | --- |   Not Supported, deprecated
-| signals   	 | 
+| serialization	 | 
+| signals   	 | -- | Not Supported, depricated | 
 | signals 2	     | 
 | smart pointer	 | Pass
 | sort	         | Pass
