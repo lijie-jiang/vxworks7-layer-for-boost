@@ -72,7 +72,7 @@ And copies the headers to ***vsbDir*/usr/h/public/boost**.
 The buildable portions of Boost become visible selections in the Workbench configuration menu once the layer is enabled. 
 ![](./docs/wb_boost_menu.png)
 
-   Only the Boost timer library is included by default, selecting the layer also installs the headers in the VSB.
+   Only the Boost system library is included by default, selecting the layer also installs the headers in the VSB.
 Other libraries must be selected in the Workbench configuration tool before they are included. 
 You can also select to build the portions of Boost you want on the command line (in Workbench) with **vxprj** or **wrtool**:
 ```
