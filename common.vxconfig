@@ -1,4 +1,4 @@
-# Copyright (c) 2014 Wind River Systems, Inc.
+# Copyright (c) 2014,2017 Wind River Systems, Inc.
 #
 # Use, modification and distribution are subject to the
 # Boost Software License, Version 1.0.  (See accompanying file
@@ -7,6 +7,7 @@
 #
 # Modification History
 # --------------------
+# 07mar17,brk  build system library instead of timer by default 
 # 26nov14,brk  Created
 #
 
@@ -111,7 +112,7 @@ config  BOOST_SERIALIZATION
 
 config  BOOST_SYSTEM
         bool "Build system (error_code)"
-        default n
+        default y
 
 config  BOOST_THREAD
         bool "Build thread"
@@ -121,7 +122,7 @@ config  BOOST_THREAD
 # build timer as sanity check, small and works with all configurations		
 config  BOOST_TIMER
         bool "Build timer"
-        default y
+        default n
 
 config  BOOST_TESTS
         bool "Build BOOST Tests"
