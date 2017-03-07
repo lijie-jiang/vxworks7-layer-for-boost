@@ -211,17 +211,59 @@ This is a wrapper of the Boost **b2** command, and by default it tests the entir
 | variant=release | build test executables without debug information |
 | -j*Jobs* | run tests in parallel using *Jobs* threads |  
 
-### Notes:
-* The ***exceptions/copy_exception_test*** fails with the debugger attached. It launches thousands of threads and overwhelms the debugger and may require a longer timeout in the expect script to pass.
+### Testing Notes:
+* Some Boost tests use a parameter which is an absolute filepath, the test harness has not been modified to translate these filepaths to target filepaths. Use the VxWorks NFS client to execute these tests. Make the client mount point identical to the exported path. On typical Linux build host the commands would be similar to:
+```
+$ sudo systemctl start nfs-server
+$ exportfs -o rw,sync /home/user/WindRiver/workspace
+``` 
+     And then VxWorks system's **usrAppInit()** would be similar to the following:
+```
+#include <nfs/nfsDriver.h>
+#include <nfs/nfs3Lib.h>
+#include <stdio.h>
+#include <errno.h>
+
+void usrAppInit (void)
+    {
+    char * nfshost = "buildhost";
+    char * exportpath = "/home/user/WindRiver/workspace"; 
+
+
+    (void)hostAdd ("buildhost", "10.10.157.220");
+
+    nfsAuthUnixSet ("buildhost", 1000, 100, 0, NULL);
+
+    /*
+     * Note: using a local NFS device name equal to the exportpath
+     * so that target paths can be identical to host paths.
+     */
+    if (OK != nfsMount (nfshost, exportpath, exportpath))
+        {
+        perror ("nfsMount");
+        }
+    }
+```	 
+    This technique has not been verified with a Windows build system. 
+  
+* The default command-line length of the VxWorks interpreter is not long enough to execute all tests. It should be increased by modifying the VIP configuration.
+```
+$ vxprj parameter value SHELL_DEFAULT_CONFIG
+SHELL_DEFAULT_CONFIG = "INTERPRETER=,LINE_EDIT_MODE=,LINE_LENGTH=256,STRING_FREE=manual,VXE_PATH=.;/romfs"
+$ vxprj parameter setstring SHELL_DEFAULT_CONFIG 'INTERPRETER=,LINE_EDIT_MODE=,LINE_LENGTH=1024,STRING_FREE=manual,VXE_PATH=.;/romfs'
+```
+* The ***exceptions/copy_exception_test*** fails with the debugger attached. It launches thousands of threads and overwhelms the debugger. 
 * Workbench users should disable source indexing for the VSB; otherwise java runs out of memory. 
-* No clean rule is provided for the Boost layer, but cleaning the VSB will rebuild Boost as well. The download directory is not touched, so the rebuild begins from the unpack stage.
-* Removing the ***vsbDir*/3pp/BOOST**  directory or  ***vsbDir*/3pp/BOOST/boost_1_59_0/bin.v2/libs/*library_name*** will incrementally rebuild Boost independent of the VSB.
 * The boost library core tests fail if not executed with a target IP configured. The boost test harness does not properly deal with the “run fail” targets this library uses. 
 * The number of make build threads used in the VSB build is propagated to the Boost build though the -j option. However, during the testing this means multiple Telnet sessions run concurrently on the target system, and may overwhelm the memory on the target system.   If you have unreproducible, odd errors, or out of memory errors like the one shown below, repeat the testing single threaded to confirm the test is not failing due to target resource limitations.
 ```
 0x81e4b180 (iTest_random_generator): memPartAlloc: block too big 520 bytes (0x8 aligned) in partition 0xe27312a0
 0x81e4b180 (iTest_random_generator): memPartAlloc: block too big 520 bytes (0x8 aligned) in partition 0xe27312a0
 ```
+
+### Other Notes:
+* No clean rule is provided for the Boost layer, but cleaning the VSB will rebuild Boost as well. The download directory is not touched, so the rebuild begins from the unpack stage.
+* Removing the ***vsbDir*/3pp/BOOST**  directory or  ***vsbDir*/3pp/BOOST/boost_1_59_0/bin.v2/libs/*library_name*** will incrementally rebuild Boost independent of the VSB.
 
 ## Using Boost Libraries with RTP Applications
 
