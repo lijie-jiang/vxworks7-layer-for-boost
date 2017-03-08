@@ -27,7 +27,6 @@ The Boost layer has a dependency on the UNIX compatibility layer in this release
 
 If you are on a system **without internet conectivity** you must obtain the Boost sources and put them in: ***InstallDir*/vxworks-7/download**. On a Linux build host obtain these sources from http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz/download, and on Windows from http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.zip/download. If you are online, these are downloaded by **wget** or **curl** during the build. 
 
-The **expect** executable used for adapting the Boost test harness to cross compilation is not provided on Windows build hosts, and must be licensed separately, it has not been verified. It can be obtained from http://www.activestate.com/activetcl/expect. It is not required to build Boost, only to execute the test harness.
 
 ## Installation
 
@@ -72,7 +71,7 @@ And copies the headers to ***vsbDir*/usr/h/public/boost**.
 The buildable portions of Boost become visible selections in the Workbench configuration menu once the layer is enabled. 
 ![](./docs/wb_boost_menu.png)
 
-   Only the Boost timer library is included by default, selecting the layer also installs the headers in the VSB.
+   Only the Boost system library is included by default, selecting the layer also installs the headers in the VSB.
 Other libraries must be selected in the Workbench configuration tool before they are included. 
 You can also select to build the portions of Boost you want on the command line (in Workbench) with **vxprj** or **wrtool**:
 ```
@@ -130,8 +129,8 @@ The target's path to the workspace defaults to using the TCF path, but can be se
 $ vxprj vsb config -s  \
 -add "_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX=bkuhlfedora:"
 ```
-The tests are executed by connecting to the target through Telnet using an expect script found in the Boost layer: **vxworks_boost_test_run.exp.** 
-Or, for 64 bit Windows machines: **boost_test.exe.**
+The tests are executed on a Linux host by connecting to the target through Telnet using an expect script found in the Boost layer: **vxworks_boost_test_run.exp.** 
+Or, for 64 bit Windows machines: **boost_test.exe** created from **boost_test.py**.
 
 There is a *chicken and egg* problem here. You must create a VIP from the VSB before running the Boost tests, so it is necessary to build the VSB twice in order to run the tests. For example, execute the following in you workspace:
 
@@ -211,17 +210,59 @@ This is a wrapper of the Boost **b2** command, and by default it tests the entir
 | variant=release | build test executables without debug information |
 | -j*Jobs* | run tests in parallel using *Jobs* threads |  
 
-### Notes:
-* The ***exceptions/copy_exception_test*** fails with the debugger attached. It launches thousands of threads and overwhelms the debugger and may require a longer timeout in the expect script to pass.
+### Testing Notes:
+* Some Boost tests use a parameter which is an absolute filepath, the test harness has not been modified to translate these filepaths to target filepaths. Use the VxWorks NFS client to execute these tests. Make the client mount point identical to the exported path. On typical Linux build host the commands would be similar to:
+```
+$ sudo systemctl start nfs-server
+$ exportfs -o rw,sync /home/user/WindRiver/workspace
+``` 
+And then VxWorks system's **usrAppInit()** would be similar to the following:
+```
+#include <nfs/nfsDriver.h>
+#include <nfs/nfs3Lib.h>
+#include <stdio.h>
+#include <errno.h>
+
+void usrAppInit (void)
+    {
+    char * nfshost = "buildhost";
+    char * exportpath = "/home/user/WindRiver/workspace"; 
+
+
+    (void)hostAdd ("buildhost", "10.10.157.220");
+
+    nfsAuthUnixSet ("buildhost", 1000, 100, 0, NULL);
+
+    /*
+     * Note: using a local NFS device name equal to the exportpath
+     * so that target paths can be identical to host paths.
+     */
+    if (OK != nfsMount (nfshost, exportpath, exportpath))
+        {
+        perror ("nfsMount");
+        }
+    }
+```	 
+This technique has not been verified with a Windows build system. 
+  
+* The default command-line length of the VxWorks interpreter is not long enough to execute all tests. It should be increased by modifying the VIP configuration.
+```
+$ vxprj parameter value SHELL_DEFAULT_CONFIG
+SHELL_DEFAULT_CONFIG = "INTERPRETER=,LINE_EDIT_MODE=,LINE_LENGTH=256,STRING_FREE=manual,VXE_PATH=.;/romfs"
+$ vxprj parameter setstring SHELL_DEFAULT_CONFIG 'INTERPRETER=,LINE_EDIT_MODE=,LINE_LENGTH=1024,STRING_FREE=manual,VXE_PATH=.;/romfs'
+```
+* The ***exceptions/copy_exception_test*** fails with the debugger attached. It launches thousands of threads and overwhelms the debugger. 
 * Workbench users should disable source indexing for the VSB; otherwise java runs out of memory. 
-* No clean rule is provided for the Boost layer, but cleaning the VSB will rebuild Boost as well. The download directory is not touched, so the rebuild begins from the unpack stage.
-* Removing the ***vsbDir*/3pp/BOOST**  directory or  ***vsbDir*/3pp/BOOST/boost_1_59_0/bin.v2/libs/*library_name*** will incrementally rebuild Boost independent of the VSB.
 * The boost library core tests fail if not executed with a target IP configured. The boost test harness does not properly deal with the “run fail” targets this library uses. 
 * The number of make build threads used in the VSB build is propagated to the Boost build though the -j option. However, during the testing this means multiple Telnet sessions run concurrently on the target system, and may overwhelm the memory on the target system.   If you have unreproducible, odd errors, or out of memory errors like the one shown below, repeat the testing single threaded to confirm the test is not failing due to target resource limitations.
 ```
 0x81e4b180 (iTest_random_generator): memPartAlloc: block too big 520 bytes (0x8 aligned) in partition 0xe27312a0
 0x81e4b180 (iTest_random_generator): memPartAlloc: block too big 520 bytes (0x8 aligned) in partition 0xe27312a0
 ```
+
+### Other Notes:
+* No clean rule is provided for the Boost layer, but cleaning the VSB will rebuild Boost as well. The download directory is not touched, so the rebuild begins from the unpack stage.
+* Removing the ***vsbDir*/3pp/BOOST**  directory or  ***vsbDir*/3pp/BOOST/boost_1_59_0/bin.v2/libs/*library_name*** will incrementally rebuild Boost independent of the VSB.
 
 ## Using Boost Libraries with RTP Applications
 
@@ -337,8 +378,8 @@ This table indicates the results we have obtained with a 32-bit build of an Inte
 | rational	     | Pass
 | regex	         | 
 | scope exit     | 	
-| serialization	 | --- |   Not Supported, deprecated
-| signals   	 | 
+| serialization	 | 
+| signals   	 | -- | Not Supported, depricated | 
 | signals 2	     | 
 | smart pointer	 | Pass
 | sort	         | Pass

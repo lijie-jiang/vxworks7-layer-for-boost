@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+ Copyright 2017, Wind River Systems, Inc.
+
+ Use, modification and distribution are subject to the
+ Boost Software License, Version 1.0.  (See accompanying file
+ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
 Created on Mon Feb 13 13:26:17 2017
 
 @author: oneuber
@@ -65,7 +71,7 @@ try:
     #sleep(1)
     test = tn.expect(["due to signal 6.".encode("UTF-8"), "due to signal 11.".encode("UTF-8"), "and has been deleted.".encode("UTF-8"), "vxWorks *".encode("UTF-8")], 100)
     result = test[0] #will give the index of which ever thing our expeect found (-1 for timeout)
-    stdout.write("\n"+ test[2].decode("UTF-8")+"\n")
+    stdout.write(test[2].decode("UTF-8")+"\n")
     if result == -1:
         stdout.write("After trying to run, we timed out... Rebooting...\n")
         tn.write("\x18".encode("UTF-8")) #resart the telnet session
@@ -79,7 +85,6 @@ try:
     elif result == 2:
         raise ValueError("Something was deleted")
     #else '#', which is what we want to see
-    stdout.write(test[2].decode("UTF-8"))
     tn.write("echo \$?\r\n".encode("UTF-8"))
     echo_output = tn.read_until("vxWorks *]#".encode("UTF-8"), 60).decode("UTF-8")
     stdout.write(echo_output) #output the last bit of output before exiting
