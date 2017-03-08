@@ -27,7 +27,6 @@ The Boost layer has a dependency on the UNIX compatibility layer in this release
 
 If you are on a system **without internet conectivity** you must obtain the Boost sources and put them in: ***InstallDir*/vxworks-7/download**. On a Linux build host obtain these sources from http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz/download, and on Windows from http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.zip/download. If you are online, these are downloaded by **wget** or **curl** during the build. 
 
-The **expect** executable used for adapting the Boost test harness to cross compilation is not provided on Windows build hosts, and must be licensed separately, it has not been verified. It can be obtained from http://www.activestate.com/activetcl/expect. It is not required to build Boost, only to execute the test harness.
 
 ## Installation
 
@@ -130,8 +129,8 @@ The target's path to the workspace defaults to using the TCF path, but can be se
 $ vxprj vsb config -s  \
 -add "_WRS_CONFIG_BOOST_HOST_FILEPATH_MAPPING_PREFIX=bkuhlfedora:"
 ```
-The tests are executed by connecting to the target through Telnet using an expect script found in the Boost layer: **vxworks_boost_test_run.exp.** 
-Or, for 64 bit Windows machines: **boost_test.exe.**
+The tests are executed on a Linux host by connecting to the target through Telnet using an expect script found in the Boost layer: **vxworks_boost_test_run.exp.** 
+Or, for 64 bit Windows machines: **boost_test.exe** created from **boost_test.py**.
 
 There is a *chicken and egg* problem here. You must create a VIP from the VSB before running the Boost tests, so it is necessary to build the VSB twice in order to run the tests. For example, execute the following in you workspace:
 
@@ -217,7 +216,7 @@ This is a wrapper of the Boost **b2** command, and by default it tests the entir
 $ sudo systemctl start nfs-server
 $ exportfs -o rw,sync /home/user/WindRiver/workspace
 ``` 
-     And then VxWorks system's **usrAppInit()** would be similar to the following:
+And then VxWorks system's **usrAppInit()** would be similar to the following:
 ```
 #include <nfs/nfsDriver.h>
 #include <nfs/nfs3Lib.h>
@@ -244,7 +243,7 @@ void usrAppInit (void)
         }
     }
 ```	 
-    This technique has not been verified with a Windows build system. 
+This technique has not been verified with a Windows build system. 
   
 * The default command-line length of the VxWorks interpreter is not long enough to execute all tests. It should be increased by modifying the VIP configuration.
 ```
