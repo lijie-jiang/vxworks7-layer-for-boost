@@ -1,16 +1,17 @@
 ## VxWorks&reg; 7 Recipe Layer for Boost
 
 This repository contains a VxWorks&reg; 7 Source Build (VSB) layer. 
-Add this layer to your VxWorks install to build and verify Boost as part of your board's VSB project.  
+Add this layer to your VxWorks install to build and verify the Boost C++ Libraries (_Boost_)
+as part of your board's VSB project.  
 
-This repository contains a collection of patches to adapt Boost to VxWorks.
-Boost is many libraries and not all of them will work with VxWorks, some of them require
-C++ support not available in VxWorks, or are dependent on other libraries not available 
-for VxWorks. The **vxworks7-boost** project goal is to validate as many Boost libraries
-as possible and then push the required changes to boost.org. Until the patches are
-incorporated into Boost they will exist here.
+This repository contains a collection of patches to adapt the Boost C++ libraries (at version 1.59.0)
+to VxWorks.  Boost consists of many libraries, and not all of them will work with VxWorks. Some of
+them require C++ support not available in VxWorks, or are dependent on other libraries not available 
+for VxWorks. The **vxworks7-boost** project goal is to validate as many Boost libraries as possible
+and then push the required changes to boost.org. Until the patches are incorporated into Boost
+they will exist here.
 
-This layer does not contain Boost and only provides a recipe to adapt Boost to VxWorks. 
+This layer does not contain Boost; it only provides a recipe to adapt Boost to VxWorks. 
 Boost is not part of any VxWorks product, and is not covered by your Wind River support agreement.
 If you need help, use the resources available and boost.org, or contact your Wind River sales
 representative to arrange for consulting services.
@@ -25,7 +26,7 @@ Install the Wind River&reg; VxWorks&reg; 7 operating system from March 2017 or l
 The Boost layer has a dependency on the UNIX compatibility layer in this release;
 ***InstallDir*/vxworks-7/pkgs/os/utils/unix** 
 
-If you are on a system **without internet conectivity** you must obtain the Boost sources and put them in: ***InstallDir*/vxworks-7/download**. On a Linux build host obtain these sources from http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz/download, and on Windows from http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.zip/download. If you are online, these are downloaded by **wget** or **curl** during the build. 
+If you are on a system **without internet conectivity**, you must obtain the Boost sources and put them in: ***InstallDir*/vxworks-7/download**. On a Linux build host, obtain these sources from http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz/download, and on Windows from http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.zip/download. If you are online, these are downloaded by **wget** or **curl** during the build. 
 
 
 ## Installation
@@ -72,11 +73,16 @@ The buildable portions of Boost become visible selections in the Workbench confi
 ![](./docs/wb_boost_menu.png)
 
    Only the Boost system library is included by default, selecting the layer also installs the headers in the VSB.
-Other libraries must be selected in the Workbench configuration tool before they are included. 
-You can also select to build the portions of Boost you want on the command line (in Workbench) with **vxprj** or **wrtool**:
+Other libraries must be selected in the Workbench configuration tool before they are included.
+
+NOTE: The *BOOST_THREAD* component has an additional dependency. You must enable *DEFAULT_PTHREAD_PRIO_INHERIT* before the Boost thread library will be visible in the VSB configuration editor.
+
+You can also select to build the portions of Boost you want on the command line (in Workbench) with **vxprj** or **wrtool**, for example:
 ```
 $ vxprj vsb add BOOST
-$ vxprj vsb config -s -add "_WRS_CONFIG_BOOST_MATH=y"
+$ vxprj vsb config -s -add "_WRS_CONFIG_BOOST_MATH=y" \
+     -add "_WRS_CONFIG_DEFAULT_THREAD_PRIO_INHERIT=y" \
+     -add "_WRS_CONFIG_BOOST_THREAD=y"
 $ make 
 ``` 
 or 
@@ -85,6 +91,9 @@ $ wrtool prj vsb add BOOST
 $ wrtool prj vsb value set BOOST_MATH y
 $ make 
 ```
+
+Boost is primarily a set of C++ template header libraries.  While some of the Boost modules can be used within an RTP without additional runtime support, the Boost menu components present in the VSB configuration are those that provide pre-built runtime libraries that can be linked with an RTP.  You will need to enable such components in the VSB if your RTP depends upon them.  Since it is not always initially obvious which libraries are required, it is reasonable to enable all of the *non-TEST* Boost VSB components.
+
 If you are using Workbench, you may want to turn off C++ indexing before you build the VSB, as the Boost libraries are large. Right-click on the VSB project name, select **Properties > C/C++ General > Indexer**, and un-check **Enable Indexer**. Click **Apply**, and **OK**.
 
 The Makefile that actually builds the code is ***InstallDir*/vxworks-7/pkgs/app/boost/usr_src/vxworks.lib.mak**. This is copied to the Boost source directory, ***vsbDir*/3pp/BOOST/boost_1_59_0/**.
@@ -102,19 +111,16 @@ $ ./b2 install --prefix=VSBDir/usr/root --libdir=VSBDir/usr/lib/common \
 --with-test -q -d2
 ```
 
-As a best practice, simply build the BOOST layer for incremental builds. 
+To rebuild the BOOST layer incrementally, you can use the command: 
 ```
 $ vxprj vsb build BOOST
 ```
-NOTE: The thread library has an additional dependency.
-```
-$ vxprj vsb config -s -add "_WRS_CONFIG_DEFAULT_PTHREAD_PRIO_INHERIT=y"
-$ vxprj vsb config -s -add "_WRS_CONFIG_BOOST_THREAD=y"
-``` 
 
 ## Testing 
 
-Most of Boost is header only libraries. Therefore, to verify them with a specific VxWorks configuration, you must run regression tests for the library you wish to verify. All regression tests are dependent on the test harness library so it must be included first. For example:
+Most of Boost is header-only libraries. Boost provides a set of regression tests that you may run to verify the functionality of these libraries on VxWorks. The tests may be built (and optionally run) as part of the VSB build, or the tests may be built and run separately.
+
+To enable building the tests as part of the VSB build, enable the *BOOST_TEST* component, and any specific regression test components that you wish. All regression tests are dependent on the test harness library so it must be included first. For example:
 ``` 
 $ vxprj vsb config -s -add "_WRS_CONFIG_BOOST_TESTS=y"
 $ vxprj vsb config -s -add "_WRS_CONFIG_BOOST_MATH_TESTS=y"
@@ -132,7 +138,7 @@ $ vxprj vsb config -s  \
 The tests are executed on a Linux host by connecting to the target through Telnet using an expect script found in the Boost layer: **vxworks_boost_test_run.exp.** 
 Or, for 64 bit Windows machines: **boost_test.exe** created from **boost_test.py**.
 
-There is a *chicken and egg* problem here. You must create a VIP from the VSB before running the Boost tests, so it is necessary to build the VSB twice in order to run the tests. For example, execute the following in you workspace:
+There is a *chicken and egg* problem here. You must create a VIP from the VSB before running the Boost tests, so with this method it is necessary to build the VSB twice in order to run the tests. For example, execute the following in you workspace:
 
 ```
 $ wrtool prj vsb create –bsp simVSB vxsim_linux
@@ -168,7 +174,7 @@ Test pass/failure results appear on the console; the results are also stored in 
 ***vsbDir*/3pp/BOOST/boost_1_59_0/bin.v2/libs/*library_name***.
 
 ### Testing with build_run_tests.sh
-As an alterntive to running the Boost test harness within the VxWorks VSB build, a bash shell script is generated by the build that can be invoked independently once the Boost layer is built.
+As an alterntive to running the Boost test harness within the VxWorks VSB build, a bash shell script **build_run_tests.sh** is generated by the build that can be invoked independently once the Boost layer is built.
 For example: 
 ```
 $ wrtool prj vsb create –bsp simVSB vxsim_linux
@@ -196,22 +202,25 @@ $ export BOOST_TELNET_ADDR=192.168.200.1"
 $ ./build_run_tests.sh  --limit-tests=math
 ```
 
+You may alternatively edit the **build_run_tests.sh** script to set host and target-relative paths and environment variables used during testing.  The environment variables *LAYER_SRC_PATH* and *VSB_LD_LIBRARY_PATH* should be paths appropriate for the target (accessing the host filesystem); while the rest of the paths mentioned in the script are host paths.  As mentioned below in the section on Testing, it is recommended to configure the target so that it may access the host filesystem using paths identical to the host paths.  If you manually edit **build_run_tests.sh**, you need not add the *BOOST_TESTS* component to your VSB, nor any of the specific Boost VSB regression test components.
+
 **NOTE:** If you are running Windows, in the above commands, replace `wrenv.linux` with `wrenv` and `vxsim_linux` with `vxsim_windows`.
 
-This is a wrapper of the Boost **b2** command, and by default it tests the entire set of Boost libraries, even those that are unsupported. Therefore, the command should be invoked with options modifying the behavior for your testing requirments. For complete **b2** documetation, consult the Boost documetation at http://www.boost.org/build/doc/html/bbv2/overview/invocation.html. The following options are used by the VSB Boost layer but are not included in **build_run_tests.sh** :
+**build_run_tests.sh** is a wrapper of the Boost **b2** command, and by default it tests the entire set of Boost libraries, even those that are unsupported. Therefore, the command should be invoked with options modifying the behavior for your testing requirments. For complete **b2** documetation, consult the Boost documetation at http://www.boost.org/build/doc/html/bbv2/overview/invocation.html. The following options are used by the VSB Boost layer but are not included in **build_run_tests.sh** :
 
 | Option |   Behavior  | 
 | ------ | ----------- |
 | -q     |  quit after the first test failure |
-| -d2    |  debug level 2, print command invocations |  
+| -d2    |  debug level 2, print command invocations |
+| -a     |  rebuild/re-run all specified tests, even those that have already passed. |
 | testing.execute=off |  build tests only, do not execute |.
 | --abbreviate-paths | munge the test directory names so they are shorter |
-| --limit-tests=*library1*\|*library2* | only build and execute a subset of library tests |
+| --limit-tests="*library1*\|*library2*" | only build and execute a subset of library tests |
 | variant=release | build test executables without debug information |
 | -j*Jobs* | run tests in parallel using *Jobs* threads |  
 
 ### Testing Notes:
-* Some Boost tests use a parameter which is an absolute filepath, the test harness has not been modified to translate these filepaths to target filepaths. Use the VxWorks NFS client to execute these tests. Make the client mount point identical to the exported path. On typical Linux build host the commands would be similar to:
+* Some Boost tests use a parameter which is an absolute host file path. The test harness has not been modified to translate these paths to target paths. If running on a hardware (non-simulator) target, you may use the VxWorks NFS client to execute these tests. Make the client mount point identical to the exported path. On typical Linux build host the commands would be similar to:
 ```
 $ sudo systemctl start nfs-server
 $ exportfs -o rw,sync /home/user/WindRiver/workspace
@@ -242,8 +251,10 @@ void usrAppInit (void)
         perror ("nfsMount");
         }
     }
-```	 
-This technique has not been verified with a Windows build system. 
+```
+Note that the local NFS device name (3rd argument to *nfsMount()*) is chosen equal to the *exportpath* on the host, so that files within the exported NFS filesystem are accessible on the target using the exact same absolute path as on the host.
+
+The use of NFS may not be easily available on Windows hosts. 
   
 * The default command-line length of the VxWorks interpreter is not long enough to execute all tests. It should be increased by modifying the VIP configuration.
 ```
