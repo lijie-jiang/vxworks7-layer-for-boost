@@ -243,7 +243,7 @@ BOOST_BUILD_TEST += move
 endif
 
 # mpi requires MPI support
-# (some VX partner did a MPI port, but it's not generally avalible )
+# (some VX partner did a MPI port, but it's not generally available )
 
 ifdef _WRS_CONFIG_BOOST_MPL_TESTS
 BOOST_BUILD_TEST += mpl
@@ -313,7 +313,6 @@ endif
 # python requires python support
 
 ifdef _WRS_CONFIG_BOOST_RANDOM_TESTS
-# looks like it needs /dev/urandom for entropy?
 BOOST_BUILD_TEST += random
 endif 
 
@@ -341,7 +340,7 @@ ifdef _WRS_CONFIG_BOOST_SERIALIZATION_TESTS
 BOOST_BUILD_TEST += serialization
 endif 
 
-# signals is depricated (use signals2 )
+# signals is deprecated (use signals2 )
 
 ifdef _WRS_CONFIG_BOOST_SIGNALS2_TESTS
 BOOST_BUILD_TEST += signals2
@@ -435,7 +434,7 @@ ifdef _WRS_CONFIG_BOOST_VARIANT_TESTS
 BOOST_BUILD_TEST += variant
 endif 
 
-# wave - a C++ preprocessor, I can't imagine an embbeded application for it?
+# wave - a C++ preprocessor, I can't imagine an embedded application for it?
 
 ifdef _WRS_CONFIG_BOOST_XPRESSIVE_TESTS
 BOOST_BUILD_TEST += xpressive
@@ -456,7 +455,7 @@ EXTRA_DEFINE += -DBOOST_TEST_LIMITED_SIGNAL_DETAILS -DBOOST_LOG_WITHOUT_DEFAULT_
 # dlmalloc in containers should not use sbrk()
 EXTRA_DEFINE += -DHAVE_MORECORE=0
 
-# Rather than removing all warnings, suppress the ones that are obviously extranious 
+# Rather than removing all warnings, suppress the ones that are obviously extraneous 
 ifeq ($(TOOL),gnu)
 EXTRA_DEFINE += -Wno-comment -Wno-parentheses -Wno-reorder -Wno-narrowing -Wno-error=unused-parameter
 BOOST_TOOL:= gcc
@@ -522,7 +521,7 @@ endif
 BOOST_ARGS =  --prefix=$(ROOT_DIR) --libdir=$(LIBDIR)/$(TOOL_COMMON_DIR) --includedir=$(VSB_DIR)/usr/h/public   
 BOOST_ARGS+=  link=static toolset=$(BOOST_TOOL) cross-compile=vxworks $(BOOST_WORKAROUND)
 
-# create a shell script for customers who whould prefer to invoke the test harness outside 
+# create a shell script for customers who would prefer to invoke the test harness outside 
 # the VSB build
 build_run_tests.sh: $(AUTO_INCLUDE_VSB_CONFIG_QUOTE) $(VXWORKS_ENV_SH)  $(__AUTO_INCLUDE_LIST_UFILE)
 	@echo "#!/bin/bash"                                                 > $@
