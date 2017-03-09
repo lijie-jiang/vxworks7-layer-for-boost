@@ -10,6 +10,7 @@
 /*
 Modification history
 --------------------
+09mar17,brk  Increase layer version
 18jan17,dlk  Add LAYER_REQUIRES BZIP2, as BZIP2 is no longer default.
 09jan17,dlk  Add some FEATURE_REQUIRES items.
 24may16,brk  Updated to HLD
@@ -22,7 +23,7 @@ Layer BOOST {
      HELP              Boost provides free peer-reviewed portable C++ source libraries. \
                        This layer enables boost for VxWorks. Support for boost itself is not \
                        provided by Wind River. Please use the resources at boost.org instead.
-     VERSION           1.59.0.0
+     VERSION           1.59.0.1
      FEATURE           OPEN_SOURCE
      FEATURE_REQUIRES  {CORE_IO SET_GET_RLIMIT} \
                        {SHELL RTP_EXIT_STATUS}
