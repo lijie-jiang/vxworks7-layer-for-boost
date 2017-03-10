@@ -114,7 +114,7 @@ $ vxprj vsb build BOOST
 
 ## Testing 
 
-Boost provides a set of regression tests that you may run to verify the functionality of these libraries on VxWorks. The tests may be built (and optionally run) as part of the VSB build, or the tests may be built and run separately.
+Boost provides a set of regression tests that you may run to verify the functionality of its libraries on VxWorks. The tests may be built (and optionally run) as part of the VSB build, or the tests may be built and run separately.
 
 To enable building the tests as part of the VSB build, enable the *BOOST_TEST* component, and any specific regression test components that you wish. All regression tests are dependent on the test harness library so it must be included first. For example:
 ``` 
