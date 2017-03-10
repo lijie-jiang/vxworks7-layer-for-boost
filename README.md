@@ -67,17 +67,15 @@ $ cd simVSB
 After creating the VSB (VxWorks source build project), include the BOOST layer using the Workbench configuration editor:
 ![](./docs/layer selection.png)
 
-   The VSB build unpacks Boost into ***vsbDir*/3pp/BOOST**.
-And copies the headers to ***vsbDir*/usr/h/public/boost**.
+The VSB build unpacks Boost into ***vsbDir*/3pp/BOOST**, and copies the headers to ***vsbDir*/usr/h/public/boost**.
 The buildable portions of Boost become visible selections in the Workbench configuration menu once the layer is enabled. 
 ![](./docs/wb_boost_menu.png)
 
-   Only the Boost system library is included by default, selecting the layer also installs the headers in the VSB.
-Other libraries must be selected in the Workbench configuration tool before they are included.
+   Only the Boost system library is included by default. Boost is primarily a set of C++ template header libraries.  While some of the Boost modules can be used within an RTP without additional runtime support, the Boost menu components present in the VSB configuration are those that provide pre-built runtime libraries that can be linked with an RTP.  You will need to enable such components in the VSB if your RTP depends upon them.  Since it is not always initially obvious which libraries are required, it is reasonable to enable all of the *non-TEST* Boost VSB components.
 
 NOTE: The *BOOST_THREAD* component has an additional dependency. You must enable *DEFAULT_PTHREAD_PRIO_INHERIT* before the Boost thread library will be visible in the VSB configuration editor.
 
-You can also select to build the portions of Boost you want on the command line (in Workbench) with **vxprj** or **wrtool**, for example:
+You can also configure and build the VSB using the command line (in Workbench, or a separate *wrenv* shell) with **vxprj** or **wrtool**, for example:
 ```
 $ vxprj vsb add BOOST
 $ vxprj vsb config -s -add "_WRS_CONFIG_BOOST_MATH=y" \
@@ -91,8 +89,6 @@ $ wrtool prj vsb add BOOST
 $ wrtool prj vsb value set BOOST_MATH y
 $ make 
 ```
-
-Boost is primarily a set of C++ template header libraries.  While some of the Boost modules can be used within an RTP without additional runtime support, the Boost menu components present in the VSB configuration are those that provide pre-built runtime libraries that can be linked with an RTP.  You will need to enable such components in the VSB if your RTP depends upon them.  Since it is not always initially obvious which libraries are required, it is reasonable to enable all of the *non-TEST* Boost VSB components.
 
 If you are using Workbench, you may want to turn off C++ indexing before you build the VSB, as the Boost libraries are large. Right-click on the VSB project name, select **Properties > C/C++ General > Indexer**, and un-check **Enable Indexer**. Click **Apply**, and **OK**.
 
@@ -118,7 +114,7 @@ $ vxprj vsb build BOOST
 
 ## Testing 
 
-Most of Boost is header-only libraries. Boost provides a set of regression tests that you may run to verify the functionality of these libraries on VxWorks. The tests may be built (and optionally run) as part of the VSB build, or the tests may be built and run separately.
+Boost provides a set of regression tests that you may run to verify the functionality of these libraries on VxWorks. The tests may be built (and optionally run) as part of the VSB build, or the tests may be built and run separately.
 
 To enable building the tests as part of the VSB build, enable the *BOOST_TEST* component, and any specific regression test components that you wish. All regression tests are dependent on the test harness library so it must be included first. For example:
 ``` 
@@ -202,7 +198,7 @@ $ export BOOST_TELNET_ADDR=192.168.200.1"
 $ ./build_run_tests.sh  --limit-tests=math
 ```
 
-You may alternatively edit the **build_run_tests.sh** script to set host and target-relative paths and environment variables used during testing.  The environment variables *LAYER_SRC_PATH* and *VSB_LD_LIBRARY_PATH* should be paths appropriate for the target (accessing the host filesystem); while the rest of the paths mentioned in the script are host paths.  As mentioned below in the section on Testing, it is recommended to configure the target so that it may access the host filesystem using paths identical to the host paths.  If you manually edit **build_run_tests.sh**, you need not add the *BOOST_TESTS* component to your VSB, nor any of the specific Boost VSB regression test components.
+You may alternatively edit the **build_run_tests.sh** script to set host and target-relative paths and environment variables used during testing.  The environment variables *LAYER_SRC_PATH* and *VSB_LD_LIBRARY_PATH* should be paths appropriate for the target (accessing the host filesystem); while the rest of the paths mentioned in the script are host paths.  As mentioned below in the *Testing Notes* section, it is recommended to configure the target so that it may access the host filesystem using paths identical to the host paths.  If you manually edit **build_run_tests.sh**, you need not add the *BOOST_TESTS* component to your VSB, nor any of the specific Boost VSB regression test components.
 
 **NOTE:** If you are running Windows, in the above commands, replace `wrenv.linux` with `wrenv` and `vxsim_linux` with `vxsim_windows`.
 
@@ -277,10 +273,6 @@ $ vxprj parameter setstring SHELL_DEFAULT_CONFIG 'INTERPRETER=,LINE_EDIT_MODE=,L
 
 ## Using Boost Libraries with RTP Applications
 
-Your VSB configuration must include the Boost library support required for your RTP applications. While you can select individual layers for specific library support in addition to the required based BOOST and UNIX layers, Wind River recommends that you add and build all of them.  
-
-If you are using Workbench, you may want to turn off C++ indexing before you build the VSB, as the Boost libraries are large. Right-click on the VSB project name, select **Properties > C/C++ General > Indexer**, and un-check **Enable Indexer**. Click **Apply**, and **OK**.  
-
 Your VIP project (based on your VSB) does not require any special configuration with regard to Boost or standard VxWorks C++ support (which is included by default).  
 
 For your RTP application project:
@@ -288,21 +280,34 @@ For your RTP application project:
 1. Create the project and base it on the VSB project.
 
 2. Add your code to the project.
+  * For example, you could use the code provided at http://www.boost.org/doc/libs/1_63_0/libs/timer/doc/cpu_timers.html.
+  * Add **#include \<vxWorks.h\>** at the start of the example code.
+  * Be sure your file is named with a '.cpp' extension rather than a '.c' extension!
 
-3. Add the link commands for the Boost libraries you are using. 
-  *  If you are using Workbench, select the RTP application project name, then **Properties > Build Properties > libraries**. 
-     For example, add:
+3. Add the required library directives in the RTP project build properties.. 
+  *  If you are using Workbench, right-click on the application project name, then select **Properties > Build Properties > libraries**.  Add the **boost_system** and **unix** libraries for all applications, as well as any others that are specifically required for you application to build.
+     For the example code mentioned above, one would add:
      
      ```
-     -lboost_timer 
+     -lboost_system
+     -lboost_timer
+     -lboost_chrono
      -lunix
      ```
      
   *  Click **Apply** and **OK**.
   
-4. Update the include paths. For example, using Workbench, select select the RTP application project name, then **Properties > Build Properties > Paths > Generate**. Click **Apply**, and **OK**.
+4. The Boost headers are copied into the VSB's normal include paths (at "boost/..."), so you should not need to add any include paths specifically for Boost.  However, you may need to add an include path for the *published* headers in the UNIX layer.  Using Workbench, select select the RTP application project name, then **Properties > Build Properties > Paths > Add**. Add in the following directive:
+    ```
+    -I$(VSB_DIR)/usr/h/published/UNIX
+    ```
+Click **Apply**, and **OK**.
 
-5. Build the RTP project. 
+5. You may also wish to disable C++ indexing for the RTP project. This may be done in the same way as described for the VSB project.
+
+6. Build the RTP project.
+   * When prompted to generate the include search path, click Generate Includes, and click through the remaining dialogs.
+   * If there are any missing symbols, you may need to add additional directives for the libraries containing them.
 
 ## Porting Status 
 
