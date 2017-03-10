@@ -1,69 +1,62 @@
 diff -uNdr boost_1_59_0/boost/timer.hpp ../BOOST/boost_1_59_0/boost/timer.hpp
 --- boost_1_59_0/boost/timer.hpp	2013-12-28 06:11:49.000000000 -0800
-+++ ../BOOST/boost_1_59_0/boost/timer.hpp	2017-03-08 10:39:33.017166039 -0800
-@@ -22,7 +22,12 @@
++++ ../BOOST/boost_1_59_0/boost/timer.hpp	2017-03-09 11:35:37.878213120 -0800
+@@ -22,7 +22,11 @@
  #include <boost/limits.hpp>
  
  # ifdef BOOST_NO_STDC_NAMESPACE
 +#ifdef __VXWORKS__
-+#include <tickLib.h>  /* for tickRateGet() */
-+#include <clockLib.h>
++#include <tickLib.h>  /* for tickRateGet(), tick64Get(), _Vx_ticks64_t */
 +#else
      namespace std { using ::clock_t; using ::clock; }
 +#endif
  # endif
  
  
-@@ -43,6 +48,48 @@
+@@ -43,6 +47,42 @@
  
  class timer
  {
 +#ifdef __VXWORKS__
 + public:
-+    timer() { (void)clock_gettime(CLOCK_MONOTONIC, &_start_time); } // postcondition: elapsed()==0
++    // For VxWorks, std::clock() always returns -1 since VxWorks does not track
++    // process CPU time.
++    timer() {
++        _rate = (unsigned int)tickRateGet();
++        _start_time = tick64Get();
++    }  // postcondition: elapsed()==0
 +//         timer( const timer& src );      // post: elapsed()==src.elapsed()
 +//        ~timer(){}
 +//  timer& operator=( const timer& src );  // post: elapsed()==src.elapsed()
-+    void   restart() { (void)clock_gettime(CLOCK_MONOTONIC, &_start_time); } // post: elapsed()==0
++    void   restart() { _start_time = tick64Get(); } // post: elapsed()==0
 +    double elapsed() const                  // return elapsed time in seconds
 +    {
-+        struct timespec _now;
-+        (void)clock_gettime(CLOCK_MONOTONIC, &_now);
-+        _now.tv_sec -= _start_time.tv_sec;
-+        _now.tv_nsec -= _start_time.tv_nsec;
-+        if (_now.tv_nsec < 0L)
-+        {
-+            _now.tv_nsec += 1000000000L; /* 10**9, 1 billion */
-+            _now.tv_sec -= 1;
-+        }
-+        return  double(_now.tv_sec) + double(_now.tv_nsec) * 1.0e-9;
++        return double(tick64Get() - _start_time) / _rate;
 +    }
 +
 +    double elapsed_max() const   // return estimated maximum value for elapsed()
 +    // Portability warning: elapsed_max() may return too high a value on systems
 +    // where std::clock_t overflows or resets at surprising values.
 +    {
-+        struct timespec _now = {std::numeric_limits<time_t>::max() / tickRateGet(), 999999999L};
-+        _now.tv_sec -= _start_time.tv_sec;
-+        _now.tv_nsec -= _start_time.tv_nsec;
-+        return  double(_now.tv_sec) + double(_now.tv_nsec) * 1.0e-9;
++        // For VxWorks, tick64Get() values increase monotonically from 0 at boot
++        // until rolling over at 0xffffffffffffffff.
++        return double(~(_Vx_ticks64_t)0U) / _rate;
 +    }
 +
 +    double elapsed_min() const            // return minimum value for elapsed()
 +    {
-+        struct timespec _res;
-+        (void)clock_getres(CLOCK_MONOTONIC, &_res);
-+        return double (_res.tv_nsec) * 1.0e-9;  //_res.tv_sec is always zero
++      return double(1) / _rate;
 +    }
 +
 + private:
-+  struct timespec _start_time;
++    unsigned int  _rate;  // assuming clock rate is fixed after timer creation
++    _Vx_ticks64_t _start_time;
 +
 +#else /* __VXWORKS__ */
   public:
           timer() { _start_time = std::clock(); } // postcondition: elapsed()==0
  //         timer( const timer& src );      // post: elapsed()==src.elapsed()
-@@ -65,6 +112,7 @@
+@@ -65,6 +105,7 @@
  
   private:
    std::clock_t _start_time;
