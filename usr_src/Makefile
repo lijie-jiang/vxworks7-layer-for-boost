@@ -12,8 +12,8 @@
 # 24may15,brk  HLD review changes
 # 26nov15,brk  use b2 build utility wrapped by vxworks_env.sh
 #              (similar to autoconf/automake support,)  
-#				in preperation for regression test harness support   
-# 12sep15,brk  switched to tar download for unix compatiblity
+#				in preparation for regression test harness support   
+# 12sep15,brk  switched to tar download for UNIX compatibility
 # 28nov14,brk  created
 
 

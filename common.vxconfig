@@ -26,7 +26,7 @@ choice BOOST_SHARED_LINK_TYPE
        bool "Build only the system shared libraries"
        help
          A shared system library is required by tests in some libraries.
-         The tests are built with the static link feature, some tests overide this selection
+         The tests are built with the static link feature, some tests override this selection
          and build shared libraries. In the some cases the system.so library is also required
          by these tests. 
 
@@ -103,7 +103,7 @@ config  BOOST_SERIALIZATION
         bool "Build serialization"
         default n
 
-# signals package is depriated in favour of thread safe signals2 
+# signals package is deprecated in favour of thread safe signals2 
 # signals2 is header only  
 # 
 #config  BOOST_SIGNALS
@@ -137,7 +137,7 @@ config  BOOST_TELNET_ADDR
 		default ""  
 		help
 			If left blank the tests are just compiled, if specified an 'expect' script is used to telnet to the target and execute tests.
-			The target must support telnet and have the host filesytem mounted in order to find the test RTPs.   
+			The target must support telnet and have the host filesystem mounted in order to find the test RTPs.   
 			rlogin should be disabled and so no user login is required.
 
 config  BOOST_HOST_FILEPATH_MAPPING_PREFIX
@@ -146,7 +146,7 @@ config  BOOST_HOST_FILEPATH_MAPPING_PREFIX
 		default "/hostfs/ws"  
 		help
 		   The target needs to use one of several filesystems to access host in order to load the test executables, the default value
-		   is the valid when the TCF (debugger) conection is used. Other possiblites are NFS, FTP mounts which are typically 
+		   is the valid when the TCF (debugger) connection is used. Other possiblites are NFS, FTP mounts which are typically 
 		   <hostname>:    
 
 config  BOOST_ACCUMULATORS_TESTS
@@ -293,7 +293,7 @@ config  BOOST_FLYWEIGHT_TESTS
 
 config  BOOST_FOREACH_TESTS
 		depends on BOOST_TESTS
-        bool "Build foreach tests"
+        bool "Build for-each tests"
         default n
 
 config  BOOST_FORMAT_TESTS
@@ -442,7 +442,7 @@ config  BOOST_MULTI_INDEX_TESTS
 
 config  BOOST_MULTIPRECISION_TESTS
 		depends on BOOST_TESTS
-        bool "Build multiprecision tests"
+        bool "Build multi-precision tests"
         default n
 
 config  BOOST_OPTIONAL_TESTS
@@ -538,7 +538,7 @@ config  BOOST_SERIALIZATION_TESTS
         bool "Build serialization tests"
         default n
 
-# signals is depricated
+# signals is deprecated
 
 config  BOOST_SIGNALS2_TESTS
 		depends on BOOST_TESTS
@@ -600,7 +600,7 @@ config  BOOST_TOKENIZER_TESTS
 	    bool "Build tokenizer tests"
         default n
     
-#TR1 depricated
+#TR1 deprecated
     
 config  BOOST_TTI_TESTS
 		depends on BOOST_TESTS
@@ -625,7 +625,7 @@ config  BOOST_TYPE_ERASURE_TESTS
 
 config  BOOST_TYPE_TRAITS_TESTS
 		depends on BOOST_TESTS
-	    bool "Build type traitis tests"
+	    bool "Build type traits tests"
         default n
 
 config  BOOST_TYPEOF_TESTS
@@ -655,7 +655,7 @@ config  BOOST_UUID_TESTS
 
 config  BOOST_VARIANT_TESTS
 		depends on BOOST_TESTS
-	    bool "Build varient tests"
+	    bool "Build variant tests"
         default n
 
 #wave -unsupported

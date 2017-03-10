@@ -10,8 +10,8 @@
 #  --------------------
 # 07feb17,brk  llvm support 
 # 26nov15,brk  use b2 build utility wrapped by vxworks_env.sh
-#              (similar to autoconf approch,)  
-#				in preperation for regression test harness support  
+#              (similar to autoconf approach,)  
+#				in preparation for regression test harness support  
 #  26aug15,brk  updates for newer boost and C11 support in VX 
 #  30nov14,brk  written
 #
@@ -90,7 +90,7 @@ BOOST_BUILD_WITH += --with-math
 endif
 
 # mpi requires MPI support
-# (some VX partner did a MPI port, but it's not generally avalible )
+# (some VX partner did a MPI port, but it's not generally available )
 
 ifdef _WRS_CONFIG_BOOST_PROGRAM_OPTIONS
 BOOST_BUILD_WITH += --with-program_options
@@ -110,7 +110,7 @@ ifdef _WRS_CONFIG_BOOST_SERIALIZATION
 BOOST_BUILD_WITH += --with-serialization
 endif 
 
-# signals is depricated (use signal2 )
+# signals is deprecated (use signal2 )
 # signal2 is header only 
 #ifdef _WRS_CONFIG_BOOST_SIGNALS
 #BOOST_BUILD += signals
@@ -130,7 +130,7 @@ ifdef _WRS_CONFIG_BOOST_TIMER
 BOOST_BUILD_WITH += --with-timer
 endif 
 
-# wave - a C++ preprocessor, I can't imagine an embbeded application for it?
+# wave - a C++ preprocessor, I can't imagine an embedded application for it?
 
 ifdef _WRS_CONFIG_BOOST_TESTS
 BOOST_BUILD_WITH += --with-test
@@ -149,7 +149,7 @@ EXTRA_DEFINE += -DBOOST_TEST_LIMITED_SIGNAL_DETAILS -DBOOST_LOG_WITHOUT_DEFAULT_
 EXTRA_DEFINE += -DHAVE_MORECORE=0
 
 
-# Rather than removing all warnings, suppress the ones that are obviously extranious 
+# Rather than removing all warnings, suppress the ones that are obviously extraneous 
 ifeq ($(TOOL),gnu)
 EXTRA_DEFINE += -Wno-comment -Wno-parentheses -Wno-reorder -Wno-narrowing -Wno-error=unused-parameter
 BOOST_TOOL:= gcc
