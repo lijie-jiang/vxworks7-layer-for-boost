@@ -201,7 +201,7 @@ $ ./build_run_tests.sh  --limit-tests=math
 
 You can also choose to edit the **build_run_tests.sh** script to set the host and target-relative paths and environment variables used during testing. The environment variables **LAYER_SRC_PATH** and **VSB_LD_LIBRARY_PATH** must be paths appropriate for the target (accessing the host file system); while the rest of the paths mentioned in the script are host paths. As mentioned below in the *Testing Notes* section, Wind River recommends that you configure the target so that it can access the host file system using paths identical to the host paths. If you manually edit **build_run_tests.sh**, you do not need to add the **BOOST_TESTS** component to your VSB, nor do you need to add any of the specific Boost VSB regression test components.
 
-**build_run_tests.sh** is a wrapper of the Boost **b2** command and, by default, it tests the entire set of Boost libraries; even those that are unsupported. Therefore, the command must be invoked with options that modify the behavior for your testing requirments. For complete **b2** documetation, consult the Boost documetation at http://www.boost.org/build/doc/html/bbv2/overview/invocation.html. The following options are used by the VSB Boost layer but are not included in **build_run_tests.sh** :
+**build_run_tests.sh** is a wrapper of the Boost **b2** command and, by default, it tests the entire set of Boost libraries; even those that are unsupported. Therefore, the command must be invoked with options that modify the behavior for your testing requirments. For complete **b2** documentation, consult the Boost documetation at http://www.boost.org/build/doc/html/bbv2/overview/invocation.html. The following options are used by the VSB Boost layer but are not included in **build_run_tests.sh** :
 
 | Option |   Behavior  | 
 | ------ | ----------- |
@@ -219,7 +219,7 @@ You can also choose to edit the **build_run_tests.sh** script to set the host an
 ```
 $ sudo systemctl start nfs-server
 $ exportfs -o rw,sync /home/user/WindRiver/workspace
-``` 
+```
 And then VxWorks system's **usrAppInit()** would be similar to the following:
 ```
 #include <nfs/nfsDriver.h>
@@ -249,7 +249,7 @@ void usrAppInit (void)
 ```
 **NOTE:** The local NFS device name (third argument to **nfsMount( )**) is chosen to be equal to the *exportpath* on the host so that files within the exported NFS file system are accessible on the target using the exact same absolute path as on the host.
 
-The use of NFS may not be easily available on Windows hosts. 
+The use of NFS may not be easily available on Windows hosts.
   
 * The default command-line length of the VxWorks interpreter is not long enough to execute all tests. Increase it by modifying the VIP configuration.
 ```
