@@ -107,7 +107,7 @@ $ ./b2 install --prefix=VSBDir/usr/root --libdir=VSBDir/usr/lib/common \
 --with-test -q -d2
 ```
 
-To rebuild the Boost layer incrementally, you can use the command: 
+To rebuild the Boost layer incrementally, you can use the following command: 
 ```
 $ vxprj vsb build BOOST
 ```
