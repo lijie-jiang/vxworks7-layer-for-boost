@@ -251,7 +251,7 @@ void usrAppInit (void)
 
 The use of NFS may not be easily available on Windows hosts.
 
-* If using the VxWorks NFS client, there is a VIP parameter *NFS_MAXPATH* (defaulting to 255) that limits the length of NFS paths.  Depending upon the NFS client device name and the host paths in use, this default may be too short for some of the Boost tests. It is recommended to increase *NFS_MAXPATH* to a larger value (e.g. 400); but in any case the value should be no larger than 1024.
+* If using the VxWorks NFS client, there is a VIP parameter *NFS_MAXPATH* (defaulting to 255) that limits the length of NFS paths.  Depending upon the NFS client device name and the host paths in use, this default may be too short for some of the Boost tests. Increase *NFS_MAXPATH* to a larger value (e.g. 400); but in any case the value should be no larger than 1024.
   
 * The default command-line length of the VxWorks shell is not long enough to execute all tests. Increase it by modifying the VIP configuration as follows:
 ```
