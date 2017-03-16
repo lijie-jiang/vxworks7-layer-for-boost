@@ -11,7 +11,10 @@ for VxWorks. The **vxworks7-boost** project goal is to validate as many Boost li
 and then push the required changes to boost.org. Until the patches are incorporated into Boost
 they will exist here.
 
-This layer does not contain Boost; it only provides a recipe to adapt Boost to VxWorks. 
+Note that this layer aims to allow using Boost code in VxWorks user-space applications (RTPs), not
+in the VxWorks kernel.
+
+This layer does not contain Boost; it only provides a recipe to adapt Boost to VxWorks.
 Boost is not part of any VxWorks product, and is not covered by your Wind River support agreement.
 If you need help, use the resources available and boost.org, or contact your Wind River sales
 representative to arrange for consulting services.
