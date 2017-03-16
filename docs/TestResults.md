@@ -1,5 +1,6 @@
 
-This table indicates the results we have obtained with a Intel BSP **itl_generic** using the GNU compiler with C++03 and 64bit support selected.
+This table indicates the Boost test results we have obtained on an Intel Q35 target, using a 64-bit SMP VSB based upon the **itl_generic** BSP, and built with the GNU compiler, with the default C++ support (C++03, not C++11) selected.
+
 Other configurations are selectable, but have not been verified by Wind River.
 
 The number of test failures are indicated in the chart below. Failures are classified as follows:
