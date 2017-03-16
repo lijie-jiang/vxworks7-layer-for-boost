@@ -68,7 +68,7 @@ $ cd simVSB
 ```
 
 After creating the VSB (VxWorks source build project), include the BOOST layer using the Workbench configuration editor:
-![](./docs/layer selection.png)
+![](./docs/layer_selection.png)
 
 The VSB build unpacks Boost into ***vsbDir*/3pp/BOOST**, and copies the headers to ***vsbDir*/usr/h/public/boost**.
 The buildable portions of Boost become visible selections in the Workbench configuration menu once the layer is enabled. 
