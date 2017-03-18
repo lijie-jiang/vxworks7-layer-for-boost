@@ -97,8 +97,17 @@ If you are using Workbench, you may want to turn off C++ indexing before you bui
 
 The Makefile that actually builds the code is ***InstallDir*/vxworks-7/pkgs/app/boost/usr_src/vxworks.lib.mak**. This is copied to the Boost source directory, ***vsbDir*/3pp/BOOST/boost_1_59_0/**.
 
+### Incremental Builds
+
+Incremental builds of Boost can be done by using the layer build command.
+```
+$ vxprj vsb build BOOST
+```  
+
 ## b2 Usage
  
+If you have built Boost for other operating systems you will have used the **b2** build utility directly; this is also possible with VxWorks.
+
 The initial build of the Boost layer creates the **vxworks_env.sh** which contains the current VSB cross build environment. This is propagated to the Boost jam build environment by the generic **project_config.jam** file provided in the Boost layer. Once these files are in place, you can optionally invoke the **b2** outside of the VSB build by first sourcing **vxworks_env.sh**. Duplicate the command found in the build log. For example:
 
 ```
@@ -108,11 +117,6 @@ $ ./b2 install --prefix=VSBDir/usr/root --libdir=VSBDir/usr/lib/common \
 --includedir=VSBDir/usr/h/public  link=static  toolset=gcc cross-compile=vxworks     \
 --with-atomic --with-chrono --with-context --with-coroutine --with-exception \
 --with-test -q -d2
-```
-
-To rebuild the Boost layer incrementally, you can use the following command: 
-```
-$ vxprj vsb build BOOST
 ```
 
 ## Testing 
