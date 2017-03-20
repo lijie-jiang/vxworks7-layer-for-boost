@@ -162,7 +162,7 @@ BOOST_TOOL:= diab
 endif
 
 ifeq ($(TOOL),icc)
-EXTRA_DEFINE += -DBOOST_NO_CXX11_HDR_INITIALIZER_LIST -CG_allow_xmm -CG_allow_x87
+EXTRA_DEFINE += -DBOOST_NO_CXX11_HDR_INITIALIZER_LIST 
 BOOST_TOOL:= intel-vxworks
 endif
 
