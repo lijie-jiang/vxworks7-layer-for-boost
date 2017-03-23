@@ -1,0 +1,17 @@
+diff -uNdr boost_1_59_0/libs/geometry/index/test/rtree/interprocess/Jamfile.v2 ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/libs/geometry/index/test/rtree/interprocess/Jamfile.v2
+--- boost_1_59_0/libs/geometry/index/test/rtree/interprocess/Jamfile.v2	2015-08-03 08:51:49.000000000 -0400
++++ boost_1_59_0/libs/geometry/index/test/rtree/interprocess/Jamfile.v2	2017-03-20 14:31:00.000000000 -0400
+@@ -21,10 +21,10 @@
+         <host-os>hpux,<toolset>gcc:<linkflags>"-Wl,+as,mpas"
+ #        <toolset>gcc-mingw:<linkflags>"-lole32 -loleaut32 -lpsapi -ladvapi32"
+         <toolset>gcc,<target-os>windows:<linkflags>"-lole32 -loleaut32 -lpsapi -ladvapi32" 
+-        <host-os>windows,<toolset>clang:<linkflags>"-lole32 -loleaut32 -lpsapi -ladvapi32"
++        <target-os>windows,<toolset>clang:<linkflags>"-lole32 -loleaut32 -lpsapi -ladvapi32"
+         <toolset>msvc:<cxxflags>/bigobj
+-        <host-os>windows,<toolset>intel:<cxxflags>/bigobj
+-        <host-os>linux:<linkflags>"-lrt"
++        <target-os>windows,<toolset>intel:<cxxflags>/bigobj
++        <target-os>linux:<linkflags>"-lrt"
+       ] ;
+    }
+ 
