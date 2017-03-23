@@ -1,6 +1,6 @@
-diff -uNdr boost_1_59_0/tools/build/src/tools/builtin.jam ../../workspace/VSB_64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/builtin.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/builtin.jam ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/builtin.jam
 --- boost_1_59_0/tools/build/src/tools/builtin.jam	2015-08-11 09:53:51.000000000 -0400
-+++ boost_1_59_0/tools/build/src/tools/builtin.jam	2017-03-16 23:06:51.000000000 -0400
++++ boost_1_59_0/tools/build/src/tools/builtin.jam	2017-03-20 11:00:04.000000000 -0400
 @@ -41,7 +41,7 @@
  
  
@@ -10,9 +10,9 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/builtin.jam ../../workspace/VSB_64
      elf  # Not actually an OS -- used for targeting bare metal where object
           # format is ELF.  This catches both -elf and -eabi gcc targets and well
           # as other compilers targeting ELF. It is not clear how often we need
-diff -uNdr boost_1_59_0/tools/build/src/tools/clang-vxworks.jam ../../workspace/VSB_64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/clang-vxworks.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/clang-vxworks.jam ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/clang-vxworks.jam
 --- boost_1_59_0/tools/build/src/tools/clang-vxworks.jam	1969-12-31 19:00:00.000000000 -0500
-+++ boost_1_59_0/tools/build/src/tools/clang-vxworks.jam	2017-03-16 23:06:51.000000000 -0400
++++ boost_1_59_0/tools/build/src/tools/clang-vxworks.jam	2017-03-20 11:00:04.000000000 -0400
 @@ -0,0 +1,151 @@
 +# Copyright Brian Kuhl 2017.
 +# Distributed under the Boost Software License, Version 1.0.
@@ -165,9 +165,9 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/clang-vxworks.jam ../../workspace/
 +{
 +    "$(.LD)" $(USER_OPTIONS) -L"$(LINKPATH)" -o "$(<)" "$(>)" "$(LIBRARIES)" $(START-GROUP) $(FINDLIBS-ST-PFX) -l$(FINDLIBS-ST) $(FINDLIBS-SA-PFX) -l$(FINDLIBS-SA) $(END-GROUP) $(OPTIONS) -fpic -shared -non-static
 +}
-diff -uNdr boost_1_59_0/tools/build/src/tools/diab.jam ../../workspace/VSB_64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/diab.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/diab.jam ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/diab.jam
 --- boost_1_59_0/tools/build/src/tools/diab.jam	1969-12-31 19:00:00.000000000 -0500
-+++ boost_1_59_0/tools/build/src/tools/diab.jam	2017-03-16 23:06:51.000000000 -0400
++++ boost_1_59_0/tools/build/src/tools/diab.jam	2017-03-20 11:00:04.000000000 -0400
 @@ -0,0 +1,130 @@
 +# Copyright 2015, Wind River Inc.
 +# Distributed under the Boost Software License, Version 1.0.
@@ -299,9 +299,9 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/diab.jam ../../workspace/VSB_64_ic
 +  $(RM) "$(<)"
 +  dar rc $(<) $(>)
 +}
-diff -uNdr boost_1_59_0/tools/build/src/tools/gcc.jam ../../workspace/VSB_64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/gcc.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/gcc.jam ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/gcc.jam
 --- boost_1_59_0/tools/build/src/tools/gcc.jam	2015-08-11 09:53:51.000000000 -0400
-+++ boost_1_59_0/tools/build/src/tools/gcc.jam	2017-03-16 23:06:51.000000000 -0400
++++ boost_1_59_0/tools/build/src/tools/gcc.jam	2017-03-20 11:00:04.000000000 -0400
 @@ -387,6 +387,8 @@
  
  toolset.flags gcc.compile.c++ OPTIONS <rtti>off : -fno-rtti ;
@@ -343,9 +343,9 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/gcc.jam ../../workspace/VSB_64_icc
              case *       : option = -pthread ; libs = rt ;
          }
  
-diff -uNdr boost_1_59_0/tools/build/src/tools/intel.jam ../../workspace/VSB_64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/intel.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/intel.jam ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/intel.jam
 --- boost_1_59_0/tools/build/src/tools/intel.jam	2015-08-11 09:53:51.000000000 -0400
-+++ boost_1_59_0/tools/build/src/tools/intel.jam	2017-03-16 23:06:51.000000000 -0400
++++ boost_1_59_0/tools/build/src/tools/intel.jam	2017-03-20 11:00:04.000000000 -0400
 @@ -16,7 +16,12 @@
  
  rule init ( * : * )
@@ -360,10 +360,10 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/intel.jam ../../workspace/VSB_64_i
      {
          toolset.using intel-linux : 
            $(1) : $(2) : $(3) : $(4) : $(5) : $(6) : $(7) : $(8) : $(9) ;
-diff -uNdr boost_1_59_0/tools/build/src/tools/intel-vxworks.jam ../../workspace/VSB_64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/intel-vxworks.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/intel-vxworks.jam ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/intel-vxworks.jam
 --- boost_1_59_0/tools/build/src/tools/intel-vxworks.jam	1969-12-31 19:00:00.000000000 -0500
-+++ boost_1_59_0/tools/build/src/tools/intel-vxworks.jam	2017-03-17 10:03:37.000000000 -0400
-@@ -0,0 +1,191 @@
++++ boost_1_59_0/tools/build/src/tools/intel-vxworks.jam	2017-03-21 22:31:45.000000000 -0400
+@@ -0,0 +1,185 @@
 +# # Copyright Wind River 2015.
 +# Distributed under the Boost Software License, Version 1.0.
 +# (See accompanying file LICENSE_1_0.txt
@@ -508,11 +508,6 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/intel-vxworks.jam ../../workspace/
 +
 +flags intel-vxworks ARFLAGS <archiveflags> ;
 +
-+# Default value. Mostly for the sake of intel-linux
-+# that inherits from gcc, but does not has the same
-+# logic to set the .AR variable. We can put the same
-+# logic in intel-linux, but that's hardly worth the trouble
-+# as on Linux, 'ar' is always available.
 +.AR = ar ;
 +
 +rule archive ( targets * : sources * : properties * )
@@ -532,7 +527,6 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/intel-vxworks.jam ../../workspace/
 +actions piecemeal archive
 +{
 +  "$(.AR)" $(AROPTIONS) rc "$(<)" "$(>)"
-+  "ranlib" -cs "$(<)"
 +}
 +
 +flags intel-vxworks.link USER_OPTIONS <linkflags> ;
@@ -555,9 +549,9 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/intel-vxworks.jam ../../workspace/
 +{
 +    "$(CONFIG_COMMAND)" $(USER_OPTIONS) -L"$(LINKPATH)" -o "$(<)" "$(>)"  "$(LIBRARIES)" -l$(FINDLIBS-SA) -l$(FINDLIBS-ST) $(OPTIONS)
 +}
-diff -uNdr boost_1_59_0/tools/build/src/tools/testing.jam ../../workspace/VSB_64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/testing.jam
+diff -uNdr boost_1_59_0/tools/build/src/tools/testing.jam ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/tools/testing.jam
 --- boost_1_59_0/tools/build/src/tools/testing.jam	2015-08-11 09:53:51.000000000 -0400
-+++ boost_1_59_0/tools/build/src/tools/testing.jam	2017-03-16 23:06:51.000000000 -0400
++++ boost_1_59_0/tools/build/src/tools/testing.jam	2017-03-20 11:00:04.000000000 -0400
 @@ -389,15 +389,38 @@
      # test are found. So, we collect all paths from dependency libraries (via
      # xdll-path property) and add whatever explicit dll-path user has specified.
@@ -601,9 +595,9 @@ diff -uNdr boost_1_59_0/tools/build/src/tools/testing.jam ../../workspace/VSB_64
      }
  }
  
-diff -uNdr boost_1_59_0/tools/build/src/util/os.jam ../../workspace/VSB_64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/util/os.jam
+diff -uNdr boost_1_59_0/tools/build/src/util/os.jam ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/tools/build/src/util/os.jam
 --- boost_1_59_0/tools/build/src/util/os.jam	2015-08-11 09:53:51.000000000 -0400
-+++ boost_1_59_0/tools/build/src/util/os.jam	2017-03-16 23:06:51.000000000 -0400
++++ boost_1_59_0/tools/build/src/util/os.jam	2017-03-20 11:00:04.000000000 -0400
 @@ -65,6 +65,7 @@
  # constant whose value would be the same as the default, below.
  .shared-library-path-variable-NT = $(.executable-path-variable-NT) ;

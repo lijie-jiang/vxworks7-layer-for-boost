@@ -162,12 +162,12 @@ BOOST_TOOL:= diab
 endif
 
 ifeq ($(TOOL),icc)
-EXTRA_DEFINE += -DBOOST_NO_CXX11_HDR_INITIALIZER_LIST 
+EXTRA_DEFINE += -diag-disable=1418  -diag-disable=1682 
 BOOST_TOOL:= intel-vxworks
 endif
 
 ifeq ($(TOOL),llvm)
-EXTRA_DEFINE += 
+EXTRA_DEFINE += -Wno-c++11-narrowing
 BOOST_TOOL:= clang-vxworks
 endif
 

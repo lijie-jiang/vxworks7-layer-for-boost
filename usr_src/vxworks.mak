@@ -469,8 +469,8 @@ BOOST_WORKAROUND += "variant=release"
 endif
 
 ifeq ($(TOOL),icc)
-EXTRA_DEFINE += -DBOOST_NO_CXX11_HDR_INITIALIZER_LIST -CG_allow_xmm -CG_allow_x87
-BOOST_TOOL:= intel
+EXTRA_DEFINE += -diag-disable=1418  -diag-disable=1682 
+BOOST_TOOL:= intel-vxworks
 endif
 
 ifeq ($(TOOL),llvm)
