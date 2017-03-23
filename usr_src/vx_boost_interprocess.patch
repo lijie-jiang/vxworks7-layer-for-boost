@@ -1,6 +1,6 @@
-diff -uNdr boost_1_59_0/boost/interprocess/detail/atomic.hpp vx7/workspace/VsbPpc64/3pp/BOOST/boost_1_59_0/boost/interprocess/detail/atomic.hpp
---- boost_1_59_0/boost/interprocess/detail/atomic.hpp	2015-06-24 07:18:17.000000000 -0700
-+++ boost_1_59_0/boost/interprocess/detail/atomic.hpp	2016-06-19 21:29:06.770324006 -0700
+diff -uNdr boost_1_59_0/boost/interprocess/detail/atomic.hpp ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/boost/interprocess/detail/atomic.hpp
+--- boost_1_59_0/boost/interprocess/detail/atomic.hpp	2015-06-24 10:18:17.000000000 -0400
++++ boost_1_59_0/boost/interprocess/detail/atomic.hpp	2017-03-20 11:00:04.000000000 -0400
 @@ -570,6 +570,60 @@
  }  //namespace ipcdetail{
  }  //namespace interprocess{
@@ -62,9 +62,41 @@ diff -uNdr boost_1_59_0/boost/interprocess/detail/atomic.hpp vx7/workspace/VsbPp
  
  #else
  
-diff -uNdr boost_1_59_0/boost/interprocess/detail/workaround.hpp vx7/workspace/VsbPpc64/3pp/BOOST/boost_1_59_0/boost/interprocess/detail/workaround.hpp
---- boost_1_59_0/boost/interprocess/detail/workaround.hpp	2015-06-24 07:18:17.000000000 -0700
-+++ boost_1_59_0/boost/interprocess/detail/workaround.hpp	2016-06-19 08:30:52.588165006 -0700
+diff -uNdr boost_1_59_0/boost/interprocess/detail/os_thread_functions.hpp ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/boost/interprocess/detail/os_thread_functions.hpp
+--- boost_1_59_0/boost/interprocess/detail/os_thread_functions.hpp	2015-06-24 10:18:17.000000000 -0400
++++ boost_1_59_0/boost/interprocess/detail/os_thread_functions.hpp	2017-03-20 15:40:30.000000000 -0400
+@@ -52,6 +52,9 @@
+ #     include <sys/param.h>
+ #     include <sys/sysctl.h>
+ #  endif
++#if defined(__VXWORKS__) 
++#include <vxCpuLib.h>
++#endif 
+ //According to the article "C/C++ tip: How to measure elapsed real time for benchmarking"
+ #  if defined(CLOCK_MONOTONIC_PRECISE)   //BSD
+ #     define BOOST_INTERPROCESS_CLOCK_MONOTONIC CLOCK_MONOTONIC_PRECISE
+@@ -466,6 +469,18 @@
+       else{
+          return static_cast<unsigned int>(num_cores);
+       }
++   #elif defined(__VXWORKS__)
++      cpuset_t set =  ::vxCpuEnabledGet();
++    #ifdef __DCC__
++      int i;
++      for( i = 0; set; ++i)
++          {
++               set &= set -1;
++          }
++      return(i);
++    #else  
++      return (__builtin_popcount(set) );
++    #endif  
+    #endif
+ }
+ 
+diff -uNdr boost_1_59_0/boost/interprocess/detail/workaround.hpp ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/boost/interprocess/detail/workaround.hpp
+--- boost_1_59_0/boost/interprocess/detail/workaround.hpp	2015-06-24 10:18:17.000000000 -0400
++++ boost_1_59_0/boost/interprocess/detail/workaround.hpp	2017-03-20 11:00:04.000000000 -0400
 @@ -33,7 +33,7 @@
     //////////////////////////////////////////////////////
     //Check for XSI shared memory objects. They are available in nearly all UNIX platforms
@@ -73,6 +105,4 @@ diff -uNdr boost_1_59_0/boost/interprocess/detail/workaround.hpp vx7/workspace/V
 +   #if !defined(__QNXNTO__) && !defined(__ANDROID__) && !defined(__HAIKU__) && !(__VXWORKS__)
        #define BOOST_INTERPROCESS_XSI_SHARED_MEMORY_OBJECTS
     #endif
- 
-
  
