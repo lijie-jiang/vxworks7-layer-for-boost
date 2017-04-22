@@ -213,17 +213,23 @@ BOOST_BUILD_LIB_FORMAT:= link=static
 BOOST_BUILD_WITH_TARGETS:=$(BOOST_BUILD_WITH)
 endif
 
+# Clear the 'checks' cache. The C++11 runtime checks could have failed becuse of no target connection
+# better to rerun every time 
+BOOST_WORKAROUND += --reconfigure
+
+
 ifeq "$(WIND_HOST_TYPE)" "x86-win32"
 # Shorten paths on windows to avoid path length issues
 # Don't add postfix (default on windows) to library names layout    
-BOOST_WIN_WORKAROUND :=  --abbreviate-paths --layout=system
+BOOST_WORKAROUND +=  --abbreviate-paths --layout=system
 endif 
+
 
 ifdef BOOST_BUILD_WITH_TARGETS
 boost_build: $(AUTO_INCLUDE_VSB_CONFIG_QUOTE) $(VXWORKS_ENV_SH)  $(__AUTO_INCLUDE_LIST_UFILE) 
 	. ./$(VXWORKS_ENV_SH) &&      \
 	./b2 install -j$(JOBS) --prefix=$(ROOT_DIR) --libdir=$(LIBDIR)/$(TOOL_COMMON_DIR) --includedir=$(VSB_DIR)/usr/h/public   \
-		   $(BOOST_BUILD_LIB_FORMAT) toolset=$(BOOST_TOOL) cross-compile=vxworks  $(BOOST_WIN_WORKAROUND)   \
+		   $(BOOST_BUILD_LIB_FORMAT) toolset=$(BOOST_TOOL) cross-compile=vxworks  $(BOOST_WORKAROUND)   \
 		   $(BOOST_BUILD_WITH_TARGETS) -q -d2
 else
 boost_build:

@@ -455,6 +455,10 @@ EXTRA_DEFINE += -DBOOST_TEST_LIMITED_SIGNAL_DETAILS -DBOOST_LOG_WITHOUT_DEFAULT_
 # dlmalloc in containers should not use sbrk()
 EXTRA_DEFINE += -DHAVE_MORECORE=0
 
+# Clear the 'checks' cache. The C++11 runtime checks could have failed becuse of no target connection
+# better to rerun every time 
+BOOST_WORKAROUND += --reconfigure
+
 # Rather than removing all warnings, suppress the ones that are obviously extraneous 
 ifeq ($(TOOL),gnu)
 EXTRA_DEFINE += -Wno-comment -Wno-parentheses -Wno-reorder -Wno-narrowing -Wno-error=unused-parameter

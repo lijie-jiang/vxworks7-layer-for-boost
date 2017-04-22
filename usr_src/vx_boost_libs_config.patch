@@ -1,7 +1,22 @@
-
-diff -uNdr boost_1_59_0/libs/config/test/Jamfile.v2 vx7/workspace/VSBSim32/usr/src/BOOST/boost_1_59_0/libs/config/test/Jamfile.v2
---- boost_1_59_0/libs/config/test/Jamfile.v2	2015-08-04 04:44:49.000000000 -0700
-+++ boost_1_59_0/libs/config/test/Jamfile.v2	2016-02-22 22:09:32.968419479 -0800
+diff -uNdr boost_1_59_0/libs/config/checks/Jamfile.v2 ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/libs/config/checks/Jamfile.v2
+--- boost_1_59_0/libs/config/checks/Jamfile.v2	2015-08-04 07:44:49.000000000 -0400
++++ boost_1_59_0/libs/config/checks/Jamfile.v2	2017-04-22 07:54:51.000000000 -0400
+@@ -9,10 +9,11 @@
+ 
+ import modules ;
+ import path ; 
++import testing ;
+ 
+ actions simple_run_action
+ {
+-      $(>) > $(<)
++   $(LAUNCHER) $(>) > $(<)
+ }
+ 
+ rule run-simple ( sources + : args * : input-files * : requirements * : target-name )
+diff -uNdr boost_1_59_0/libs/config/test/Jamfile.v2 ../../workspace/VSB_itl64_icc/3pp/BOOST/boost_1_59_0/libs/config/test/Jamfile.v2
+--- boost_1_59_0/libs/config/test/Jamfile.v2	2015-08-04 07:44:49.000000000 -0400
++++ boost_1_59_0/libs/config/test/Jamfile.v2	2017-04-21 22:58:27.000000000 -0400
 @@ -67,6 +67,7 @@
            : #input-files
            : #requirements
@@ -29,5 +44,3 @@ diff -uNdr boost_1_59_0/libs/config/test/Jamfile.v2 vx7/workspace/VSBSim32/usr/s
            :
            config_link_test
      ]
- 
-
