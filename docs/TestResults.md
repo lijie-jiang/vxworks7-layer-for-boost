@@ -19,8 +19,8 @@ The number of test failures are indicated in the chart below. Failures are class
 * EXCGEN           - shell reports RTP 'has had a failure and has been deleted'
 * TIMEOUT          - test RTP fails to exit within timeout (100s)
 * STDFAIL          - test RTP exits normally, reporting test errors with nonzero exit status
-* LINK             - Failure to link the test executible
-* COMPILE          - Failure to compile the test executible 
+* LINK             - Failure to link the test executable
+* COMPILE          - Failure to compile the test executable 
 * NO_CONN          - Unable to telnet to target system  
 
 
@@ -135,7 +135,7 @@ The number of test failures are indicated in the chart below. Failures are class
 | wave 	         | --- | Not Supported, no embedded application
    
 To obtain these results, a Linux build host was used with the filesystem mounted by the VxWorks NFS client using the method described in the [README](../README.md#testing-notes).
-The VxWorks 7 March 2017 release was used with addtional workarounds:
+The VxWorks 7 March 2017 release was used with additional workarounds:
 * Fix inconsistent wide character support for VxWorks RTPs (V7COR-4768) by defining **MB_LEN_MAX** as 5 (instead of 1) in **vxworks-7/pkgs/os/lang-lib/tool/toolsrc_gnu/usr/h/tool/gnu/limits.h**.
 * Increase the default stack size for pthread_create() in RTPs by setting **DEF_STACK_SIZE** to 100000 (instead of (20 * 1024)) in **vxworks-7/pkgs/os/core/user/src/posix/pthreads/pthreadLib.c**
 
