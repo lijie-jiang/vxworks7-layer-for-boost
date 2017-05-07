@@ -73,7 +73,7 @@ endif
 ifdef _WRS_CONFIG_BOOST_LOCALE
 BOOST_BUILD_WITH += --with-locale
 # posix backend requires a lot that VxWorks ain't got
-# it uses POSIX.1-2008 extensions to C, that aren�t in our VxWorks Dinkum C libraries.
+# it uses POSIX.1-2008 extensions to C, that aren't in our VxWorks Dinkum C libraries.
 # boost_1_59_0/libs/locale/src/posix/converter.cpp
 # Specifically APIs that manipulate the locale_t type.
 # http://pubs.opengroup.org/onlinepubs/9699919799/functions/uselocale.html
@@ -213,7 +213,7 @@ BOOST_BUILD_LIB_FORMAT:= link=static
 BOOST_BUILD_WITH_TARGETS:=$(BOOST_BUILD_WITH)
 endif
 
-# Clear the 'checks' cache. The C++11 runtime checks could have failed becuse of no target connection
+# Clear the 'checks' cache. The C++11 runtime checks could have failed because of no target connection
 # better to rerun every time 
 BOOST_WORKAROUND += --reconfigure
 

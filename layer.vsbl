@@ -10,6 +10,7 @@
 /*
 Modification history
 --------------------
+06may17,brk  remove dependency on BZIP2
 09mar17,brk  Increase layer version
 18jan17,dlk  Add LAYER_REQUIRES BZIP2, as BZIP2 is no longer default.
 09jan17,dlk  Add some FEATURE_REQUIRES items.
@@ -29,7 +30,7 @@ Layer BOOST {
                        {SHELL RTP_EXIT_STATUS}
      VENDOR            Wind River
      VSB_REQUIRES      RTP
-     LAYER_REQUIRES    UNIX BZIP2
+     LAYER_REQUIRES    UNIX 
      SUBSCRIBE         UNIX
      PARENT
      OPTIONAL          YES
