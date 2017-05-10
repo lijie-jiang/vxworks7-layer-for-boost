@@ -1,7 +1,7 @@
-diff -uNdr boost_1_59_0/boost/config/compiler/diab.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/config/compiler/diab.hpp
+diff -uNdr boost_1_59_0/boost/config/compiler/diab.hpp ../../workspace/ARM_VSB/3pp/BOOST/boost_1_59_0/boost/config/compiler/diab.hpp
 --- boost_1_59_0/boost/config/compiler/diab.hpp	1969-12-31 19:00:00.000000000 -0500
-+++ boost_1_59_0/boost/config/compiler/diab.hpp	2016-11-07 14:06:55.000000000 -0500
-@@ -0,0 +1,27 @@
++++ boost_1_59_0/boost/config/compiler/diab.hpp	2017-05-10 01:01:48.000000000 -0400
+@@ -0,0 +1,28 @@
 +//
 +// 
 +
@@ -20,6 +20,7 @@ diff -uNdr boost_1_59_0/boost/config/compiler/diab.hpp ../../workspace/VSB_Sim32
 +
 +#define BOOST_MPL_CFG_NO_HAS_XXX_TEMPLATE
 +#define BOOST_LOG_NO_MEMBER_TEMPLATE_FRIENDS
++#define BOOST_REGEX_NO_EXTERNAL_TEMPLATES
 +
 +#define BOOST_NO_CXX11_HDR_INITIALIZER_LIST
 +#define BOOST_NO_CXX11_HDR_CODECVT
@@ -29,9 +30,9 @@ diff -uNdr boost_1_59_0/boost/config/compiler/diab.hpp ../../workspace/VSB_Sim32
 +/* #define BOOST_NO_CXX11_VARIADIC_MACROS */
 +
 +#define BOOST_COMPILER "Wind River Diab " BOOST_STRINGIZE(__VERSION_NUMBER__)
-diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/config/platform/vxworks.hpp
+diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../../workspace/ARM_VSB/3pp/BOOST/boost_1_59_0/boost/config/platform/vxworks.hpp
 --- boost_1_59_0/boost/config/platform/vxworks.hpp	2015-08-04 07:44:49.000000000 -0400
-+++ boost_1_59_0/boost/config/platform/vxworks.hpp	2016-11-22 18:01:55.000000000 -0500
++++ boost_1_59_0/boost/config/platform/vxworks.hpp	2017-05-09 23:49:07.000000000 -0400
 @@ -1,30 +1,29 @@
  //  (C) Copyright Dustin Spicuzza 2009.
  //      Adapted to vxWorks 6.9 by Peter Brockamp 2012.
@@ -392,9 +393,9 @@ diff -uNdr boost_1_59_0/boost/config/platform/vxworks.hpp ../../workspace/VSB_Si
 +#else 
 +#  define BOOST_ASIO_DISABLE_SERIAL_PORT
 +#endif
-diff -uNdr boost_1_59_0/boost/config/select_compiler_config.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/config/select_compiler_config.hpp
+diff -uNdr boost_1_59_0/boost/config/select_compiler_config.hpp ../../workspace/ARM_VSB/3pp/BOOST/boost_1_59_0/boost/config/select_compiler_config.hpp
 --- boost_1_59_0/boost/config/select_compiler_config.hpp	2015-08-04 07:44:49.000000000 -0400
-+++ boost_1_59_0/boost/config/select_compiler_config.hpp	2016-11-07 14:06:55.000000000 -0500
++++ boost_1_59_0/boost/config/select_compiler_config.hpp	2017-05-09 23:49:07.000000000 -0400
 @@ -48,6 +48,10 @@
  //  Digital Mars C++
  #   define BOOST_COMPILER_CONFIG "boost/config/compiler/digitalmars.hpp"
@@ -406,9 +407,9 @@ diff -uNdr boost_1_59_0/boost/config/select_compiler_config.hpp ../../workspace/
  # elif defined(__GNUC__) && !defined(__ibmxl__)
  //  GNU C++:
  #   define BOOST_COMPILER_CONFIG "boost/config/compiler/gcc.hpp"
-diff -uNdr boost_1_59_0/boost/config/stdlib/dinkumware.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/config/stdlib/dinkumware.hpp
+diff -uNdr boost_1_59_0/boost/config/stdlib/dinkumware.hpp ../../workspace/ARM_VSB/3pp/BOOST/boost_1_59_0/boost/config/stdlib/dinkumware.hpp
 --- boost_1_59_0/boost/config/stdlib/dinkumware.hpp	2015-08-04 07:44:49.000000000 -0400
-+++ boost_1_59_0/boost/config/stdlib/dinkumware.hpp	2016-11-07 14:06:55.000000000 -0500
++++ boost_1_59_0/boost/config/stdlib/dinkumware.hpp	2017-05-09 23:49:07.000000000 -0400
 @@ -96,7 +96,8 @@
  #include <exception>
  #endif
@@ -419,9 +420,9 @@ diff -uNdr boost_1_59_0/boost/config/stdlib/dinkumware.hpp ../../workspace/VSB_S
  #  define BOOST_NO_STD_TYPEINFO
  #endif  
  
-diff -uNdr boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp ../../workspace/VSB_Sim32/3pp/BOOST/boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp
+diff -uNdr boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp ../../workspace/ARM_VSB/3pp/BOOST/boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp
 --- boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp	2015-08-04 07:44:49.000000000 -0400
-+++ boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp	2016-11-07 14:06:55.000000000 -0500
++++ boost_1_59_0/boost/config/stdlib/libstdcpp3.hpp	2017-05-09 23:49:07.000000000 -0400
 @@ -78,6 +78,7 @@
  #  include <unistd.h>
  #endif
