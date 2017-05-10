@@ -1,4 +1,4 @@
-
+ 
 diff -uNdr boost_1_59_0/libs/lexical_cast/example/small_examples.cpp ../workspace/VSB64/usr/src/BOOST/boost_1_59_0/libs/lexical_cast/example/small_examples.cpp
 --- boost_1_59_0/libs/lexical_cast/example/small_examples.cpp	2015-04-27 18:10:48.000000000 +0000
 +++ boost_1_59_0/libs/lexical_cast/example/small_examples.cpp	2016-05-16 23:36:23.048579200 +0000
