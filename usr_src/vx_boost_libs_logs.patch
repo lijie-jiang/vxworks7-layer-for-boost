@@ -1,0 +1,14 @@
+diff -uNdr boost_1_59_0/libs/log/src/dump.cpp ../../workspace/VSB_Sim64/3pp/BOOST/boost_1_59_0/libs/log/src/dump.cpp
+--- boost_1_59_0/libs/log/src/dump.cpp	2015-08-04 14:17:10.000000000 -0400
++++ boost_1_59_0/libs/log/src/dump.cpp	2017-05-09 13:01:22.000000000 -0400
+@@ -194,8 +194,9 @@
+     static void cpuid(uint32_t& eax, uint32_t& ebx, uint32_t& ecx, uint32_t& edx)
+     {
+ #if defined(__GNUC__)
+-#if defined(__i386__) && defined(__PIC__) && __PIC__ != 0
++#if ( defined(__i386__) || (defined(__VXWORKS__) && defined(__x86_64__))) && ( defined(__PIC__) && __PIC__ != 0 ) 
+         // We have to backup ebx in 32 bit PIC code because it is reserved by the ABI
++        // Workaround VxWorks GCC 4.8.1 throws compile error on 64bit with PIC
+         uint32_t ebx_backup;
+         __asm__ __volatile__
+         (
