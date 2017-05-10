@@ -73,6 +73,7 @@ config  BOOST_INTERPROCESS
 
 config  BOOST_IOSTREAMS
         bool "Build iostreams"
+        depends on BZIP2
         default n
 
 config  BOOST_LOCALE
